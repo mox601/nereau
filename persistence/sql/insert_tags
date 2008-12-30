@@ -1,0 +1,25 @@
+START TRANSACTION;
+
+CREATE TEMP TABLE tags_temp
+(
+	id serial NOT NULL,
+	tag text NOT NULL,
+	PRIMARY KEY (id)
+)
+ON COMMIT DROP;
+
+INSERT INTO tags_temp (tag)
+VALUES ('games');
+
+INSERT INTO tags_temp (tag)
+VALUES ('search');
+
+INSERT INTO tags (tag)
+SELECT tag
+FROM tags_temp
+WHERE NOT EXISTS (
+	SELECT tag
+	FROM tags
+	WHERE tags.tag = tags_temp.tag);
+
+COMMIT TRANSACTION;

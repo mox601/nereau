@@ -1,0 +1,19 @@
+INSERT INTO classes (idterm,idtag,iduser,value)
+VALUES (
+	(
+		SELECT id 
+		FROM stemmedterms 
+		WHERE stemmedterm='search'
+	),
+	(
+		SELECT id 
+		FROM tags 
+		WHERE tag='googling'
+	),
+	(
+		SELECT id 
+		FROM users 
+		WHERE username='olbion'
+	),
+	0.025
+);

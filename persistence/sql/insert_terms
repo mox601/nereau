@@ -1,0 +1,53 @@
+START TRANSACTION;
+
+CREATE TEMP TABLE terms_temp
+(
+	id serial NOT NULL,
+	idstemmedterm integer NOT NULL,
+	term text NOT NULL,
+	relevance integer NOT NULL,
+	PRIMARY KEY (id),
+	UNIQUE(idstemmedterm,term),
+	FOREIGN KEY(idstemmedterm)
+		REFERENCES stemmedterms(id)
+)
+ON COMMIT DROP;
+
+INSERT INTO terms_temp (idstemmedterm,term,relevance)
+VALUES (
+	(
+		SELECT id
+		FROM stemmedterms
+		WHERE stemmedterm='cane'
+	),
+	'canetto',
+	2
+);
+
+INSERT INTO terms_temp (idstemmedterm,term,relevance)
+VALUES (
+	(
+		SELECT id
+		FROM stemmedterms
+		WHERE stemmedterm='cane'
+	),
+	'canello',
+	3
+);
+
+INSERT INTO terms (idstemmedterm,term)
+SELECT idstemmedterm,term
+FROM terms_temp
+WHERE NOT EXISTS (
+	SELECT term
+	FROM terms
+	WHERE terms.term = terms_temp.term);
+
+UPDATE terms
+SET relevance = relevance + (
+	SELECT relevance
+	FROM terms_temp
+	WHERE terms.term = terms_temp.term
+	);
+
+COMMIT TRANSACTION;

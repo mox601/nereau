@@ -1,0 +1,25 @@
+START TRANSACTION;
+
+CREATE TEMP TABLE stemmedterms_temp
+(
+	id serial NOT NULL,
+	stemmedterm text NOT NULL,
+	PRIMARY KEY (id)
+)
+ON COMMIT DROP;
+
+INSERT INTO stemmedterms_temp (stemmedterm)
+VALUES ('cane');
+
+INSERT INTO stemmedterms_temp (stemmedterm)
+VALUES ('oca');
+
+INSERT INTO stemmedterms (stemmedterm)
+SELECT stemmedterm
+FROM stemmedterms_temp
+WHERE NOT EXISTS (
+	SELECT stemmedterm
+	FROM stemmedterms
+	WHERE stemmedterms.stemmedterm = stemmedterms_temp.stemmedterm);
+
+COMMIT TRANSACTION;

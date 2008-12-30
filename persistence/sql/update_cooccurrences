@@ -1,0 +1,29 @@
+INSERT INTO cooccurrences (idclass,idterm,value)
+VALUES (
+	(
+		SELECT id 
+		FROM classes 
+		WHERE 
+			idterm = ( 
+				SELECT id 
+				FROM stemmedterms
+				WHERE stemmedterm='search'
+			)
+			AND idtag = (
+				SELECT id 
+				FROM tags 
+				WHERE tag='googling'
+			) 
+			AND iduser = ( 
+				SELECT id 
+				FROM users 
+				WHERE username='olbion'
+			)
+	), 
+	(
+		SELECT id 
+		FROM stemmedterms 
+		WHERE stemmedterm='lycos'
+	),
+	0.111
+);

@@ -1,0 +1,18 @@
+UPDATE classes 
+SET value=0.03
+WHERE
+	idterm = (
+		SELECT id 
+		FROM stemmedterms 
+		WHERE stemmedterm='search'
+	)
+	AND idtag = (
+		SELECT id 
+		FROM tags 
+		WHERE tag='googling'
+	)
+	AND iduser = (
+		SELECT id 
+		FROM users 
+		WHERE username='olbion'
+	);

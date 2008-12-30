@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: temp.ProvaEspansioni
+Classpath: lib/htmlparser.jar lib/postgresql-8.3dev-600.jdbc4.jar

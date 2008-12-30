@@ -1,0 +1,16 @@
+SELECT	
+	terms1.stemmedterm AS term1, 
+	tags.tag AS tag, 
+	classes.value AS tagranking, 
+	terms2.stemmedterm AS term2, 
+	cooccurrences.value AS value
+FROM
+	stemmedterms AS terms1
+	JOIN classes ON terms1.id=classes.idterm
+	JOIN tags ON classes.idtag=tags.id
+	JOIN users ON classes.iduser=users.id
+	JOIN cooccurrences ON cooccurrences.idclass=classes.id
+	JOIN stemmedterms AS terms2 ON cooccurrences.idterm=terms2.id
+WHERE
+	users.username='olbion' AND 
+	(terms1.stemmedterm='yahoo' OR terms1.stemmedterm='search')
