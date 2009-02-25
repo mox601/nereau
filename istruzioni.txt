@@ -35,7 +35,12 @@ Utilizzo delle tabelle, come letto nella tesi
 
 
 
-
+cazzisimi di Eclipse 
+devo avere java 1.6 come build
+configurazione del db in database_config
+url nereau
+user postgres
+password prova
 
 
 
@@ -43,8 +48,12 @@ Utilizzo delle tabelle, come letto nella tesi
 git workflow
 git init
 git add .
-
-
+git commit -m "blah blah"
+con git commit -a aggiungerebbe automaticamente i file nuovi all'indice e farebbe il commit
+per aggiungere il repo di github
+git remote add origin git@github.com:mox601/nereau.git
+e faccio il push verso il repository remoto di github
+git push origin master
 
 
 
