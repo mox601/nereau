@@ -1,0 +1,59 @@
+appunti su configurazione del postgresql
+
+
+Restore del Dump
+devi prima creare l'utente per cui si fa il grant nel database
+user web81_nereau 
+password nereau
+
+serve a nereau
+user postgres
+password prova
+
+per login su phppgadmin: 
+user postgresuser
+password postgres
+
+creazione delle tabelle sul database fatto tramite upload dell'sql con phppgadmin4.2.2
+(phppgadmin non puó avere postgres come utente)
+
+
+DB schema
+
+Tabelle: 
+classes(id, idterm, idtag, iduser, value)
+cooccurrences(id, idclass, idterm, value)
+stemmedterms(id, stemmedterm)
+tags(id, tag)
+terms(id, idstemmedterm, term, relevance)
+users(id, username, password, lastupdate, firstname, lastname, email, role)
+visitedurls(id, iduser, url, query, expandedquery, date)
+visitedurltags(id, idvisitedurl, idtag, value)
+votes(idvote, iduser, query, expandedquery, tags)
+
+Utilizzo delle tabelle, come letto nella tesi
+
+
+
+
+
+
+
+
+git workflow
+git init
+git add .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
