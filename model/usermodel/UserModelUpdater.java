@@ -78,9 +78,12 @@ public class UserModelUpdater {
 		//retrieve visited urls from db
 		List<VisitedURL> visitedURLs = null;
 		if(alreadyRetrieved)
+			/* se gli url sono stati passati nel metodo update(User user, List<VisitedURL> alreadyRetrieved), 
+			 * allora usa quelli che ti hanno passato */
 			visitedURLs = this.vUrls;
 		else {
 			try {
+				/* altrimenti, devi prendere dal db tutti gli url visitati dallo user */
 				visitedURLs = this.visitedURLHandler.retrieveLastVisitedURLs(user);
 				logger.info("url visitati: " + visitedURLs);
 			}
@@ -89,7 +92,8 @@ public class UserModelUpdater {
 				logger.info("ATTENZIONE: impossibile reperire url visitati dal db. motivo: \n"+e.getMessage());
 			}
 		}
-		
+		/* AGGIORNAMENTO DEL MODELLO UTENTE */
+		/* itera su tutte le pagine visitate */
 		//MODIFICA: lavoro su una pagina per volta (altrimenti la memoria non basta!)
 		for(VisitedURL vu: visitedURLs) {
 			

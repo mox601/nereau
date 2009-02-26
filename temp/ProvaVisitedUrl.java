@@ -24,36 +24,36 @@ public class ProvaVisitedUrl {
 		VisitedURLDAO vudao = new VisitedURLDAOPostgres();
 		UserDAO udao = new UserDAOPostgres();
 		
-		/*
-		String urlString = "http://www.miomio.com";
-		Query query = new Query("baus");
+		
+		String urlString = "http://woork.blogspot.com/2009/02/free-ajax-components-for-advanced-web.html";
+		Query query = new Query("ajax");
 		Set<RankedTag> rTags = new HashSet<RankedTag>();
-		rTags.add(new RankedTag("amazon",1.1));
-		rTags.add(new RankedTag("books",2.6));
-		ExpandedQuery expQuery = new ExpandedQuery("baus bau",rTags);
+		rTags.add(new RankedTag("ajax",1.1));
+		rTags.add(new RankedTag("components",2.6));
+		ExpandedQuery expQuery = new ExpandedQuery("ajax components",rTags);
 		VisitedURL vUrl = new VisitedURL(urlString,query,null);
-		User user = new User("iddio","padre");
+		User user = new User("mox","pwd");
 		
 		try {
 			vudao.saveVisitedURL(vUrl, user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		*/
+		
 		
 		
 		try {
-			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("iddio"));
+			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("mox"));
 			
 			System.out.println("num of results: " + vUrls.size());
 			
-			for(VisitedURL vUrl: vUrls) {
+			for(VisitedURL vUrl2: vUrls) {
 				
-				System.out.println("url=" + vUrl.getURL() + ", date=" + vUrl.getDate() + 
-						", query=" + vUrl.getQuery());
-				if(vUrl.getExpandedQuery()!=null) {
-					System.out.println("expquery=" + vUrl.getExpandedQuery() + 
-							", tags=" + vUrl.getExpandedQuery().getExpansionTags());
+				System.out.println("url=" + vUrl2.getURL() + ", date=" + vUrl2.getDate() + 
+						", query=" + vUrl2.getQuery());
+				if(vUrl2.getExpandedQuery()!=null) {
+					System.out.println("expquery=" + vUrl2.getExpandedQuery() + 
+							", tags=" + vUrl2.getExpandedQuery().getExpansionTags());
 				}
 				
 			}

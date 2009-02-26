@@ -20,7 +20,7 @@ public class ProvaEspansioni {
 		
 		if(args.length!=2) {
 			user = new User("iddio");
-			queryString = "madonna";
+			queryString = "madonna mp3 pop";
 		}
 		
 		else {

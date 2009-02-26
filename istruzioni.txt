@@ -33,9 +33,27 @@ votes(idvote, iduser, query, expandedquery, tags)
 
 Utilizzo delle tabelle, come letto nella tesi
 
+Le tabelle peró sono vuote... 
+come lavorare su dei dati?
+1- dump del db online nereau.eunetwork.net per lavorare in locale su quei dati, periodicamente aggiornati ma comunque copiati su postgres locale. 
+2- lavorare in remoto, usando quel db in tutto e per tutto. 
+Meglio 1. 
+
+il codice é tutto organizzato con pattern Facade
+A facade is an object that provides a simplified interface to a larger body of code
+incapsula cioé parti complesse di codice e fornisce un'interfaccia semplificata. 
+
+Passi della tesi
+Nereau non riconosce le relazioni tra i tags. La creazione delle diverse espansioni della query dipende dalle singole espansioni che vengono generate da ogni singolo tag: se due tag producono la stessa espansione EQ1, con gli stessi termini, allora vengono messi in relazione (comparendo nell'etichetta laterale nell'interfaccia web). 
+Concettualmente la relazione tra due tag é messa in relazione a posteriori rispetto all'elaborazione (solo se producono lo stesso risultato), e non prima, durante la stessa. 
+Per produrre espansioni con qualitá piú elevata, si vuole trovare una relazione semantica tra due tag per poterla sfruttare nel momento in cui si generano le espansioni. Dopo aver calcolato in che misura due tag siano correlati, posso procedere ad una singola espansione tenendo conto di questa somiglianza, per esempio sommando i due vettori sumT1 e sumT2 (somma di tutti i valori di cooccorrenza della matr. 3D relativi a tutti i termini della Query stemmata). 
 
 
-cazzisimi di Eclipse 
+
+
+
+
+problemi su Eclipse 
 devo avere java 1.6 come build
 configurazione del db in database_config
 url nereau
