@@ -15,7 +15,7 @@ user postgresuser
 password postgres
 
 creazione delle tabelle sul database fatto tramite upload dell'sql con phppgadmin4.2.2
-(phppgadmin non pu√≥ avere postgres come utente)
+(phppgadmin non puó avere postgres come utente)
 
 
 DB schema
@@ -45,8 +45,20 @@ incapsula cioé parti complesse di codice e fornisce un'interfaccia semplificata.
 
 Passi della tesi
 Nereau non riconosce le relazioni tra i tags. La creazione delle diverse espansioni della query dipende dalle singole espansioni che vengono generate da ogni singolo tag: se due tag producono la stessa espansione EQ1, con gli stessi termini, allora vengono messi in relazione (comparendo nell'etichetta laterale nell'interfaccia web). 
-Concettualmente la relazione tra due tag é messa in relazione a posteriori rispetto all'elaborazione (solo se producono lo stesso risultato), e non prima, durante la stessa. 
+
+Concettualmente la relazione tra due tag é evidenziata a posteriori rispetto all'elaborazione (solo se producono lo stesso risultato), e non prima, durante la stessa. 
+
 Per produrre espansioni con qualitá piú elevata, si vuole trovare una relazione semantica tra due tag per poterla sfruttare nel momento in cui si generano le espansioni. Dopo aver calcolato in che misura due tag siano correlati, posso procedere ad una singola espansione tenendo conto di questa somiglianza, per esempio sommando i due vettori sumT1 e sumT2 (somma di tutti i valori di cooccorrenza della matr. 3D relativi a tutti i termini della Query stemmata). 
+
+Per fare questo serve un modo per mettere in relazione due tag tra loro. 
+Tag Clustering
+ci sono diversi modi di farlo, basati su grafi o matrici di co-occorrenza e altri parametri. 
+-Il sistema ELSABer sfrutta questa ipotesi: 
+tag simili annotano url simili, e viceversa... 
+
+-(altro metodo per il clustering)
+
+Come valutare delle prestazioni delle due strategie di clustering?
 
 
 
