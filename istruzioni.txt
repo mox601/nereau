@@ -60,6 +60,14 @@ Per fare questo serve un modo per mettere in relazione due tag tra loro, cioé mi
 
 Posso fare questo in diversi modi:  
 ----------------------------------------
+0 - É variante della 1
+Raggruppo i tag dell'utente in diversi cluster (LiBao2007?) avendoli modellati con tf*idf?. 
+Quindi i tag candidati all'espansione saranno distribuiti in diversi cluster. Ipoteticamente potremmo fermarci qui, effettuando un'espansione per ogni cluster, visto che useremmo tag correlati. 
+Invece, possiamo analizzare ulteriormente i tag appartenenti ad ogni cluster dal punto di vista dei diversi livelli di astrazione dei tag. 
+Ad esempio, in un cluster potremmo avere dei tag simili, "mp3" "radiohead" e "sigurros". Analizzando con i criteri di LiBao2007, possiamo calcolare che il livello di astrazione di "mp3" é superiore a "radiohead" e a "sigurros", che invece avranno un livello di astrazione simile. In questo modo possiamo dire che mp3 é un tag "padre" degli altri due. Ora valutiamo se é corretto fare due espansioni diverse per i tag a livello inferiore, oppure se per l'utente quei due tag hanno alti valori di co-occorrenza e quindi molto collegati. Nel secondo caso, si fa un'espansione con entrambi i tag. 
+
+
+----------------------------------------
 1 - Tag simili annotano url simili, e viceversa. 
 Dopo che li abbiamo messi in relazione, otteniamo dei cluster di tag, e ogni cluster contiene i tag simili. 
 (Dobbiamo verificare il livello gerarchico al quale si trovano tag di uno stesso cluster. Come sfrutto queste informazioni?)
