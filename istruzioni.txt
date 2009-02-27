@@ -43,22 +43,64 @@ il codice  tutto organizzato con pattern Facade
 A facade is an object that provides a simplified interface to a larger body of code
 incapsula cio parti complesse di codice e fornisce un'interfaccia semplificata. 
 
+
+
+
+
+
 Passi della tesi
 Nereau non riconosce le relazioni tra i tags. La creazione delle diverse espansioni della query dipende dalle singole espansioni che vengono generate da ogni singolo tag: se due tag producono la stessa espansione EQ1, con gli stessi termini, allora vengono messi in relazione (comparendo nell'etichetta laterale nell'interfaccia web). 
 
 Concettualmente la relazione tra due tag  evidenziata a posteriori rispetto all'elaborazione (solo se producono lo stesso risultato), e non prima, durante la stessa. 
 
-Per produrre espansioni con qualit‡ piœ elevata, si vuole trovare una relazione semantica tra due tag per poterla sfruttare nel momento in cui si generano le espansioni. Dopo aver calcolato in che misura due tag siano correlati, posso procedere ad una singola espansione tenendo conto di questa somiglianza, per esempio sommando i due vettori sumT1 e sumT2 (somma di tutti i valori di cooccorrenza della matr. 3D relativi a tutti i termini della Query stemmata). 
+Soluzione
+Per produrre espansioni con qualit‡ piœ elevata, si vuole trovare una relazione semantica tra due (o piœ) tag per poterla sfruttare nel momento in cui si generano le espansioni. Dopo aver calcolato in che misura due tag siano correlati, posso procedere ad una singola espansione tenendo conto di questa somiglianza, per esempio sommando i due vettori sumT1 e sumT2 (somma di tutti i valori di cooccorrenza della matrice 3D relativi a tutti i termini della Query stemmata). 
 
-Per fare questo serve un modo per mettere in relazione due tag tra loro. 
+Per fare questo serve un modo per mettere in relazione due tag tra loro, cio misurare la somiglianza. 
+
+Posso fare questo in diversi modi:  
+----------------------------------------
+1 - Tag simili annotano url simili, e viceversa. 
+Dopo che li abbiamo messi in relazione, otteniamo dei cluster di tag, e ogni cluster contiene i tag simili. 
+(Dobbiamo verificare il livello gerarchico al quale si trovano tag di uno stesso cluster. Come sfrutto queste informazioni?)
+
 Tag Clustering
 ci sono diversi modi di farlo, basati su grafi o matrici di co-occorrenza e altri parametri. 
--Il sistema ELSABer sfrutta questa ipotesi: 
-tag simili annotano url simili, e viceversa... 
+-Il sistema ELSABer (LiBao2007) sfrutta questa ipotesi: 
+tag simili annotano url simili, e viceversa
+quali strutture dati mi servono? 
+mi servono 2 matrici: 
+la C (righe: tag - colonne: url) che in ogni elemento Cij contiene il numero di utenti che ha annotato l'url j con il tag i. 
+e la M (righe: tag - colonne: url) che contiene i valori tf*idf. (Potrei anche tenerne soltanto una e fare il calcolo del tf*idf quando devo estrarre il valore)
+La somiglianza  calcolata con la coseno-somiglianza tra i due vettori dei tag. 
+da esaminare: 
+%%% TAG SINONIMI %%%
+Una volta calcolata la somiglianza, posso selezionare, dai primi N tag piœ simili al tag Ti, quelli che rappresentano dei sinonimi. (film, movies)
+%%%
+e
+%%% TAG A DIVERSI LIVELLI GERARCHICI %%%
+%%%
 
--(altro metodo per il clustering)
+Ottenuti gli N cluster che raggruppano i tag simili tra loro, posso fare N espansioni diverse, una per ogni cluster di tag
 
-Come valutare delle prestazioni delle due strategie di clustering?
+-(alternativa per il clustering)
+
+
+
+
+----------------------------------------
+2 - Gerarchia di tag
+costruisco una struttura dei tag globale (di tutti gli utenti), organizzata come un albero n-ario A che uso come un'ontologia. (faccio un clustering gerarchico - con Shepitsen2008 o ZhouBao2007)
+Nereau produce gi‡ dei tag candidati all'espansione (CT), basandosi sui termini della query fornita dall'utente. 
+Uso questi tag e vedo dove occorrono nell'albero globale dei tag. 
+(Per semplificare, posso evitare di considerare tutti i nodi figli dei tag dell'utente che capitano ai livelli piœ bassi)
+A questo punto, ottengo che i tag dell'utente sono mappati sull'albero globale della gerarchia dei tag. Da qui devo costruire delle espansioni, sfruttando una matrice M che modella le co-occorrenze dei tag incontrati dell'utente e l'albero A' modificato perch contenga solo i tag dell'utente. 
+Ogni cammino foglia-radice potrebbe essere un'espansione candidata, ma possiamo usare un algoritmo ricorsivo che parte dalla radice dell'albero per verificare se i figli della radice hanno un'alta co-occorrenza per l'utente. In questo modo, posso capire se "spezzare" un'espansione in diverse espansioni (perch i tag dell'utente co-occorrono poco, quindi per l'utente non sono collegati->due espansioni diverse), oppure mantenere una singola espansione perch i tag hanno una forte relazione per l'utente. 
+
+
+Valutare le Prestazioni
+
+1 vs 2 vs Nereau
 
 
 
