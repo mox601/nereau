@@ -46,6 +46,15 @@ incapsula cioé parti complesse di codice e fornisce un'interfaccia semplificata.
 
 
 
+connessione a sito remoto
+nereau.eunetwork.net
+ssh web81_nereau@nereau.eunetwork.net -p 4422
+web81_nereau
+nereauroma3
+
+riga di comando per scaricare file da remoto: 
+scp -P 4422 web81_nereau@nereau.eunetwork.net:web/<file_remoto> <file_locale>
+
 
 
 Passi della tesi
