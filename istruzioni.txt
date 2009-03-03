@@ -52,9 +52,13 @@ ssh web81_nereau@nereau.eunetwork.net -p 4422
 web81_nereau
 nereauroma3
 
+
+dump del database in remoto
+pg_dump --file=<nome_file>.sql --format=p --no-owner --inserts --encoding=LATIN9
+
 riga di comando per scaricare file da remoto: 
 scp -P 4422 web81_nereau@nereau.eunetwork.net:web/<file_remoto> <file_locale>
-
+aaa
 
 
 Passi della tesi
