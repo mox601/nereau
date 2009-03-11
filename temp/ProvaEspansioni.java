@@ -32,8 +32,16 @@ public class ProvaEspansioni {
 		
 		Set<ExpandedQuery> expQueries = qef.expandQuery(queryString, user);
 		
+		/* posso fare una seconda prova di espansione, usando il metodo nuovo */
+		/* Set<ExpandedQuery> newExpQueries = qef.newExpandQuery(queryString, user) */
+		
+		
+		
+		
 		for(ExpandedQuery  eq: expQueries)
 			System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
+		
+		
 		
 		
 		

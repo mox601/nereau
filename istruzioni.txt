@@ -37,7 +37,7 @@ Le tabelle per— sono vuote...
 come lavorare su dei dati?
 1- dump del db online nereau.eunetwork.net per lavorare in locale su quei dati, periodicamente aggiornati ma comunque copiati su postgres locale. 
 2- lavorare in remoto, usando quel db in tutto e per tutto. 
-Meglio 1. 
+Meglio 1. Fatto il dump in remoto, importandolo con lo strumento integrato per il recupero dei db di pgadmin III
 
 il codice Ž tutto organizzato con pattern Facade
 A facade is an object that provides a simplified interface to a larger body of code
@@ -54,11 +54,18 @@ nereauroma3
 
 
 dump del database in remoto
-pg_dump --file=<nome_file>.sql --format=p --no-owner --inserts --encoding=LATIN9
+pg_dump --file=<nome_file>.sql --format=p --no-owner --column-inserts --encoding=LATIN9 --no-privileges
+//se il format Ž plain, non puoi usare il pg_restore
+//sul server c'Ž uno script che lo fa nella directory dumps/<data>
 
-riga di comando per scaricare file da remoto: 
+Riga di comando per scaricare file da remoto: 
 scp -P 4422 web81_nereau@nereau.eunetwork.net:web/<file_remoto> <file_locale>
-aaa
+
+Restore in locale - si fa con strumento di pgadmin III
+pg_restore --format=t dumps/2009-03-04/earth.eushells.net.17\:16\:08.pg.sql
+
+
+
 
 
 Passi della tesi
@@ -122,6 +129,10 @@ Ogni cammino foglia-radice potrebbe essere un'espansione candidata, ma possiamo 
 Valutare le Prestazioni
 
 1 vs 2 vs Nereau
+
+
+
+
 
 
 
