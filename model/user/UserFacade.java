@@ -16,7 +16,6 @@ public class UserFacade {
 		this.userDAO = new UserDAOPostgres();
 	}
 	
-	
 	public static synchronized UserFacade getInstance() {
 		if(instance==null)
 			instance = new UserFacade();

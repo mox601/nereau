@@ -153,10 +153,10 @@ git workflow
 git init
 git add .
 git commit -m "blah blah"
-con git commit -a aggiungerebbe automaticamente i file nuovi all'indice e farebbe il commit
-per aggiungere il repo di github
+# con git commit -a aggiungerebbe automaticamente i file nuovi all'indice e farebbe il commit
+# per aggiungere il repo di github
 git remote add origin git@github.com:mox601/nereau.git
-e faccio il push verso il repository remoto di github
+# e faccio il push verso il repository remoto di github
 git push origin master
 
 

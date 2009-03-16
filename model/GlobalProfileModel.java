@@ -5,6 +5,7 @@ import java.util.Map;
 
 import persistence.GlobalProfileDAO;
 import persistence.GlobalProfileModelDAO;
+import persistence.PersistenceException;
 import persistence.postgres.GlobalProfileDAOPostgres;
 import persistence.postgres.GlobalProfileModelDAOPostgres;
 
@@ -23,5 +24,18 @@ public class GlobalProfileModel {
 		/* matrice che contiene i valori di tf(*idf) di tag-url */
 		this.globalMatrix = new HashMap<String, Map<RankedTag, Map<String, Double>>>();
 	}
+	
+	/* aggiorna il profilo globale,: osservando il db di tutti gli url visitati e 
+	 * */
+	public void updateGlobalProfileModel() {
+		try {
+			//this.globalProfileHandler.
+			
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+			}
+		
+	}
+	
 
 }
