@@ -1,8 +1,6 @@
 package cluster;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 
 public class Tree {
@@ -25,7 +23,7 @@ public class Tree {
 		boolean found = false;
 		/* from root */
 		Node currentNode = this.getRoot();
-		/* examinate list of root's children */
+		/* examinate the list of root's children */
 		found = (currentNode == b);
 		if (!found) {
 			found = currentNode.hasDescendant(b);
@@ -50,6 +48,42 @@ public class Tree {
 		}
 		
 		return path;
+	}
+	/* TODO: occhio al null */
+	public Tree getSubTree(Node child) {	
+		if (this.contains(child)) {
+			return new Tree(child);
+		}
+		else return null;
+	}
+
+	public Tree mergeTreesWithNewRoot(Tree firstTree, Node newRoot) {
+		
+		List<Node> oldTrees = new LinkedList<Node>();
+		/* add children to the new root node */
+		oldTrees.add(this.getRoot());
+		oldTrees.add(firstTree.getRoot());
+		newRoot.setChildren(oldTrees);	
+		Tree mergedTree = new Tree(newRoot);
+		return mergedTree;
+	}
+
+	public List<Node> getLeaves() {
+		List<Node> leaves = new LinkedList<Node>(); 
+		
+		Node actualNode = this.getRoot();
+		List<Node> children = actualNode.getChildren();
+		
+		if (actualNode.isLeaf()) {
+			leaves.add(actualNode);
+		} else {
+			for(Node child : children) {
+				Tree subTree = this.getSubTree(child);
+				leaves.addAll(subTree.getLeaves());
+			}
+		}
+		
+		return leaves;
 	}
 	
 }

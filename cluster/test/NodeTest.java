@@ -5,8 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +16,11 @@ public class NodeTest {
 	private Node b;
 	private Node c;
 	
+	
+	/*
+	 * i test si scrivono con questa forma: assert*(expected, actual)
+	 * */
+	
 	@Before
 	public void setUp() {
 		a = new Node("A"); 
@@ -26,21 +29,12 @@ public class NodeTest {
 	}
 	
 	
-	/*
-	@Test
-	public void simpleAdd() {
-		int result = 1; 
-		int expected = 1; 
-		assertEquals(result, expected);
-	} 
-	*/
-	
 	/* test del costruttore con valore stringa */
 	@Test
 	public void constructor_string_value() {
 		String value = "node_value";
 		Node node = new Node(value);
-		assertEquals(node.getValue(), value); 
+		assertEquals(value, node.getValue()); 
 		assertNull(a.getFather());
 	}
 	
@@ -68,11 +62,11 @@ public class NodeTest {
 		/* figlio di a */
 		a.addChild(b);
 		assertTrue(a.getChildren().contains(b)); 
-		assertEquals(a.getChildren().get(0).getValue(), "B");
+		assertEquals("B", a.getChildren().get(0).getValue());
 		/* figlio di b */
 		b.addChild(c);
 		assertTrue(b.getChildren().contains(c));
-		assertEquals(b.getChildren().get(0).getValue(), "C");
+		assertEquals("C", b.getChildren().get(0).getValue());
 
 	}
 
@@ -117,6 +111,8 @@ public class NodeTest {
 		assertTrue(c.hasSibling(b));
 
 	}
+	
+	
 	
 	
 

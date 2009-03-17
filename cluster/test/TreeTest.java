@@ -27,9 +27,9 @@ public class TreeTest {
 	public void testRoot() {
 		String value = "value";
 		Node root = new Node(value);
-		Tree tree = new Tree(root);
-		assertEquals(tree.getRoot(), root); 
-		assertEquals(tree.getRoot().getValue(), root.getValue()); 
+		Tree tree2 = new Tree(root);
+		assertEquals(root, tree2.getRoot()); 
+		assertEquals(root.getValue(), tree2.getRoot().getValue()); 
 		
 	}
 	
@@ -72,18 +72,81 @@ public class TreeTest {
 		expectedPathD.add(c);
 		expectedPathD.add(a);
 		List<Node> resultPathD = tree.pathToRoot(d);
-		assertEquals(resultPathD, expectedPathD);
+		assertEquals(expectedPathD, resultPathD);
 
 		List<Node> expectedPathE = new LinkedList<Node>();
 		expectedPathE.add(e);
 		expectedPathE.add(c);
 		expectedPathE.add(a);
 		List<Node> resultPathE = tree.pathToRoot(e);
-		assertEquals(resultPathE, expectedPathE);
+		assertEquals(expectedPathE, resultPathE);
 		assertEquals(tree.pathToRoot(d), tree.pathToRoot(d));
 		
 		Node f = new Node("F");
 		assertNull(tree.pathToRoot(f));
+	}
+	
+	
+	@Test
+	public void getSubTree() {
+		
+		Node subTreeRoot = c; 
+		Tree subTree = tree.getSubTree(subTreeRoot);
+		assertEquals(subTreeRoot, subTree.getRoot());
+		assertEquals(subTree.getRoot().getChildren(), c.getChildren());
+	}
+	
+	/* test per il merge di alberi con una nuova radice specificata, 
+	 * e per il metodo getLeaves() */
+	@Test
+	public void mergeTrees() {
+		/*		 f
+		 * 		/ \
+		 * 	   g   h
+		 * create this tree and merge with tree. 
+		 * The result should be 
+		 * 		 N
+		 * 		/  \  
+		 *    a     f
+		 *   / \   / \
+		 * b	c  g  h
+		 *     / \
+		 *     d  e
+		 * */
+		
+		/* the parameter in the method specifies the new value of the new root */
+		Node f = new Node("F");
+		Node g = new Node("G");
+		Node h = new Node("H");
+		
+		Node newRoot = new Node("I");
+		
+		f.addChild(g);
+		f.addChild(h);
+		
+		Tree firstTree = new Tree(f);
+		Tree mergedTree = tree.mergeTreesWithNewRoot(firstTree, newRoot); 
+		
+		List<Node> oldRoots = new LinkedList<Node>();
+		oldRoots.add(a);
+		oldRoots.add(f);
+		
+		assertEquals(oldRoots, mergedTree.getRoot().getChildren());
+		
+		
+		
+		/* test per getLeaves() */
+		
+		List<Node> expectedLeaves = new LinkedList<Node>();
+		expectedLeaves.add(b);
+		expectedLeaves.add(d);
+		expectedLeaves.add(e);
+		expectedLeaves.add(g);
+		expectedLeaves.add(h);
+		
+		List<Node> obtainedLeaves = mergedTree.getLeaves();
+		assertEquals(expectedLeaves, obtainedLeaves);
+		
 	}
 	
 
