@@ -4,6 +4,9 @@ import java.util.List;
 
 
 public class Tree {
+	
+	/* modella il clustering gerarchico, Ž l'albero che contiene i cluster e 
+	 * i valori ai quali ogni cluster Ž stato accorpato in un nodo (=un cluster)*/
 
 	private Node root;
 

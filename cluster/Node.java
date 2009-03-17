@@ -9,15 +9,21 @@ public class Node {
 	
 	private Node father;
 	private List<Node> children;
-	// TODO: cambiare in generic o in un tipo che mi serve
 	// gli alberi e i nodi mi servono per modellare l'algoritmo di clustering
 	private String value; 
-	
+	/* per l'algoritmo di clustering */
+	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
+	private Float similarity;
 	
 	public Node(String value) {
 		this.value = value; 
 		this.children = new LinkedList<Node>();
 		
+	}
+	
+	public Node(String value, float similarity) {
+		this.value = value;
+		this.similarity = similarity;
 	}
 	
 	
@@ -29,16 +35,14 @@ public class Node {
 		if (this == obj) return true;
 		if((obj == null) || (obj.getClass() != this.getClass())) return false;
 		Node nodeToCompare = (Node)obj;
-		return value == nodeToCompare.getValue(); 
+		return value == nodeToCompare.getValue() && (this.similarity == nodeToCompare.getSimilarity()); 
 		// && (data == test.data || (data != null && data.equals(test.data)));		
 	}
+	
 	
 	public int hashCode() {
 		return this.getValue().hashCode();
 	}
-	
-	
-	
 	
 	public boolean addChild(Node newChild) {
 		newChild.setFather(this);
@@ -47,12 +51,8 @@ public class Node {
 	
 	// TODO
 	public boolean removeChild(Node toRemove) {
-		
 		return false; 
 	}
-	
-	
-	
 	
 	public void setChildren(List<Node> children) {
 		this.children = children;
@@ -72,6 +72,17 @@ public class Node {
 	public String getValue() {
 		return value;
 	}
+	
+	
+	public void setSimilarity(Float similarity) {
+		this.similarity = similarity;
+		
+	}
+	
+	public Float getSimilarity() {
+		return this.similarity;
+	}
+	
 	
 	
 	public boolean hasFather(Node father) {
@@ -115,6 +126,52 @@ public class Node {
 		return found;
 	}
 
+	
+	
+	/* pseudo code per il merge dei nodi (si parte da cluster con un solo tag e si 
+	 * prosegue per i cluster composti da piœ tag) 
+	 * 
+	 * (init: similarity = 1.0; actualClusters)
+	 * 
+	 * Tree mergeClusters(List<Tree> actualClusters, Float similarity) {
+	 *		// posso fare a meno di una delle due condizioni?
+	 * 	if ((similarity == 0.0) || (actualClusters.length() == 1)) {
+	 * 		//termina l'algoritmo, restituisci il primo (e unico) elemento di actualClusters
+	 * 		return actualClusters.first();
+	 * 	} else {
+	 * 		//calcola la distanza tra tutti i cluster presenti in actualCluster
+	 * 		// se sono 4: dist12, dist13, dist14, dist23, dist24, dist34. 
+	 * 		// tutte le permutazioni, insomma. 
+	 * 		// se il valore di somiglianza che ho ottenuto (tra i cluster 
+	 * 		// 1 e 2 per esempio) Ž <= similarity, non lo considero.
+	 * 		// Se Ž maggiore, allora lo prendo e fondo i cluster 1 e 2 nel cluster X
+	 * 		// con valore di mergeSimilarity = similarity, aggiornando il valore del 
+	 * 		// centroide di X come somma di tutt i tag che include.   
+	 * 		
+	 * 		}
+	 * 
+	 * 	//diminuisci somiglianza e prosegui
+	 * 	similarity = similarity - 0.15;
+	 * 	
+	 * }
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * */
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public boolean hasSibling(Node c) {
 		return this.getFather().getChildren().contains(c);

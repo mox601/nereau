@@ -16,7 +16,6 @@ public class NodeTest {
 	private Node b;
 	private Node c;
 	
-	
 	/*
 	 * i test si scrivono con questa forma: assert*(expected, actual)
 	 * */
@@ -42,8 +41,14 @@ public class NodeTest {
 	 * un oggetto che sia progettato per modellare clusters */
 	@Test
 	public void costructorClusterData() {
+		String value = "cluster_value";
+		Float sim = new Float("2.0");
+		Node node = new Node(value, sim);		
+		assertEquals(sim, node.getSimilarity());
 		
 	}
+
+
 	
 	
 	@Test
