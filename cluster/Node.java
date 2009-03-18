@@ -14,6 +14,9 @@ public class Node {
 	/* per l'algoritmo di clustering */
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
+	
+	/* contiene all'inizio solo un tag, poi i nodi si fondono e contengono sempre piœ 
+	 * tags, fino a contenerli tutti */
 	private List<Tagtfidf> clusterTags; 
 	
 	public Node(String value) {
