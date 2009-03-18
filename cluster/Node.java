@@ -14,6 +14,7 @@ public class Node {
 	/* per l'algoritmo di clustering */
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
+	private List<Tagtfidf> clusterTags; 
 	
 	public Node(String value) {
 		this.value = value; 
@@ -127,6 +128,13 @@ public class Node {
 	}
 
 	
+	public String toString() {
+		/* returns a string description of node */
+		String description = this.value + "-" + this.getSimilarity();
+		return description;
+	}
+	
+	
 	
 	/* pseudo code per il merge dei nodi (si parte da cluster con un solo tag e si 
 	 * prosegue per i cluster composti da piœ tag) 
@@ -164,12 +172,6 @@ public class Node {
 	 * 
 	 * 
 	 * */
-	
-	
-	
-	
-	
-	
 	
 	
 

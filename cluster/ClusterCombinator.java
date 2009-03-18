@@ -7,6 +7,9 @@ import combinator.CombinationGenerator;
 
 public class ClusterCombinator {
 	
+	/* si costruisce passandogli la lista dei clusters da combinare
+	 * restituisce una lista di liste di combinazioni dei cluster presi 2 alla volta */
+	
 	private CombinationGenerator combinator;
 	private List<Node> clustersToCombine;
 	
@@ -18,14 +21,16 @@ public class ClusterCombinator {
 	
 	/* ottengo una lista di liste di coppie di nodi, le combinazioni di cui 
 	 * calcolare le distanze */
-	public List<List<Node>> getClusterCombinations() {
+	
+	public LinkedList<LinkedList<Node>> getClusterCombinations() {
 		
 		// devo ottenere una lista di liste di cluster, 
 		// tutte le combinazioni
 		
-		List<Node> clustersToCombine = new LinkedList<Node>();
+//		List<Node> clustersToCombine = new LinkedList<Node>();
+//		List<List<Node>> combinationList = new List<List<Node>>();
 		LinkedList<LinkedList<Node>> combinationList = new LinkedList<LinkedList<Node>>();
-	
+		
 		int[] indices;
 
 		while (combinator.hasMore ()) {
@@ -34,20 +39,12 @@ public class ClusterCombinator {
 		  for (int i = 0; i < indices.length; i++) {
 		    actualClusterCombination.add(clustersToCombine.get(indices[i]));
 		  }
-		  CombinationGenerator.clusterPrint(actualClusterCombination);
+//		  CombinationGenerator.clusterPrint(actualClusterCombination);
 		  combinationList.add((LinkedList<Node>) actualClusterCombination);
 		  
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		return null;
+		return combinationList;
 		
 	}
 	
