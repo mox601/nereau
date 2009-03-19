@@ -86,7 +86,9 @@ public class Tagtfidf {
 		
 	} 
 	
-
+	/*AAAAARRHRGGGGGGGGGGGHHHHHHHHHHH!!!!!!!!!!!!!!
+	 * la somiglianza si calcola tra due cluster!!!!!!!!!!!! 
+	 * Ž utile quando si deve applicare il clustering gerarchico!! */
 	/* calcola la coseno somiglianza tra tag corrente e tag parametro */
 	public Double cosineSimilarity(Tagtfidf tag) {
 		Double cosineValue = 0.0; 
