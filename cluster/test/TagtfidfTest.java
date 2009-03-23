@@ -54,7 +54,7 @@ public class TagtfidfTest {
 		blogUrl3Freq = new Integer(1929);
 		tagUrlsMap1.put(blogUrl3, blogUrl3Freq);
 		tag1 = new Tagtfidf(blogTag, tagUrlsMap1);
-		/* ho inserito tutt i (chiave,valore) nella Map. 
+		/* ho inserito tutti i (chiave,valore) nella Map. 
 		 * Ora il tag Ž rappresentato da 3 url, con la loro frequenza */
 		
 		
@@ -131,6 +131,11 @@ public class TagtfidfTest {
 		
 		
 	} 
+	
+	@Test
+	public void testModule() {
+		System.out.println("tag1 module " + tag1.getModule());
+	}
 	
 	
 	

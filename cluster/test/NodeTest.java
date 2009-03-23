@@ -5,10 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import cluster.Node;
+import cluster.Tagtfidf;
 
 public class NodeTest {
 	
@@ -48,6 +52,30 @@ public class NodeTest {
 		
 	}
 
+	
+	@Test
+	public void constructorClusterTag() {
+		String cluster_value = "cluster_value";
+		Float sim = new Float("2.0");
+		String tag_name = "search";
+		HashMap<String, Integer> tagUrlsMap = new HashMap<String, Integer>();
+		
+		String url1 = "www.google.it";
+		Integer url1freq = 7;
+		
+		String url2 = "www.yahoo.it";
+		Integer url2freq = 14;
+		
+		tagUrlsMap.put(url1, url1freq);
+		tagUrlsMap.put(url2, url2freq);
+		
+		Tagtfidf tag = 	new Tagtfidf(tag_name, tagUrlsMap);
+
+		
+		Node node = new Node(cluster_value, sim, tag);
+
+	}
+	
 
 	
 	

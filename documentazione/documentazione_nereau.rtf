@@ -66,6 +66,9 @@ Tagtfidf %%%\
 \
 \
 \
+\
+\
+\
 Passi della Tesi %%%%\
 1 - Clustering di tutti i tag di tutti gli utenti. Ottengo degli insiemi di tag, coerenti tra loro secondo (Gemmell2008 http://maya.cs.depaul.edu/~mobasher/papers/itwp08-gsmb.pdf - Shepitsen2008 http://maya.cs.depaul.edu/~mobasher/papers/recsys08_sgmb.pdf\
 ). \
@@ -95,7 +98,8 @@ Mij = Cij * log(n/URLti)\
 dove n \'e9 il numero di url (=il numero di colonne di C) e URLti \'e9 il numero di url taggati con ti. Cos\'ed il tag \'e9 un vettore riga, e l'url un vettore colonna. \
 osservazione 1: \
 tag simili annotano pagine simili e pagine simili sono annotate da tag simili. \
-da qui, la somiglianza tra 2 tag Sim(ti, tj) \'e9 la Cos(Ti, Tj) tra i vettori dei tags. + considerazioni linguistiche (stemming di Porter e punteggiatura)\
+da qui, la somiglianza tra 2 tag Sim(ti, tj) \'e9 la Cos(Ti, Tj) tra i vettori dei tags. + considerazioni linguistiche (stemming di Porter e punteggiatura). \
+Devo poter gestire un cambiamento nella rappresentazione dei dati: vorrei passare da tfidf tagXurl a una rappresentazione dei tag con le co-occorrenze tagXtag, e vedere come si comporta il clustering nei due casi. Potrei dover cambiare l'algoritmo di clustering. \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
 Passo 2 %%%%%%%%%%%%%%%%%%%%%\

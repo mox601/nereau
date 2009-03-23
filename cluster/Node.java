@@ -15,6 +15,8 @@ public class Node {
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
 	
+	private Tagtfidf centroid;
+	
 	/* contiene all'inizio solo un tag, poi i nodi si fondono e contengono sempre piœ 
 	 * tags, fino a contenerli tutti */
 	private List<Tagtfidf> clusterTags; 
@@ -25,9 +27,15 @@ public class Node {
 		
 	}
 	
-	public Node(String value, float similarity) {
+	public Node(String value, Float similarity) {
 		this.value = value;
 		this.similarity = similarity;
+	}
+	
+	public Node(String value, Float similarity, Tagtfidf tag) {
+		this.value = value;
+		this.similarity = similarity;
+		this.centroid = tag;
 	}
 	
 	
@@ -186,6 +194,14 @@ public class Node {
 
 	public boolean isLeaf() {
 		return this.children.isEmpty();
+	}
+
+	public void setCentroid(Tagtfidf centroid) {
+		this.centroid = centroid;
+	}
+
+	public Tagtfidf getCentroid() {
+		return centroid;
 	}
 
 

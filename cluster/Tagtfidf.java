@@ -1,5 +1,7 @@
 package cluster;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Tagtfidf {
@@ -31,11 +33,41 @@ public class Tagtfidf {
 	}
 	
 	/* confronto tra due tag */
-	public double compareToTag(Tagtfidf tagToCompare) {
-		double cosineSimilarity = 0;
+	public Double compareToTag(Tagtfidf tagToCompare) {
+		Double cosineSimilarity = 0.0;
+		
+		
+		
+		
+		/* Modulo (sqrt della somma di tutti i valori tf) 
+		 * dei due vettori Tagtfidf 
+		 * TODO: se uso tfidf cambia il risultato? */
+		/* Modulo tag 1 */
+		Double moduloTag1 = this.getModule();
+		
+		/* Modulo tag 2 */
+		Double moduloTag2 = tagToCompare.getModule();
+		
+		
+		
 		return cosineSimilarity;
 	}
 	
+	public Double getModule() {
+		Double module = 0.0;
+		/* somma tutti i quadrati degli elementi della mappa. */
+//		Collection<Integer> values = this.getTagUrlsMap().values();
+//		Iterator iterator = values.iterator();
+//		while (iterator.hasNext()) {
+//			Double squareValue = (Double)iterator.next();
+//			module = module + squareValue; 
+//		}
+
+		Math.sqrt(module.doubleValue());
+		
+		return module;
+	}
+
 	/* occhio al tipo di ritorno, vorrei fosse rappresentativo. 
 	 * TRUE/FALSE? */
 	/* TODO: ho levato il parametro Integer frequency:  
@@ -93,15 +125,21 @@ public class Tagtfidf {
 	public Double cosineSimilarity(Tagtfidf tag) {
 		Double cosineValue = 0.0; 
 		/* per ogni tag posso creare un vettore che contiene 0 se nel vettore corrente 
-		 * non Ž presente una chiave che invece c'Ž nell'altro 
+		 * non Ž presente una chiave-valore che invece c'Ž nell'altro
+		 *  
+		 * a1 b1 c1
+		 * d1 e1 f1
+		 * risultato: 
+		 * a1 b1 c1 00 00 00
+		 * 00 00 00 d1 e1 f1
+		 * Poi calcolo la coseno somiglianza tra questi due vettori.
 		 * 
-		 *  123
-		 *  456
-		 * result: 
-		 * 123000
-		 * 000456
-		 * (anche in ordine diverso)
-		 * Poi calcolo la coseno somiglianza tra questi due vettori. 
+		 *  oppure: 
+		 *  a1 b1 c1
+		 *  b1 d1 a1
+		 *  risultato: 
+		 *  a1 b1 c1 00
+		 *  a1 b1 00 d1
 		 * 
 		 * */
 		
