@@ -3,6 +3,8 @@ package cluster;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 public class Tagtfidf {
 	
@@ -36,37 +38,61 @@ public class Tagtfidf {
 	public Double compareToTag(Tagtfidf tagToCompare) {
 		Double cosineSimilarity = 0.0;
 		
+		Double numeratore = 0.0;
 		
+		Iterator<Entry<String, Integer>> iterator1 = this.getTagUrlsMap().entrySet().iterator();
 		
+		while (iterator1.hasNext()) {
+			Map.Entry<String, Integer> keyValue1 = (Entry<String, Integer>) iterator1.next();
+			Integer value2 = null;
+			value2 = tagToCompare.getUrlFrequency(keyValue1.getKey());
+			
+			/* fai il prodotto e aggiungi all'accumulatore */			
+			if (value2 != null) {
+//				System.out.println("keyfound: " + keyValue1.getKey() + " value: " + keyValue1.getValue());
+				numeratore = numeratore + (keyValue1.getValue() * value2);			
+			}
+				/* se nel secondo tag l'url cercato non Ž presente: 
+				 * avrebbe come occorrenza 0 e quindi si moltiplicherebbe il 
+				 * primo valore per 0: non Ž necessario aggiungere un caso else */	
+		}
+		
+			
 		
 		/* Modulo (sqrt della somma di tutti i valori tf) 
 		 * dei due vettori Tagtfidf 
 		 * TODO: se uso tfidf cambia il risultato? */
 		/* Modulo tag 1 */
 		Double moduloTag1 = this.getModule();
-		
 		/* Modulo tag 2 */
 		Double moduloTag2 = tagToCompare.getModule();
 		
 		
+		Double denominatore = moduloTag1 * moduloTag2;		
+//		System.out.println("denominatore: " + denominatore);
+		
+		cosineSimilarity = numeratore / denominatore;
 		
 		return cosineSimilarity;
 	}
 	
+	
 	public Double getModule() {
 		Double module = 0.0;
 		/* somma tutti i quadrati degli elementi della mappa. */
-//		Collection<Integer> values = this.getTagUrlsMap().values();
-//		Iterator iterator = values.iterator();
-//		while (iterator.hasNext()) {
-//			Double squareValue = (Double)iterator.next();
-//			module = module + squareValue; 
-//		}
-
-		Math.sqrt(module.doubleValue());
+		Collection<Integer> values = this.getTagUrlsMap().values();
 		
+		Iterator<Integer> it = values.iterator();
+		while (it.hasNext()) {
+			Integer value = (Integer) it.next();
+			module = module + Math.pow(value, 2);
+//			System.out.println(module.intValue());
+		}
+		module = Math.sqrt(module.doubleValue());
 		return module;
 	}
+	
+	
 
 	/* occhio al tipo di ritorno, vorrei fosse rappresentativo. 
 	 * TRUE/FALSE? */

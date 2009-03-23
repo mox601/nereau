@@ -3,6 +3,7 @@ package cluster.test;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.junit.Before;
@@ -51,7 +52,7 @@ public class TagtfidfTest {
 		blogUrl2Freq = new Integer(3277);
 		tagUrlsMap1.put(blogUrl2, blogUrl2Freq);
 		blogUrl3 = "http://www.formfiftyfive.com/";
-		blogUrl3Freq = new Integer(1929);
+		blogUrl3Freq = new Integer(2500);
 		tagUrlsMap1.put(blogUrl3, blogUrl3Freq);
 		tag1 = new Tagtfidf(blogTag, tagUrlsMap1);
 		/* ho inserito tutti i (chiave,valore) nella Map. 
@@ -69,7 +70,7 @@ public class TagtfidfTest {
 		designUrl2Freq = new Integer(399);
 		tagUrlsMap2.put(designUrl2, designUrl2Freq);
 		designUrl3 = "http://www.formfiftyfive.com/";
-		designUrl3Freq = new Integer(1345);
+		designUrl3Freq = new Integer(2000);
 		tagUrlsMap2.put(designUrl3, designUrl3Freq);
 		tag2 = new Tagtfidf(designTag, tagUrlsMap2);
 
@@ -77,6 +78,8 @@ public class TagtfidfTest {
 		
 		
 	}
+
+	
 	
 
 	@Test
@@ -107,8 +110,6 @@ public class TagtfidfTest {
 		assertNotNull(oldFrequency);
 		tag1.addUrlOccurrency(oldUrl);
 		assertEquals(new Integer(1 + oldFrequency), tag1.getUrlFrequency(oldUrl));
-
-		
 		
 		/* aggiunge al tag un'occorrenza di un sito nuovo */
 		String newUrl = "http://www.abkhfjdsohgos.it/";
@@ -122,19 +123,21 @@ public class TagtfidfTest {
 	
 	@Test
 	public void testCosineSimilarity() {
-		/* confronto i due tag blog (tag1) e design(tag2) */
-		
-		/* la coseno somiglianza Ž simmetrica */
-		Double cosSim12 = tag1.compareToTag(tag2);
-		Double cosSim21 = tag2.compareToTag(tag1);
-		assertTrue(cosSim12.equals(cosSim21));
-		
-		
 	} 
+	
+	
 	
 	@Test
 	public void testModule() {
-		System.out.println("tag1 module " + tag1.getModule());
+		Double expectedModule = 0.0;		
+		Iterator<Integer> it = tagUrlsMap1.values().iterator();
+		while (it.hasNext()) {
+			Integer value = (Integer) it.next();
+			expectedModule = expectedModule + Math.pow(value, 2); 
+		}
+		expectedModule = Math.sqrt(expectedModule);
+		assertEquals(expectedModule, tag1.getModule());
+		
 	}
 	
 	
@@ -142,7 +145,57 @@ public class TagtfidfTest {
 
 	@Test
 	public void testCompareToTag() {
-//		fail("Not yet implemented");
+		/* confronto i due tag blog (tag1) e design(tag2) */
+		
+		/* la coseno somiglianza Ž simmetrica */
+		Double cosSim12 = tag1.compareToTag(tag2);
+		Double cosSim21 = tag2.compareToTag(tag1);
+		
+		System.out.println("somiglianza: " + cosSim12);
+		assertTrue(cosSim12.equals(cosSim21));	}
+	
+	
+	
+	
+	
+	@Test
+	public void testCompareToTagBig() {
+		/* crea due tag con molti url, in numero random */
+		
+		String firstTagString = "tag_one";
+		Map<String, Integer> firstTagUrlsMap = new HashMap<String, Integer>();
+		String secondTagString = "tag_two";
+		Map<String, Integer> secondTagUrlsMap = new HashMap<String, Integer>();
+		
+		int numberOfUrls = (int) (Math.random() * 100);
+		System.out.println("numero di url 1: " + numberOfUrls);
+		for (int i = 0; i < numberOfUrls; i++) {
+
+			String key = "a";
+//			System.out.println(url);
+			
+			int urlTagFrequency = (int) (Math.random() * 100);
+			firstTagUrlsMap.put(key, urlTagFrequency);
+			
+			if (i % 2 == 0) {
+				/*aggiungi la stessa chiave con diverso valore all'altro tag */
+				secondTagUrlsMap.put(key, urlTagFrequency + (int) Math.random() * 40);
+			}
+
+		}
+		
+		Tagtfidf firstTag = new Tagtfidf(firstTagString, firstTagUrlsMap);
+		Tagtfidf secondTag = new Tagtfidf(secondTagString, secondTagUrlsMap);
+		
+		
+		/* la coseno somiglianza Ž simmetrica */
+		Double cosSim12 = firstTag.compareToTag(secondTag);
+		Double cosSim21 = secondTag.compareToTag(firstTag);
+		
+		System.out.println("somiglianza: " + cosSim12);
+		assertTrue(cosSim12.equals(cosSim21));	
+	
 	}
+	
 
 }
