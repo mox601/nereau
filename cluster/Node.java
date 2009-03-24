@@ -19,7 +19,10 @@ public class Node {
 	
 	/* contiene all'inizio solo un tag, poi i nodi si fondono e contengono sempre piœ 
 	 * tags, fino a contenerli tutti */
-	private List<Tagtfidf> clusterTags; 
+	/* posso non usarlo: per trovare i tag di un cluster si fa getLeaves sul cluster 
+	 * di cui si vuole conoscere la composizione */
+//	private List<Tagtfidf> clusterTags; 
+	
 	
 	public Node(String value) {
 		this.value = value; 
@@ -30,18 +33,61 @@ public class Node {
 	public Node(String value, Float similarity) {
 		this.value = value;
 		this.similarity = similarity;
+		this.children = new LinkedList<Node>();
+
 	}
 	
-	public Node(String value, Float similarity, Tagtfidf tag) {
+	public Node(String value, Tagtfidf tagCentroid) {
 		this.value = value;
-		this.similarity = similarity;
-		this.centroid = tag;
+//		this.similarity = similarity;
+		this.centroid = tagCentroid;
+		this.children = new LinkedList<Node>();
+	}
+	
+	public Node(List<Node> clustersToMerge) {
+		
+		
+//		Node mergedClusterNode = new Node(value, tagCentroid);
+		this.centroid = calculateAverageTag(clustersToMerge);
+		this.setChildren(clustersToMerge);
+		/* questo nodo Ž il padre per tutti i cluster fusi */
+		Iterator<Node> childrenIterator = this.getChildren().listIterator();
+		/* il valore del nodo Ž calcolato sulla base dei valori dei cluster di 
+		 * cui si crea il merge */
+		StringBuffer bufferValue = new StringBuffer();
+		while (childrenIterator.hasNext()) {
+			Node currentChild = childrenIterator.next();
+			currentChild.setFather(this);
+			bufferValue.append(currentChild.getValue()).append("/");
+		}
+		
+		/* rimuovo l'ultimo carattere / dallo StringBuffer? */
+		this.value = bufferValue.toString();
+		
+		
+		
 	}
 	
 	
+
 	/* Override dei metodi equals e hashCode per il confronto tra oggetti */
 	// TODO: cambiare se cambia la definizione dell'oggetto
 	
+
+	private Tagtfidf calculateAverageTag(List<Node> clustersToMerge) {
+		
+		Tagtfidf centroid = null;
+		int numberOfClusters = clustersToMerge.size();
+		Iterator<Node> clustersIterator = clustersToMerge.iterator();
+		while (clustersIterator.hasNext()) {
+			Node currentCluster = clustersIterator.next();
+			
+		}
+		
+		return centroid;
+		
+	}
+
 	public boolean equals(Object obj) {
 		
 		if (this == obj) return true;
@@ -144,6 +190,10 @@ public class Node {
 		String description = this.value + "-" + this.getSimilarity();
 		return description;
 	}
+	
+	
+	
+	
 	
 	
 	

@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -44,13 +46,55 @@ public class NodeTest {
 	/* test del costruttore che sar‡ usato effettivamente, devo salvare nel nodo 
 	 * un oggetto che sia progettato per modellare clusters */
 	@Test
-	public void costructorClusterData() {
+	public void constructorClusterData() {
 		String value = "cluster_value";
 		Float sim = new Float("2.0");
 		Node node = new Node(value, sim);		
 		assertEquals(sim, node.getSimilarity());
 		
 	}
+	
+	
+	@Test
+	public void mergeClusters() {
+		/* costruisco 2 nodi che contengono solo 1 tag ciascuno e li fondo 
+		 * poi costruisco un nuovo nodo con altri 2 tag e lo fondo con il cluster 
+		 * precedente */
+		
+		String tag1name = "design";
+		Map<String, Integer> tag1UrlsMap = new HashMap<String, Integer>();
+		String alist = "www.alistapart.com/";
+		int freqAlist = 1; 
+		tag1UrlsMap.put(alist, freqAlist);
+		String beyond ="www.googlebeyond.com/";
+		int freqBeyond = 2;
+		tag1UrlsMap.put(beyond, freqBeyond);
+		Tagtfidf tag1 = new Tagtfidf(tag1name, tag1UrlsMap);
+		
+		
+		String tag2name = "creativity";
+		Map<String, Integer> tag2UrlsMap = new HashMap<String, Integer>();
+		int freqAlist2 = 3;
+		tag2UrlsMap.put(alist, freqAlist2);
+		String google = "www.googlehacker.com/";
+		int freqGoogle = 7;
+		tag2UrlsMap.put(google, freqGoogle);
+		Tagtfidf tag2 = new Tagtfidf(tag2name, tag2UrlsMap);
+		
+		
+		/* costruisco i clusters singoli */
+		
+		Node cluster1 = new Node(tag1name, tag1);
+		Node cluster2 = new Node(tag2name, tag2);
+		
+		/* e costruisco il cluster come fusione di tag1 e tag2 */
+		List<Node> clustersToMerge = new LinkedList<Node>(); 
+		Node mergedCluster1 = new Node(clustersToMerge);
+		
+	}
+	
+	
+	
 
 	
 	@Test
