@@ -114,13 +114,18 @@ public class NodeTest {
 		tagUrlsMap.put(url2, url2freq);
 		
 		Tagtfidf tag = 	new Tagtfidf(tag_name, tagUrlsMap);
-
-		
-		Node node = new Node(cluster_value, sim, tag);
+		/* ho cambiato il costruttore */
+//		Node node = new Node(cluster_value, sim, tag);
 
 	}
 	
 
+	@Test
+	public void testAverageTag() {
+		
+//		Tagtfidf averageTag = Tagtfidf(tagsToMerge)
+	}
+	
 	
 	
 	@Test

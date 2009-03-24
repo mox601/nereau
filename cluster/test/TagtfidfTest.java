@@ -2,6 +2,8 @@ package cluster.test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -196,6 +198,19 @@ public class TagtfidfTest {
 		assertTrue(cosSim12.equals(cosSim21));	
 	
 	}
+	
+	
+	@Test
+	public void testGetKeys() {
+		ArrayList<String> keys = tag1.getKeys();
+		ArrayList<String> expectedKeys = new ArrayList<String>();
+		expectedKeys.add(blogUrl1);
+		expectedKeys.add(blogUrl2);
+		expectedKeys.add(blogUrl3);
+		assertTrue(keys.containsAll(expectedKeys));
+		
+	}
+	
 	
 
 }

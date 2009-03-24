@@ -1,4 +1,5 @@
 package cluster;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -46,7 +47,6 @@ public class Node {
 	
 	public Node(List<Node> clustersToMerge) {
 		
-		
 //		Node mergedClusterNode = new Node(value, tagCentroid);
 		this.centroid = calculateAverageTag(clustersToMerge);
 		this.setChildren(clustersToMerge);
@@ -63,9 +63,7 @@ public class Node {
 		
 		/* rimuovo l'ultimo carattere / dallo StringBuffer? */
 		this.value = bufferValue.toString();
-		
-		
-		
+
 	}
 	
 	
@@ -76,18 +74,39 @@ public class Node {
 
 	private Tagtfidf calculateAverageTag(List<Node> clustersToMerge) {
 		
-		Tagtfidf centroid = null;
-		int numberOfClusters = clustersToMerge.size();
+		
+		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
+		
+		/* aggiungi i tagtfidf in una lista */
 		Iterator<Node> clustersIterator = clustersToMerge.iterator();
 		while (clustersIterator.hasNext()) {
-			Node currentCluster = clustersIterator.next();
-			
+			tagsToMerge.add(clustersIterator.next().getCentroid());
 		}
+		Tagtfidf centroid = new Tagtfidf(tagsToMerge);
+		
+//		ArrayList<String> keys = getAllKeys(clustersToMerge);
+		
 		
 		return centroid;
 		
 	}
 
+	/* restituisce tutte le chiavi dei clusters */
+	private ArrayList<String> getAllKeys(List<Node> clusters) {
+		ArrayList<String> keys = new ArrayList<String>();
+		/* itera su tutti i clusters *
+		 * per ognuno, estrai le sue chiavi */
+		Iterator<Node> it = clusters.iterator();
+		while (it.hasNext()) {
+			Node currentCluster = it.next();
+			keys.addAll(currentCluster.getCentroid().getKeys());
+		}
+		
+		return keys;
+	}
+
+	
+	
 	public boolean equals(Object obj) {
 		
 		if (this == obj) return true;

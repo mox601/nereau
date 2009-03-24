@@ -1,7 +1,9 @@
 package cluster;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -33,6 +35,19 @@ public class Tagtfidf {
 		this.tagUrlsMap = tagUrlsMap;
 		this.totalUrls = new Integer(this.tagUrlsMap.size());
 	}
+	
+
+	public Tagtfidf(List<Tagtfidf> tagsToMerge) {
+		
+	/* costruisce un tag average con i tagsToMerge */
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 	/* confronto tra due tag */
 	public Double compareToTag(Tagtfidf tagToCompare) {
@@ -210,6 +225,19 @@ public class Tagtfidf {
 	public Integer getTotalUrls() {
 		return totalUrls;
 	}
+
+	public ArrayList<String> getKeys() {
+		ArrayList<String> keyList = new ArrayList<String>();
+		Collection<String> keys = this.getTagUrlsMap().keySet();
+		Iterator<String> it = keys.iterator();
+		while (it.hasNext()) {
+			keyList.add(it.next());
+		}
+		return keyList;
+		
+	}
+
+	
 
 	/**
 	 * @param totalUrls the totalUrls to set
