@@ -41,15 +41,44 @@ public class Tagtfidf {
 		
 	/* costruisce un tag average con i tagsToMerge */
 		
+		/* prendo tutte le chiavi che compaiono in tutti i tag */
+		ArrayList<String> tagsKeys = this.getAllKeys(tagsToMerge);
+		/* iterando su queste, estrae i valori di tutti i tags corrispondenti alla chiave 
+		 * richiesta: li somma tra loro e aggiunge la nuova (chiave, val1+...+valn) */
+		
+		for (String key : tagsKeys) {
+			/* estrai tutti i valori corrispondenti a questa chiave e sommali tra loro 
+			 * al termine aggiungi la nuova (key,sumValue)*/
+			
+		}
+		
+		
 	}
 	
 	
+	/* restituisce tutte le chiavi dei clusters */
+	private ArrayList<String> getAllKeys(List<Tagtfidf> tags) {
+		ArrayList<String> keys = new ArrayList<String>();
+		/* itera su tutti i tags *
+		 * per ognuno, estrai le sue chiavi */
+		Iterator<Tagtfidf> it = tags.iterator();
+		while (it.hasNext()) {
+			keys.addAll(it.next().getKeys());
+		}
+		
+		return keys;
+	}
+
 	
 	
 	
 	
 	
-	/* confronto tra due tag */
+	/*AAAAARRHRGGGGGGGGGGGHHHHHHHHHHH!!!!!!!!!!!!!!
+	 * la somiglianza si calcola tra due cluster!!!!!!!!!!!! 
+	 * Ž utile quando si deve applicare il clustering gerarchico!! */
+	
+	/* confronto tra due tag usando la coseno somiglianza */
 	public Double compareToTag(Tagtfidf tagToCompare) {
 		Double cosineSimilarity = 0.0;
 		
@@ -72,8 +101,6 @@ public class Tagtfidf {
 				 * primo valore per 0: non Ž necessario aggiungere un caso else */	
 		}
 		
-			
-		
 		/* Modulo (sqrt della somma di tutti i valori tf) 
 		 * dei due vettori Tagtfidf 
 		 * TODO: se uso tfidf cambia il risultato? */
@@ -81,8 +108,7 @@ public class Tagtfidf {
 		Double moduloTag1 = this.getModule();
 		/* Modulo tag 2 */
 		Double moduloTag2 = tagToCompare.getModule();
-		
-		
+			
 		Double denominatore = moduloTag1 * moduloTag2;		
 //		System.out.println("denominatore: " + denominatore);
 		
@@ -158,37 +184,6 @@ public class Tagtfidf {
 		return this.getTagUrlsMap().get(url);
 		
 	} 
-	
-	/*AAAAARRHRGGGGGGGGGGGHHHHHHHHHHH!!!!!!!!!!!!!!
-	 * la somiglianza si calcola tra due cluster!!!!!!!!!!!! 
-	 * Ž utile quando si deve applicare il clustering gerarchico!! */
-	/* calcola la coseno somiglianza tra tag corrente e tag parametro */
-	public Double cosineSimilarity(Tagtfidf tag) {
-		Double cosineValue = 0.0; 
-		/* per ogni tag posso creare un vettore che contiene 0 se nel vettore corrente 
-		 * non Ž presente una chiave-valore che invece c'Ž nell'altro
-		 *  
-		 * a1 b1 c1
-		 * d1 e1 f1
-		 * risultato: 
-		 * a1 b1 c1 00 00 00
-		 * 00 00 00 d1 e1 f1
-		 * Poi calcolo la coseno somiglianza tra questi due vettori.
-		 * 
-		 *  oppure: 
-		 *  a1 b1 c1
-		 *  b1 d1 a1
-		 *  risultato: 
-		 *  a1 b1 c1 00
-		 *  a1 b1 00 d1
-		 * 
-		 * */
-		
-		
-		
-		return cosineValue;
-	}
-	
 	
 
 	/**

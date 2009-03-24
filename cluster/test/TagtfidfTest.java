@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -153,8 +155,10 @@ public class TagtfidfTest {
 		Double cosSim12 = tag1.compareToTag(tag2);
 		Double cosSim21 = tag2.compareToTag(tag1);
 		
-		System.out.println("somiglianza: " + cosSim12);
-		assertTrue(cosSim12.equals(cosSim21));	}
+//		System.out.println("somiglianza: " + cosSim12);
+		assertTrue(cosSim12.equals(cosSim21));	
+		
+	}
 	
 	
 	
@@ -170,7 +174,7 @@ public class TagtfidfTest {
 		Map<String, Integer> secondTagUrlsMap = new HashMap<String, Integer>();
 		
 		int numberOfUrls = (int) (Math.random() * 100);
-		System.out.println("numero di url 1: " + numberOfUrls);
+//		System.out.println("numero di url 1: " + numberOfUrls);
 		for (int i = 0; i < numberOfUrls; i++) {
 
 			String key = "a";
@@ -194,7 +198,7 @@ public class TagtfidfTest {
 		Double cosSim12 = firstTag.compareToTag(secondTag);
 		Double cosSim21 = secondTag.compareToTag(firstTag);
 		
-		System.out.println("somiglianza: " + cosSim12);
+//		System.out.println("somiglianza: " + cosSim12);
 		assertTrue(cosSim12.equals(cosSim21));	
 	
 	}
@@ -210,6 +214,18 @@ public class TagtfidfTest {
 		assertTrue(keys.containsAll(expectedKeys));
 		
 	}
+	
+	@Test
+	public void constructorTagAverageFromList() {
+		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
+		
+		tagsToMerge.add(tag1);
+		tagsToMerge.add(tag2);
+		Tagtfidf mergedTags = new Tagtfidf(tagsToMerge);
+		
+		
+	}
+	
 	
 	
 

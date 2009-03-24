@@ -46,20 +46,27 @@ public class Node {
 	}
 	
 	public Node(List<Node> clustersToMerge) {
+		/* gli passo solo i tag di cui deve calcolare la media */
+		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
 		
 //		Node mergedClusterNode = new Node(value, tagCentroid);
-		this.centroid = calculateAverageTag(clustersToMerge);
 		this.setChildren(clustersToMerge);
 		/* questo nodo Ž il padre per tutti i cluster fusi */
 		Iterator<Node> childrenIterator = this.getChildren().listIterator();
 		/* il valore del nodo Ž calcolato sulla base dei valori dei cluster di 
 		 * cui si crea il merge */
 		StringBuffer bufferValue = new StringBuffer();
+		
 		while (childrenIterator.hasNext()) {
 			Node currentChild = childrenIterator.next();
 			currentChild.setFather(this);
 			bufferValue.append(currentChild.getValue()).append("/");
+			/* aggiungi i tag da fondere alla lista */
+			tagsToMerge.add(currentChild.getCentroid());
 		}
+		
+	
+		this.centroid = new Tagtfidf(tagsToMerge);
 		
 		/* rimuovo l'ultimo carattere / dallo StringBuffer? */
 		this.value = bufferValue.toString();
@@ -72,9 +79,7 @@ public class Node {
 	// TODO: cambiare se cambia la definizione dell'oggetto
 	
 
-	private Tagtfidf calculateAverageTag(List<Node> clustersToMerge) {
-		
-		
+	private Tagtfidf calculateAverageTag(List<Node> clustersToMerge) {		
 		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
 		
 		/* aggiungi i tagtfidf in una lista */
@@ -83,29 +88,12 @@ public class Node {
 			tagsToMerge.add(clustersIterator.next().getCentroid());
 		}
 		Tagtfidf centroid = new Tagtfidf(tagsToMerge);
-		
-//		ArrayList<String> keys = getAllKeys(clustersToMerge);
-		
-		
+				
 		return centroid;
 		
 	}
-
-	/* restituisce tutte le chiavi dei clusters */
-	private ArrayList<String> getAllKeys(List<Node> clusters) {
-		ArrayList<String> keys = new ArrayList<String>();
-		/* itera su tutti i clusters *
-		 * per ognuno, estrai le sue chiavi */
-		Iterator<Node> it = clusters.iterator();
-		while (it.hasNext()) {
-			Node currentCluster = it.next();
-			keys.addAll(currentCluster.getCentroid().getKeys());
-		}
-		
-		return keys;
-	}
-
 	
+
 	
 	public boolean equals(Object obj) {
 		
