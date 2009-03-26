@@ -2,6 +2,8 @@ package cluster;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,31 +43,71 @@ public class Tagtfidf {
 		
 	/* costruisce un tag average con i tagsToMerge */
 		
-		/* prendo tutte le chiavi che compaiono in tutti i tag */
+		this.tagUrlsMap = new HashMap<String, Integer>();
+		
+		/* prendo tutte le chiavi che compaiono in tutti i tag (senza ripetizioni) */
 		ArrayList<String> tagsKeys = this.getAllKeys(tagsToMerge);
 		/* iterando su queste, estrae i valori di tutti i tags corrispondenti alla chiave 
 		 * richiesta: li somma tra loro e aggiunge la nuova (chiave, val1+...+valn) */
-		
+		StringBuffer sb = new StringBuffer();
+
 		for (String key : tagsKeys) {
 			/* estrai tutti i valori corrispondenti a questa chiave e sommali tra loro 
-			 * al termine aggiungi la nuova (key,sumValue)*/
-			
+			 * al termine aggiungi la nuova (key,sumValue) */
+			Iterator<Tagtfidf> it = tagsToMerge.iterator();
+			Integer accumulatore = 0;
+			while(it.hasNext()) {
+				Tagtfidf currentTag = it.next();
+				
+				if (currentTag.getTagUrlsMap().containsKey(key)) {
+					accumulatore = accumulatore + currentTag.getValue(key);
+
+				}
+			}
+			/* aggiungo la chiave con il nuovo valore */
+			this.tagUrlsMap.put(key, accumulatore);
+		} // ciclo for
+		
+		/* costruisco il nome, iterando di nuovo */
+		
+		Iterator<Tagtfidf> itNome = tagsToMerge.iterator();
+		while (itNome.hasNext()) {
+			sb.append(itNome.next().getTag()).append("/");
 		}
 		
-		
+		this.tag = sb.toString();
+		/* rimuovo l'ultimo carattere, il / che avevo scritto come separatore */
+		this.tag = this.tag.substring(0, this.tag.length() - 1);		
 	}
+	
+	
+	
+	/* TODO: gestisci l'eccezione */
+	public Integer getValue(String url) {
+		Integer value = null;
+		if (this.getTagUrlsMap().containsKey(url)) {
+			value = this.getTagUrlsMap().get(url);
+		}
+		return value;
+	}
+	
 	
 	
 	/* restituisce tutte le chiavi dei clusters */
 	private ArrayList<String> getAllKeys(List<Tagtfidf> tags) {
-		ArrayList<String> keys = new ArrayList<String>();
+		ArrayList<String> keys;
+		Set<String> setKeys = new HashSet<String>();
 		/* itera su tutti i tags *
 		 * per ognuno, estrai le sue chiavi */
 		Iterator<Tagtfidf> it = tags.iterator();
 		while (it.hasNext()) {
-			keys.addAll(it.next().getKeys());
+			Tagtfidf currentTag = it.next();
+			setKeys.addAll(currentTag.getKeys());
 		}
 		
+		/* non devo considerare i duplicati dalla lista, Ž meglio se uso un set 
+		 * e poi lo ritrasformo in arraylist */
+		keys = new ArrayList<String>(setKeys);
 		return keys;
 	}
 

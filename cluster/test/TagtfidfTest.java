@@ -5,10 +5,12 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -127,6 +129,7 @@ public class TagtfidfTest {
 	
 	@Test
 	public void testCosineSimilarity() {
+		
 	} 
 	
 	
@@ -212,8 +215,10 @@ public class TagtfidfTest {
 		expectedKeys.add(blogUrl2);
 		expectedKeys.add(blogUrl3);
 		assertTrue(keys.containsAll(expectedKeys));
-		
 	}
+	
+	
+	
 	
 	@Test
 	public void constructorTagAverageFromList() {
@@ -223,6 +228,14 @@ public class TagtfidfTest {
 		tagsToMerge.add(tag2);
 		Tagtfidf mergedTags = new Tagtfidf(tagsToMerge);
 		
+		/* il tag merged deve contenere chiavi con i valori che sono la somma dei 
+		 * valori corrispondenti alle chiavi sommate */
+		mergedTags.getKeys();
+		Set<String> mergedKeys = new HashSet<String>(tag1.getKeys());
+		mergedKeys.addAll(tag2.getKeys());
+//		ArrayList<String> expectedKeyList = new ArrayList<String>(mergedKeys);
+		Set<String> actualSet = new HashSet<String>(mergedTags.getKeys());
+		assertEquals(mergedKeys, actualSet);
 		
 	}
 	

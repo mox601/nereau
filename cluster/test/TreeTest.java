@@ -109,9 +109,9 @@ public class TreeTest {
 		 * 		/  \  
 		 *    a     f
 		 *   / \   / \
-		 * b	c  g  h
+		 *  b	c  g  h
 		 *     / \
-		 *     d  e
+		 *    d   e
 		 * */
 		
 		/* the parameter in the method specifies the new value of the new root */
@@ -132,8 +132,6 @@ public class TreeTest {
 		oldRoots.add(f);
 		
 		assertEquals(oldRoots, mergedTree.getRoot().getChildren());
-		
-		
 		
 		/* test per getLeaves() */
 		

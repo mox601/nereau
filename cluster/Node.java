@@ -64,8 +64,6 @@ public class Node {
 			/* aggiungi i tag da fondere alla lista */
 			tagsToMerge.add(currentChild.getCentroid());
 		}
-		
-	
 		this.centroid = new Tagtfidf(tagsToMerge);
 		
 		/* rimuovo l'ultimo carattere / dallo StringBuffer? */

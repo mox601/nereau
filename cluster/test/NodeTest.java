@@ -61,7 +61,7 @@ public class NodeTest {
 		 * poi costruisco un nuovo nodo con altri 2 tag e lo fondo con il cluster 
 		 * precedente */
 		
-		String tag1name = "design";
+		String tag1Name = "design";
 		Map<String, Integer> tag1UrlsMap = new HashMap<String, Integer>();
 		String alist = "www.alistapart.com/";
 		int freqAlist = 1; 
@@ -69,27 +69,46 @@ public class NodeTest {
 		String beyond ="www.googlebeyond.com/";
 		int freqBeyond = 2;
 		tag1UrlsMap.put(beyond, freqBeyond);
-		Tagtfidf tag1 = new Tagtfidf(tag1name, tag1UrlsMap);
+		Tagtfidf tag1 = new Tagtfidf(tag1Name, tag1UrlsMap);
 		
 		
-		String tag2name = "creativity";
+		String tag2Name = "creativity";
 		Map<String, Integer> tag2UrlsMap = new HashMap<String, Integer>();
 		int freqAlist2 = 3;
 		tag2UrlsMap.put(alist, freqAlist2);
 		String google = "www.googlehacker.com/";
 		int freqGoogle = 7;
 		tag2UrlsMap.put(google, freqGoogle);
-		Tagtfidf tag2 = new Tagtfidf(tag2name, tag2UrlsMap);
-		
+		Tagtfidf tag2 = new Tagtfidf(tag2Name, tag2UrlsMap);
 		
 		/* costruisco i clusters singoli */
-		
-		Node cluster1 = new Node(tag1name, tag1);
-		Node cluster2 = new Node(tag2name, tag2);
+		Node cluster1 = new Node(tag1Name, tag1);
+		Node cluster2 = new Node(tag2Name, tag2);
 		
 		/* e costruisco il cluster come fusione di tag1 e tag2 */
 		List<Node> clustersToMerge = new LinkedList<Node>(); 
+		clustersToMerge.add(cluster1);
+		clustersToMerge.add(cluster2);
 		Node mergedCluster1 = new Node(clustersToMerge);
+		
+		/* verifico delle propriet‡ del cluster fusione */
+		/* il cluster deve avere nel nome delle sottostringhe con i nomi dei cluster 
+		 * di cui Ž fusione */
+		String expectedValue = cluster1.getValue();
+		String mergedValue = mergedCluster1.getValue();
+		System.out.println(mergedValue);
+		System.out.println(tag1Name);
+		System.out.println(tag2Name);
+		
+		boolean stringIncludesString = mergedValue.contains(tag1Name) && mergedValue.contains(tag2Name);
+		
+		
+		assertTrue(stringIncludesString);
+		
+		/* il centroide deve essere la somma dei centroidi dei tag di cui Ž fusione */
+		
+		/* */
+		
 		
 	}
 	
