@@ -12,7 +12,7 @@ public class ProvaGlobalProfileModel {
 		GlobalProfile globalProfile = new GlobalProfile();
 		GlobalProfileModel globalModel = new GlobalProfileModel(globalProfile);
 		
-		globalModel.updateGlobalProfileModel();
+//		globalModel.updateGlobalProfileModel();
 		
 
 	}

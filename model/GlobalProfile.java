@@ -12,8 +12,8 @@ public class GlobalProfile {
 	 * vengono salvati nel GlobalProfile come "entrypoint".
 	 * Mi interessa infatti sapere quali sono i valori tfidf per un certo tag. 
 	 *   
-	 * ultimo aggiornamento
-	 * numero di utenti rappresentati nel sistema
+	 * Come dati privati, contiene: 
+	 * data dell ultimo aggiornamento
 	 * numero di tag totali
 	 * 
 	 * costruttore + get e set degli attributi privati
