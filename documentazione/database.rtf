@@ -1,0 +1,51 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 database\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 Per ottenere un clustering "verosimile" e vedere dei risultati, devo fare un database che rappresenti tutti gli url visitati finora con i tag corrispondenti, per costruire i tagtfidf e successivamente clusterizzarli e vedere cosa esce fuori. \
+\'c9 necessario anche un metodo per visualizzare i cluster (un elenco di cluster). \
+\
+Il database che contiene i dati utili alla costruzione degli oggetti Tagtfidf deve essere fatto cos\'ed: \
+\
+\
+Gi\'e1 esiste un saveVisitedUrl, metodo di VisitedURLDAOPostgres, che avendo un url visitato e un utente, aggiorna la tabella visitedurls con i dati di iduser, url, query, expandedquery, date. \
+A me interessa che quando un utente visita un url, i tag dell'url visitato vengano salvati nella tabella Tagtfidf, che contiene per ogni tag gli url che ha annotato nella storia. L'estrazione dei tag da un url avviene solo quando il profilo utente \'e9 aggiornato, quindi il popolamento della tabella Tagtfidf avviene DOPO l'estrazione dei tag per ogni url. \
+1 - estraggo tag dall'url che ho visitato\
+2 - salvo i tag nella tabella Tagtfidf e in un'altra TagCooccurrencies, che rappresenta i tag come cooccorrenze. \
+3 - successivamente, ogni tanto, faccio il clustering dei Tagtfidf che ho trovato e salvo i risultati in un'altra tabella che verr\'e1 usata per tutti i calcoli fino al nuovo aggiornamento del Profilo Globale, quello che contiene tutti i Tagtfidf di tutti gli utenti. Il clustering dei TagCooccurrencies come si pu\'f3 fare? con lo stesso algoritmo?\
+\
+Tabella Tagtfidf %%%%%%%\
+Nella tabella Tagtfidf deve essere facile creare un oggetto Tagtfidf, che \'e9 fatto dal tag e dalle frequenze con cui \'e9 usato con i diversi url. \
+tag - url1 - url2- --- urlN\
+design 12 34 56 39 55 9 1 3\
+\
+tabella di Tagtf(idf)\
+id design url1\
+id design url2\
+id design url3\
+id google url5\
+id gmail urlN\
+id remove url3\
+id design urlN\
+\
+id idTag1 url1\
+id idTag1 url2\
+\
+%%% meglio! \
+id design url1 freq\
+id design url2 freq\
+id google url1 freq\
+id gmail url3 freq\
+\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 quindi, per ottenere tutti i Tagtfidf del sistema\
+faccio un select unique tagvalue e poi faccio una query per ogni valore ottenuto, costruendo un oggetto per ogni valore. \
+\
+In qualche modo nel db dovr\'f3 aggiornare la tabella Tagtfidf ogni volta che un utente visita un sito, mettendoci dentro i tag che sono stati usati per quell'url. Perci\'f3 vorrei conoscere i tag associati ad ogni url visitato con un click dall'utente. \
+L'insieme dei tagtfidf rappresenta quindi un GlobalProfile che \'e9 aggiornato ogni volta che un utente clicca su un sito. Si aggiorna aggiungendo un'occorrenza a tutti i tag che annotano l'url cliccato.\
+}

@@ -1,57 +1,11 @@
 {\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;}
 {\colortbl;\red255\green255\blue255;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
-\f0\fs24 \cf0 \
-DAO %%%%%%%%%%%%%%%%%%%%%\
-Gli UserDAO, ProfileDAO, etc sono interfacce che vengono implementate da classi UserDAOPostgres, *DAOPostgres, etc. \
-I DAOPostgres implementano le funzioni che sono necessarie alla query del db, etc. per esempio, UserDAOPostgres ha \
-public User authenticateUser(string, string)\
-che fa query al db e restituisce l'utente autenticato. \
-In conclusione, ha praticamente le operazioni CRUD per l'oggetto utente. \
-Si usano i prepared statement, delle stringhe final per fare query al db in modo sicuro. \
-\
-FACADE %%%%%%%%%%%%%%%%%%%%%\
-UserFacade, UserModelFacade invece incapsulano le operazioni che sono offerte dai livelli di astrazione pi\'fa bassi. Gestiscono per\'f3 le eccezioni lanciate dai metodi dei vari UserDAO, UserModelDAO, etc  con try-catch\
-Ha come attributo private e static la sua stessa istanza, che si ottiene con public static synchronized getInstance. \
-\
-static \'e9 per indicare i metodi di classe, accessibili e visibili da tutte le istanze della classe UserModelFacade. \
-synchronized serve: \
-1 per evitare che due chiamate al metodo synchronized si intreccino (sovrappongano). il primo esegue il metodo, e il secondo aspetta fino al termine in sospensione e poi prosegue. \
-2 quando un metodo synchronized termina, accade sempre prima di una qualsiasi successiva invocazione del metodo synchronized, rendendo visibili i cambi di stato dell'oggetto a tutti i thread successivi. \
-Insomma: interferenza tra thread e consistenza della memoria. \
-\
-\
-MainServer %%%%%\
-accetta connessioni su una certa porta dove resta in ascolto, e lancia un thread NereauCommandServer(clientSocket) che serve la connessione messa in piedi. \
-\
-NereauCommandServer(socket clientsocket) %%%%%\
-\'e9 il thread che serve le connessioni. \
-Dalle stringhe che riceve sul buffer costruisce con new JSONObject(line), che poi separa in cmd e args. \
-a seconda del tipo di comando, istanzia un executor diverso, uno adeguato ad ogni tipo di azione. (expand, save_visited_url, update, login, update_all, save_user, etc etc). Le azioni sono inviate dalle pagine php che si trovano sul server, a seconda delle pagine e dei click fatti dall'utente. \
-Le azioni pi\'fa interessanti sono (expand; save_visited_url; update; update_all; save_user; update_user)\
-successivamente si ottiene una risposta dall'executor lanciato e si stampa la risosta come JSONResponse. poi si chiudono i buffer e la socket. \
-\
-CommandExecutor %%%%\
-tutti gli esecutori estendono questa classe astratta abstract, il cui metodo principale \'e9 getJSONResponse(). Ognuno si costruisce la sua risposta, chiamando il comando adatto sull'oggetto nereau che \'e9 un attributo protected della classe CommandExecutor. Quando si crea il ExpandExecutor, si fa super(args), che sarebbe il costruttore della classe astratta CommandExecutor \
-\pard\pardeftab720\ql\qnatural
-\cf0 public CommandExecutor(JSONObject args) \{\
-		this.args = args;\
-		this.nereau = Nereau.getInstance();\
-	\}\
-che richiama Nereau.getInstance() per avere l'istanza di nereau che sta girando (il server)\
-Ha un metodo standard per la costruzione della risposta JSON standard, usato in caso di errore o casi particolari (no db, query non espansa, etc... )\
-\
-\
-Nereau %%%%%%\
-ha un metodo\
-public static synchronized Nereau getInstance() che restituisce una e una sola istanza, sempre la stessa, del server di nereau. \
-\
-\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
-\cf0 il metodo di nereau che viene chiamato dall'expandExecutor \'e9 Set<ExpandedQuery> expQueries nereau.expandQuery(queryString, user)\
-\
+\f0\fs24 \cf0 documentazione Nereau 0.8\
+versione con tag clustering\
 \
 Nuovi packages: \
 cluster %%%%%\
@@ -61,7 +15,7 @@ combinator %%%%%\
 nuove classi: \
 Tagtfidf %%%\
 \
-Classe che fa clustering dei tag. \
+Classe che fa clustering dei tag %%%\
 l'oggetto clusterer riceve una lista di clusters, e comincia il clustering. \
 Si comincia con parametro_somiglianza=1.0, e lo si decrementa ad ogni passo fino a 0.0, con step=0.15 per esempio. \
 Ha un metodo iterativo che organizza la lista di clusters che riceve in input: \
@@ -71,63 +25,18 @@ Ha un metodo iterativo che organizza la lista di clusters che riceve in input: \
 (ripeto 1-3 finch\'e9 non ho solo un cluster nella lista (oppure il parametro_somiglianza \'e9 0.0 - dovrebbe essere lo stesso. ))\
 \
 \
-Per ottenere un clustering "verosimile" e vedere dei risultati, devo fare un database che rappresenti tutti gli url visitati finora con i tag corrispondenti, per costruire i tagtfidf e successivamente clusterizzarli e vedere cosa esce fuori. \
-\'c9 necessario anche un metodo per visualizzare i cluster (un elenco di cluster). \
 \
-\
-\
-\
-\
-\
-Passi della Tesi %%%%\
-1 - Clustering di tutti i tag di tutti gli utenti. Ottengo degli insiemi di tag, coerenti tra loro secondo (Gemmell2008 http://maya.cs.depaul.edu/~mobasher/papers/itwp08-gsmb.pdf - Shepitsen2008 http://maya.cs.depaul.edu/~mobasher/papers/recsys08_sgmb.pdf\
-). \
-\
-2 - I tag candidati da nereau per l'espansione capiteranno cos\'ed in diversi cluster (vedi dopo per la scelta di un clustering utile nella gerarchia di cluster). \
-\
-3 - Ora posso calcolare le relazioni tra i tag di uno stesso cluster, costruendo una foresta di alberi: ognuno mi rappresenta i diversi livelli di astrazione dei tag. (LiBao2007 - http://www2007.org/papers/paper733.pdf)\
-\
-4 - Da ogni albero della foresta, calcolo l'espansione da effettuare in base alla rilevanza di ogni tag per l'utente (se \'e9 diverso, allora due espansioni diverse) con un algoritmo ricorsivo sui nodi degli alberi. \
-\
-5 - Otteniamo cos\'ed un insieme di sequenze di tag, e ogni sequenza dovr\'e1 dare origine ad un'espansione distinta. \
-(tag1, tag2, tag3) -------> espansione1\
-(tag4, tag5, tag6) -------> espansione2\
-etc...\
-Ogni tag \'e9 un vettore con i pesi dei diversi termini (come nereau normale): per fare un'espansione di due (o pi\'fa) tag contemporaneamente, si sommano membro a membro questi vettori. Si prosegue come nereau normale. \
-\
-\
-Passo 1 %%%%%%%%%%%%%%%%%%%%%\
-Rappresentazione dei dati: \
-in delicious una annotazione \'e9 una quadrupla: \
-(user, URL, tag, time)\
-possiamo vedere le annotazioni come punti in uno spazio a molte dimensioni. Rappresentazione dei tags\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
-\cf0 matrice C mxn (tagXurl) dove l'elemento Cij \'e9 il numero di persone che hanno annotato la risorsa j con il tag i. \
-M invece (matrice delle associazioni - derivata da C) \'e9 sempre mxn, ma si ispira al TF*IDF. \
-Mij = Cij * log(n/URLti)\
-dove n \'e9 il numero di url (=il numero di colonne di C) e URLti \'e9 il numero di url taggati con ti. Cos\'ed il tag \'e9 un vettore riga, e l'url un vettore colonna. \
-osservazione 1: \
-tag simili annotano pagine simili e pagine simili sono annotate da tag simili. \
-da qui, la somiglianza tra 2 tag Sim(ti, tj) \'e9 la Cos(Ti, Tj) tra i vettori dei tags. + considerazioni linguistiche (stemming di Porter e punteggiatura). \
-Devo poter gestire un cambiamento nella rappresentazione dei dati: vorrei passare da tfidf tagXurl a una rappresentazione dei tag con le co-occorrenze tagXtag, e vedere come si comporta il clustering nei due casi. Potrei dover cambiare l'algoritmo di clustering. \
+Insieme dei Tagtfidf %%%\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 In sostanza posso modellare la matrice tfidf con tutti i tag (la tabella Tagtfidf) come un GlobalProfile che viene aggiornato ogni volta che un utente qualsiasi clicca su un sito. Sar\'e1 aggiornato aggiungendo un'occorrenza a tutti i tag che annotano l'url cliccato. \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 %%%%%%%\
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
-Passo 2 %%%%%%%%%%%%%%%%%%%%%\
-(devo decidere in quanti cluster suddividere i tag del sistema in relazione ai tag candidati)\
-Avendo ottenuto una gerarchia di clusters da LiBao2007, posso decidere quale di questi clustering \'e9 pi\'fa adatto rispetto ai tag candidati: se tutti i tag capitano in un unico cluster, dovr\'f3 scegliere un clustering a grana pi\'fa fine, altrimenti non \'e9 un clustering utile per i miei tag). Dall'algoritmo di LiBao2007, vedo in quale momento l'ultimo tag (quello pi\'fa 'diverso', 'isolato') viene aggiunto ad un cluster qualsiasi durante la costruzione del clustering. In quel momento (o uno, due, x livelli pi\'fa in alto nella gerarchia dei cluster) assumo che gli altri cluster abbiano una struttura utile ai nostri fini. Il clustering \'e9 deciso. \
 \
 \
-Passo 3 %%%%%%%%%%%%%%%%%%%%%\
-Si inferiscono i livelli di astrazione dei tag calcolando i parametri descritti in LiBao2007: Coverage; Intersection Rate; etc... sempre sfruttando i dati di tutti gli utenti di nereau. \
-Confrontando i tag rispetto a questi parametri, si pu\'f3 costruire una gerarchia dei tag, ottenendo presumibilmente un albero (o una foresta) in cui il nodo padre \'e9 semanticamente pi\'fa astratto rispetto al figlio. \
-\
-Passo 4 %%%%%%%%%%%%%%%%%%%%%\
-Partendo dal nodo radice dell'albero (e ripetendo per tutti gli alberi del cluster, se necessario) si analizzano i tag che si incontrano nel cammino fino alle foglie. \
-(vedi esempio sul pdf). \
-Durante questo passo, il profilo utente \'e9 modellato come matrice di co-occorrenza tag-tag, e la somiglianza tra due tag \'e9 valutata proprio confrontando i valori della matrice (oppure i vettori riga, come dicevi oggi in sala). \
-Se due tag (tag1 e tag2, fratelli) sono diversi secondo il profilo utente, si creano due sequenze diverse: (padre-tag1) e (padre-tag2) che contribuiranno a due espansioni diverse. \
-\
-Passo 5 %%%%%%%%%%%%%%%%%%%%%\
 \
 \
 \

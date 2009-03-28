@@ -61,7 +61,6 @@ public class Tagtfidf {
 				
 				if (currentTag.getTagUrlsMap().containsKey(key)) {
 					accumulatore = accumulatore + currentTag.getValue(key);
-
 				}
 			}
 			/* aggiungo la chiave con il nuovo valore */
@@ -79,7 +78,6 @@ public class Tagtfidf {
 		/* rimuovo l'ultimo carattere, il / che avevo scritto come separatore */
 		this.tag = this.tag.substring(0, this.tag.length() - 1);		
 	}
-	
 	
 	
 	/* TODO: gestisci l'eccezione */
@@ -111,10 +109,6 @@ public class Tagtfidf {
 		return keys;
 	}
 
-	
-	
-	
-	
 	
 	/*AAAAARRHRGGGGGGGGGGGHHHHHHHHHHH!!!!!!!!!!!!!!
 	 * la somiglianza si calcola tra due cluster!!!!!!!!!!!! 
@@ -175,7 +169,6 @@ public class Tagtfidf {
 		return module;
 	}
 	
-	
 
 	/* occhio al tipo di ritorno, vorrei fosse rappresentativo. 
 	 * TRUE/FALSE? */
@@ -207,17 +200,6 @@ public class Tagtfidf {
 		
 		return success;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -274,7 +256,6 @@ public class Tagtfidf {
 		
 	}
 
-	
 
 	/**
 	 * @param totalUrls the totalUrls to set
@@ -283,8 +264,6 @@ public class Tagtfidf {
 //	public void setTotalUrls(int totalUrls) {
 //		this.totalUrls = totalUrls;
 //	}
-
-	
 
 	
 }

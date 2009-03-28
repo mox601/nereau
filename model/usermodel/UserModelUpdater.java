@@ -70,6 +70,10 @@ public class UserModelUpdater {
 			this.update(user);
 	}
 
+	
+	/* questo metodo si occupa di aggiornare il profilo utente, basandosi sugli url 
+	 * visitati dall'utente (nella storia o nell'immediato, se li passo nel metodo update) 
+	 * */
 	public void update(User user) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		
@@ -83,7 +87,7 @@ public class UserModelUpdater {
 			visitedURLs = this.vUrls;
 		else {
 			try {
-				/* altrimenti, devi prendere dal db tutti gli url visitati dallo user */
+				/* altrimenti, devi prendere dal db TUTTI gli url visitati dallo user */
 				visitedURLs = this.visitedURLHandler.retrieveLastVisitedURLs(user);
 				logger.info("url visitati: " + visitedURLs);
 			}

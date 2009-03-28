@@ -53,21 +53,22 @@ public class Node {
 		this.setChildren(clustersToMerge);
 		/* questo nodo Ž il padre per tutti i cluster fusi */
 		Iterator<Node> childrenIterator = this.getChildren().listIterator();
-		/* il valore del nodo Ž calcolato sulla base dei valori dei cluster di 
-		 * cui si crea il merge */
-		StringBuffer bufferValue = new StringBuffer();
+		/* il valore del nodo Ž calcolato sulla base del valore che 
+		 * ha il Tagtfidf creato come fusione */
 		
 		while (childrenIterator.hasNext()) {
 			Node currentChild = childrenIterator.next();
 			currentChild.setFather(this);
-			bufferValue.append(currentChild.getValue()).append("/");
 			/* aggiungi i tag da fondere alla lista */
 			tagsToMerge.add(currentChild.getCentroid());
 		}
 		this.centroid = new Tagtfidf(tagsToMerge);
 		
-		/* rimuovo l'ultimo carattere / dallo StringBuffer? */
-		this.value = bufferValue.toString();
+		/* valore preso dal Tagtfidf */
+		this.value = this.centroid.getTag();
+//		this.value = bufferValue.toString();
+//		this.value = this.value.substring(0, this.value.length() - 1);		
+
 
 	}
 	

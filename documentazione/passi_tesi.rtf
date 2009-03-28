@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+\
+\
+\
+Passi della Tesi %%%%\
+1 - Clustering di tutti i tag di tutti gli utenti. Ottengo degli insiemi di tag, coerenti tra loro secondo (Gemmell2008 http://maya.cs.depaul.edu/~mobasher/papers/itwp08-gsmb.pdf - Shepitsen2008 http://maya.cs.depaul.edu/~mobasher/papers/recsys08_sgmb.pdf\
+). \
+\
+2 - I tag candidati da nereau per l'espansione capiteranno cos\'ed in diversi cluster (vedi dopo per la scelta di un clustering utile nella gerarchia di cluster). \
+\
+3 - Ora posso calcolare le relazioni tra i tag di uno stesso cluster, costruendo una foresta di alberi: ognuno mi rappresenta i diversi livelli di astrazione dei tag. (LiBao2007 - http://www2007.org/papers/paper733.pdf)\
+\
+4 - Da ogni albero della foresta, calcolo l'espansione da effettuare in base alla rilevanza di ogni tag per l'utente (se \'e9 diverso, allora due espansioni diverse) con un algoritmo ricorsivo sui nodi degli alberi. \
+\
+5 - Otteniamo cos\'ed un insieme di sequenze di tag, e ogni sequenza dovr\'e1 dare origine ad un'espansione distinta. \
+(tag1, tag2, tag3) -------> espansione1\
+(tag4, tag5, tag6) -------> espansione2\
+etc...\
+Ogni tag \'e9 un vettore con i pesi dei diversi termini (come nereau normale): per fare un'espansione di due (o pi\'fa) tag contemporaneamente, si sommano membro a membro questi vettori. Si prosegue come nereau normale. \
+\
+\
+Passo 1 %%%%%%%%%%%%%%%%%%%%%\
+Rappresentazione dei dati: \
+in delicious una annotazione \'e9 una quadrupla: \
+(user, URL, tag, time)\
+possiamo vedere le annotazioni come punti in uno spazio a molte dimensioni. Rappresentazione dei tags\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 matrice C mxn (tagXurl) dove l'elemento Cij \'e9 il numero di persone che hanno annotato la risorsa j con il tag i. \
+M invece (matrice delle associazioni - derivata da C) \'e9 sempre mxn, ma si ispira al TF*IDF. \
+Mij = Cij * log(n/URLti)\
+dove n \'e9 il numero di url (=il numero di colonne di C) e URLti \'e9 il numero di url taggati con ti. Cos\'ed il tag \'e9 un vettore riga, e l'url un vettore colonna. \
+osservazione 1: \
+tag simili annotano pagine simili e pagine simili sono annotate da tag simili. \
+da qui, la somiglianza tra 2 tag Sim(ti, tj) \'e9 la Cos(Ti, Tj) tra i vettori dei tags. + considerazioni linguistiche (stemming di Porter e punteggiatura). \
+Devo poter gestire un cambiamento nella rappresentazione dei dati: vorrei passare da tfidf tagXurl a una rappresentazione dei tag con le co-occorrenze tagXtag, e vedere come si comporta il clustering nei due casi. Potrei dover cambiare l'algoritmo di clustering. \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+Passo 2 %%%%%%%%%%%%%%%%%%%%%\
+(devo decidere in quanti cluster suddividere i tag del sistema in relazione ai tag candidati)\
+Avendo ottenuto una gerarchia di clusters da LiBao2007, posso decidere quale di questi clustering \'e9 pi\'fa adatto rispetto ai tag candidati: se tutti i tag capitano in un unico cluster, dovr\'f3 scegliere un clustering a grana pi\'fa fine, altrimenti non \'e9 un clustering utile per i miei tag). Dall'algoritmo di LiBao2007, vedo in quale momento l'ultimo tag (quello pi\'fa 'diverso', 'isolato') viene aggiunto ad un cluster qualsiasi durante la costruzione del clustering. In quel momento (o uno, due, x livelli pi\'fa in alto nella gerarchia dei cluster) assumo che gli altri cluster abbiano una struttura utile ai nostri fini. Il clustering \'e9 deciso. \
+\
+\
+Passo 3 %%%%%%%%%%%%%%%%%%%%%\
+Si inferiscono i livelli di astrazione dei tag calcolando i parametri descritti in LiBao2007: Coverage; Intersection Rate; etc... sempre sfruttando i dati di tutti gli utenti di nereau. \
+Confrontando i tag rispetto a questi parametri, si pu\'f3 costruire una gerarchia dei tag, ottenendo presumibilmente un albero (o una foresta) in cui il nodo padre \'e9 semanticamente pi\'fa astratto rispetto al figlio. \
+\
+Passo 4 %%%%%%%%%%%%%%%%%%%%%\
+Partendo dal nodo radice dell'albero (e ripetendo per tutti gli alberi del cluster, se necessario) si analizzano i tag che si incontrano nel cammino fino alle foglie. \
+(vedi esempio sul pdf). \
+Durante questo passo, il profilo utente \'e9 modellato come matrice di co-occorrenza tag-tag, e la somiglianza tra due tag \'e9 valutata proprio confrontando i valori della matrice (oppure i vettori riga, come dicevi oggi in sala). \
+Se due tag (tag1 e tag2, fratelli) sono diversi secondo il profilo utente, si creano due sequenze diverse: (padre-tag1) e (padre-tag2) che contribuiranno a due espansioni diverse. \
+\
+Passo 5 %%%%%%%%%%%%%%%%%%%%%\
+\
+\
+\
+\
+}

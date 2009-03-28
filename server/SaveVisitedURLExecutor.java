@@ -56,6 +56,9 @@ public class SaveVisitedURLExecutor extends CommandExecutor {
 			expQuery = new ExpandedQuery(expandedQueryString,expansionTags);
 		}
 		VisitedURL vUrl = new VisitedURL(urlString,query,expQuery);
+		/* qui salva l'url visitato, tenendo traccia della query fatta dall'utente 
+		 * e della query espansa (se Ž stato cliccato su un url nella finestra delle 
+		 * query espanse) */
 		nereau.saveVisitedURL(vUrl, user);
 		
 		//E IN UNA RIGA CREO' IL MONDO!

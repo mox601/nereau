@@ -187,7 +187,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 			else
 				expansionTags = new HashSet<RankedTag>();
 			
-			//save visited url
+			//save visited url per un utente nuovo?
 			if(user.getUserID()<=0) {
 				statement = connection.prepareStatement(SQL_INSERT);
 				statement.setString(1, username);
@@ -199,6 +199,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 					statement.setString(4, "");
 				statement.setLong(5, date);
 			}
+			//salva l'url visitato per un utente esistente
 			else {
 				statement = connection.prepareStatement(SQL_INSERT_BY_USERID);
 				statement.setInt(1, user.getUserID());

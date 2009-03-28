@@ -10,9 +10,9 @@ public class ClusterBuilder {
 		this.clustersToMerge = clusters;
 	}
 	
-	
 	/* metodo che costruisce i clusters iterativamente */
 	public void buildClusters() {
+		
 		
 	}
 

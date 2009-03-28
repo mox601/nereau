@@ -96,10 +96,10 @@ public class NodeTest {
 		 * di cui Ž fusione */
 		String expectedValue = cluster1.getValue();
 		String mergedValue = mergedCluster1.getValue();
-		System.out.println(mergedValue);
-		System.out.println(tag1Name);
-		System.out.println(tag2Name);
-		
+//		System.out.println(mergedValue);
+//		System.out.println(tag1Name);
+//		System.out.println(tag2Name);
+//		
 		boolean stringIncludesString = mergedValue.contains(tag1Name) && mergedValue.contains(tag2Name);
 		
 		
