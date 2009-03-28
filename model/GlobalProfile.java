@@ -4,7 +4,8 @@ public class GlobalProfile {
 	
 	private GlobalProfileModel globalProfileModel; 
 	
-	/* il global profile Ž un profilo condiviso da tutti gli utenti: 
+	/* il global profile Ž un profilo condiviso da tutti gli utenti. 
+	 * potrebbe essere superfluo, contiene solo il globalprofilemodel
 	 * contiene il Profile Model, che contiene 
 	 * tutti gli oggetti Tagtfidf del sistema, che vengono aggiornati mano 
 	 * mano che gli utenti cliccano sui siti. 
