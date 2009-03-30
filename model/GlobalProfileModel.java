@@ -6,7 +6,6 @@ import java.util.Map;
 
 import cluster.Tagtfidf;
 
-import persistence.GlobalProfileDAO;
 import persistence.GlobalProfileModelDAO;
 import persistence.UserDAO;
 import persistence.UserModelDAO;
@@ -19,20 +18,19 @@ public class GlobalProfileModel {
 	 * vengono salvati nel GlobalProfile come "entrypoint".
 	 * Mi interessa infatti sapere quali sono i valori tfidf per un certo tag. */ 
 
-	private GlobalProfile globalProfile;
+//	private GlobalProfile globalProfile;
 	/* gestori del profilo globale */
 //	private UserModelDAO userModelHandler;
 	private GlobalProfileModelDAO globalProfileModelHandler;
 //	private UserDAO userHandler;
-	private GlobalProfileDAO globalProfileHandler;
+//	private GlobalProfileDAO globalProfileHandler;
 	
 	/* lista di Tagtfidf */
 //	private Map<String, Map<RankedTag, Map<String, Double>>> userMatrix;
 	private List<Tagtfidf> tags;
+	private int usersNumber;
 	
-	public GlobalProfileModel(GlobalProfile globalProfile) {
-		this.globalProfile = globalProfile;
-		/* assegno i gestori del profilo globale */
-	}
-
+	
+	
+	
 }
