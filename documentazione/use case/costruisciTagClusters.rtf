@@ -5,4 +5,21 @@
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 
 \f0\fs24 \cf0 il sistema costruisce i cluster di tutti i tag presenti nel sistema, usando tutti gli url visitati da tutti gli utenti e i loro tag associati. \
-genera un certo numero di set di tags a grana pi\'fa o meno fine}
+\
+La rappresentazione dei tag pu\'f3 essere di due tipi: \
+1) TagTfidf tag-url dove ogni valore \'e9 il tf(t1, u1) (l'idf \'e9 salvato come attributo del tag o globale), cio\'e9 il numero di volte che il tag t1 \'e9 stato usato per annotare l'url u1 in questione. L'algoritmo di clustering \'e9 quello gerarchico di Shepitsen, che \'e9 gi\'e1 progettato per questa rappresentazione\
+\
+2) co-occorrenza tag-tag, dove ogni tag \'e9 rappresentato come le relative co-occorrenze. Posso usare lo stesso algoritmo gerarchico, basato su coseno-somiglianza? Secondo Cattuto2008 per calcolare la somiglianza si potrebbe fare in 2 (3) modi: co-occorrenza oppure coseno somiglianza di distribuzioni di co-occorrenza. \
+\
+Fatto sta che bisogna decidere come generare i clusters quando fondo i tag: \
+se ho due tag t1 e t2 con coseno somiglianza alta e decido di fonderli, come sar\'e1 la loro rappresentazione complessiva, del cluster t1 OR t2?\
+Seguendo una logica basata sull'unione (OR) dei tag, potrei sommare semplicemente i due vettori vt1 e vt2 che rappresentano i tag. \
+esempio: \
+vt1: 0 10 20 30 50\
+vt2: 3 0   30 10 60\
+(ho degli 0 perch\'e9 la co-occorrenza tn-tn non ha significato)\
+ipotizzando vt1 e vt2 simili secondo un criterio di somiglianza (co-occorrenza semplice oppure coseno somiglianza delle cooccorrenze, non importa) potrei fondere i due tag nel cluster (t1-t2), rappresentato dal vettore somma\
+vt12: 3 10 50 40 110\
+\
+I risultati (appartenenza tag-cluster) sono poi salvati in una tabella del database. \
+Genera un certo numero di cluster di tags (a grana pi\'fa o meno fine, in base alla distribuzione dei tag scelti dall'espansione di nereau 0.7)}

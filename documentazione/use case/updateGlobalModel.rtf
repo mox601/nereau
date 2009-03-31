@@ -9,4 +9,6 @@ il sistema si occupa di aggiornare il modello globale (che contiene i tag e le l
 \
 il globalModel estrae dalla persistenza i nuovi url visitati da tutti gli utenti (dall'ultimo aggiornamento)\
 trova ed estrae i tag associati agli url che ha trovato (dalla persistenza, non usando parser e tagfinder: sono gi\'e1 stati estratti dall'aggiornamento dello usermodel)\
+Dopodich\'e9 deve costruire un clustering gerarchico basandosi su questi Tagtfidf. \
+\'c9 un processo oneroso, quindi andr\'e1 fatto una/due volte al giorno, e i risultati (tag-cluster) devono essere memorizzati su una tabella che permetta l'estrazione quando \'e9 necessario effettuare un'espansione. \
 }
