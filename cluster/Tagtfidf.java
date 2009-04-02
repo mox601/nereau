@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-public class Tagtfidf {
+public class Tagtfidf extends Tag {
 	
 	/* Rappresentazione dei tags contenuti nella matrice C mxn (tagXurl) dove l'elemento 
 	 * Cij Ž il numero di persone che hanno annotato la risorsa j con il tag i. 
@@ -29,7 +29,7 @@ public class Tagtfidf {
 	private String tag;
 	private Map<String, Integer> tagUrlsMap;
 	/* numero di risorse annotate con il tag attuale: Ž la lunghezza degli elementi 
-	 * della mappa tagUrl? TODO */
+	 * della mappa tagUrl? */
 	private Integer totalUrls;
 	
 	public Tagtfidf(String tag, Map<String, Integer> tagUrlsMap) {
@@ -38,7 +38,6 @@ public class Tagtfidf {
 		this.totalUrls = new Integer(this.tagUrlsMap.size());
 	}
 	
-
 	public Tagtfidf(List<Tagtfidf> tagsToMerge) {
 		
 	/* costruisce un tag average con i tagsToMerge */
@@ -79,7 +78,6 @@ public class Tagtfidf {
 		this.tag = this.tag.substring(0, this.tag.length() - 1);		
 	}
 	
-	
 	/* TODO: gestisci l'eccezione */
 	public Integer getValue(String url) {
 		Integer value = null;
@@ -88,8 +86,6 @@ public class Tagtfidf {
 		}
 		return value;
 	}
-	
-	
 	
 	/* restituisce tutte le chiavi dei clusters */
 	private ArrayList<String> getAllKeys(List<Tagtfidf> tags) {
@@ -109,7 +105,6 @@ public class Tagtfidf {
 		return keys;
 	}
 
-	
 	/*AAAAARRHRGGGGGGGGGGGHHHHHHHHHHH!!!!!!!!!!!!!!
 	 * la somiglianza si calcola tra due cluster!!!!!!!!!!!! 
 	 * Ž utile quando si deve applicare il clustering gerarchico!! */
@@ -201,12 +196,9 @@ public class Tagtfidf {
 		return success;
 	}
 	
-	
-	
 	/* restituisce la frequenza di un url di un tag */
 	public Integer getUrlFrequency(String url) {
 		return this.getTagUrlsMap().get(url);
-		
 	} 
 	
 
@@ -255,6 +247,8 @@ public class Tagtfidf {
 		return keyList;
 		
 	}
+
+	
 
 
 	/**

@@ -15,6 +15,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
+import cluster.Tag;
 import cluster.Tagtfidf;
 
 public class TagtfidfTest {
@@ -27,7 +28,9 @@ public class TagtfidfTest {
 	private Integer blogUrl1Freq;
 	private Integer blogUrl2Freq;
 	private Integer blogUrl3Freq;
-	private Tagtfidf tag1; 
+	
+	private Tagtfidf tag1;
+//	private Tag tag1;
 	
 	String designTag; 
 	private HashMap<String, Integer> tagUrlsMap2;

@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import cluster.ClusterBuilder;
 import cluster.Node;
+import cluster.Tagtfidf;
 
 
 public class ClusterBuilderTest {
@@ -21,8 +22,12 @@ public class ClusterBuilderTest {
 		/* estrae tutti i tags dal database e ne costruisce una lista di
 		 *  clusters (Node) */
 		
+		
 		/* usa questo costruttore per ogni tag estratto */
 		// new Tagtfidf(String tag, Map<String, Integer> tagUrlsMap);
+		/* poi costruisce un cluster a partire da ogni tag */
+		// Node(String value, Tagtfidf tagCentroid);
+
 
 		
 		

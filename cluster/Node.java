@@ -45,10 +45,11 @@ public class Node {
 		this.children = new LinkedList<Node>();
 	}
 	
-	public Node(List<Node> clustersToMerge) {
+	public Node(LinkedList<Node> clustersToMerge, double similarity) {
 		/* gli passo solo i tag di cui deve calcolare la media */
 		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
-		
+		Float sim = new Float(similarity);
+		this.setSimilarity(sim);
 //		Node mergedClusterNode = new Node(value, tagCentroid);
 		this.setChildren(clustersToMerge);
 		/* questo nodo Ž il padre per tutti i cluster fusi */

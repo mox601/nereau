@@ -86,10 +86,11 @@ public class NodeTest {
 		Node cluster2 = new Node(tag2Name, tag2);
 		
 		/* e costruisco il cluster come fusione di tag1 e tag2 */
-		List<Node> clustersToMerge = new LinkedList<Node>(); 
+		LinkedList<Node> clustersToMerge = new LinkedList<Node>(); 
 		clustersToMerge.add(cluster1);
 		clustersToMerge.add(cluster2);
-		Node mergedCluster1 = new Node(clustersToMerge);
+		// in questo contesto il parametro di somiglianza non ha senso = 0.0
+		Node mergedCluster1 = new Node(clustersToMerge, 0.0);
 		
 		/* verifico delle propriet‡ del cluster fusione */
 		/* il cluster deve avere nel nome delle sottostringhe con i nomi dei cluster 

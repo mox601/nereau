@@ -19,7 +19,7 @@ public class ClusterCombinator {
 		this.combinator = new CombinationGenerator(clusterNumber, 2);
 	}
 	
-	/* ottengo una lista di liste di coppie di nodi, le combinazioni di cui 
+	/* ottengo una lista di liste di coppie di nodi, le combinazioni tra cui 
 	 * calcolare le distanze */
 	
 	public LinkedList<LinkedList<Node>> getClusterCombinations() {
