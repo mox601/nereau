@@ -28,6 +28,26 @@ id design url2 freq\
 id google url1 freq\
 id gmail url3 freq\
 \
+%%% SQL\
+CREATE TABLE tagvisitedurls\
+(\
+  id serial NOT NULL,\
+  idtag integer NOT NULL,\
+  idurl integer NOT NULL,\
+  "value" real,\
+  CONSTRAINT primarykey PRIMARY KEY (id),\
+  CONSTRAINT id_tags FOREIGN KEY (idtag)\
+      REFERENCES tags (id) MATCH SIMPLE\
+      ON UPDATE NO ACTION ON DELETE NO ACTION,\
+  CONSTRAINT id_url FOREIGN KEY (idurl)\
+      REFERENCES visitedurls (id) MATCH SIMPLE\
+      ON UPDATE NO ACTION ON DELETE NO ACTION\
+)\
+WITH (OIDS=FALSE);\
+ALTER TABLE tagvisitedurls OWNER TO web81_nereau;\
+\
+%%%\
+\
 (id idTagX idUrlN freq)\
 \
 \pard\pardeftab720\ql\qnatural
