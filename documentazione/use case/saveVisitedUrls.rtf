@@ -6,4 +6,30 @@
 
 \f0\fs24 \cf0 salva url visitati dall'utente\
 dopo il click dell'utente su un link dei risultati trovati, si devono salvare i tag di delicious associati a quell'url dalla comunit\'e1 (di delicious) per costruire le strutture dati dei tagtfidf (tag-url). \
+\
+modifica la funzione che viene richiamata quando si fa il click sul sito da visitare. \
+Parte da php con la funzione "" e poi viene richiamato un comando Json "" che a sua volta arriva ad una funzione java "". \
+\
+nell'html ho un link che rimanda al file redirect.php\
+nel redirect.php ho delle strutture dati nell'array $args\
+query; url; language\
+che verranno passate a questa funzione\
+$result = exec_cmd ('savevisitedurl', $args);\
+\
+NB: prima si fa anche \
+var_dump($tags);\
+credo per salvare i tag che sono stati usati per l'espansione\
+\
+la funzione exec_cmd($cmd, $args) \'e9 in functions.php\
+si occupa di prendere la sessione e l'id dell'utente attivo; poi crea una socket che cerca di connettersi all'host globalmente specificato (il server dove gira nereau). \
+poi incapsula ancora cmd e args con una funzione json_encode e scrive sulla socket. \
+Poi legge dalla socket per ricevere il risultato, anche esso in json; lo decodifica e poi chiude la socket. Se il risultato \'e9 diverso da 200, mostra  l'errore della risposta. \
+Poi restituisce il risultato, la decodifica della risposta json del server. \
+\
+Sul server nereau mi interessa cosa fa il comando savevisitedurl e cosa restituisce. \
+\
+%%%\
+per la nuova implementazione, va bene cos\'ed: modificher\'f3 solo quello che succede sul server e quindi sul db\
+%%%\
+\
 }
