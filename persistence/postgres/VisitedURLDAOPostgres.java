@@ -187,7 +187,8 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 			else
 				expansionTags = new HashSet<RankedTag>();
 			
-			//save visited url per un utente nuovo?
+			//save visited url per un utente che non ha id nell'oggetto user
+			// l'id va preso dal db
 			if(user.getUserID()<=0) {
 				statement = connection.prepareStatement(SQL_INSERT);
 				statement.setString(1, username);
@@ -199,7 +200,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 					statement.setString(4, "");
 				statement.setLong(5, date);
 			}
-			//salva l'url visitato per un utente esistente
+			//salva l'url visitato per un utente di cui hai gi‡ l'id
 			else {
 				statement = connection.prepareStatement(SQL_INSERT_BY_USERID);
 				statement.setInt(1, user.getUserID());
@@ -212,6 +213,12 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				statement.setLong(5, date);
 			}
 			statement.executeUpdate();
+			
+			
+			// non ho l'id dell'url, devo estrarlo: 
+			// qui per— fa la verifica sullo UserID...
+			// per trovare l'id dell'url visitato per l'utente (di cui ho 
+			// o non ho lo user id)
 			
 			//retrieve visited url id
 			if(user.getUserID()<=0) {
@@ -233,7 +240,9 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				visitedUrlId = result.getInt("id");
 			}
 			
-			//save associated tags
+			// ho trovato l'id dell'url da salvare per l'utente corrente
+			
+			//save associated expansion tags
 			for(RankedTag rTag: expansionTags) {
 				String tag = rTag.getTag();
 				double rank = rTag.getRanking();

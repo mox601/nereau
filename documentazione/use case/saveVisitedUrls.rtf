@@ -32,4 +32,37 @@ Sul server nereau mi interessa cosa fa il comando savevisitedurl e cosa restitui
 per la nuova implementazione, va bene cos\'ed: modificher\'f3 solo quello che succede sul server e quindi sul db\
 %%%\
 \
+NereauCommandServer \'e9 lo smistatore di comandi, a seconda del contenuto della stringa command: in questo caso, verifica che la stringa sia SAVE_VISITED_URL e crea l'esecutore SaveVisitedURLExecutor(args). \
+poi si fanno diverse chiamate, a nereau, poi allo UserModelFacade, poi al VisitedURLDAOPostgres, che \'e9 quello effettivamente responsabile di salvare i dati relativi agli url visitati. \
+\
+salvo il visitedurl nella tabella: visitedurls\
+e salvo i dati: ...\
+poi salva anche tutti i tag associati usati per l'espansione nella tabella visitedurltags. MA NON LO FA. PERCH\'c9? Ma non mi interessa. \
+\
+NO:\
+in UserMatrixCalculator estrae i tag dagli url visitati dall'utente. \
+devo farglielo fare prima, quando salvo l'url visitato e i suoi tag associati. \
+cio\'e9 nel saveVisitedUrl devo aggiungere anche i tag dell'url. \
+\
+\
+\
+Oggi mi sono dedicato a capire come salvare nel db il GlobalProfileModel, che consiste in pratica nell'aggiornamento della tabella tagvisitedurls con tante righe del tipo (id idtag idurl value) dove value \'e9 il numero di volte che si \'e9 incontrata una annotazione con quel tag riferita a quell'url. \
+Da quella tabella poi dovr\'f3 costruire degli oggetti Tagtfidf fatti cos\'ed: \
+design 12 34 56 39 55 9 1 3\
+(Ne avevamo gi\'e1 parlato)\
+\
+Dopo un po' di sbattimenti, ho visto che hai deciso di estrarre i tag di un certo sito di delicious solo nel momento in cui esamini le pagine (che hanno data successiva al lastUpdate dell'utente) e calcoli la MatriceTemporanea con UserMatrixCalculator. \
+\
+Quindi, mentre estraggo i tag dagli url (nel frattempo sta costruendo la matrice temporanea) mi costruisco una struttura (forse gi\'e1 esiste qualcosa di simile) Url + lista di tag che poi passo al GlobalProfileModel. \
+Quando li ha ricevuti tutti, il GlobalProfileModel provvede ad una trasformazione e sintesi dei dati che contiene (da URL a ------> Tagtfidf) e fa l'aggiornamento dei record della tabella tagvisitedurls, attraverso il DAOPostgres di Tagtfidf. \
+\
+In sostanza, quando si aggiorna il profilo utente, si aggiorner\'e1 anche il GlobalProfileModel, evitando cos\'ed di scaricare due volte i tag associati ad ogni url. \
+\
+Preferisco prendere i tag degli url quando gi\'e1 lo fa nereau, cio\'e9 durante l'aggiornamento del modello utente UserMatrixCalculator (non si capisce quando gira quel codice): \
+itera su tutte le pagine visitate (che hanno la data successiva al lastupdate dell'utente sul db). Il lastupdate dell'utente si salva alla fine, nella classe UserModelUpdater. \
+\
+avendo l'url e tutti i tag associati, posso aggiungere l'url al GlobalModel per poi fargli aggiornare i tagtfidf ricostruiti da lui, alla fine dell'estrazione di tutti i tag degli url durante l'aggiornamento utente. \
+\
+\
+\
 }

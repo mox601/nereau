@@ -11,12 +11,15 @@ import persistence.UserDAO;
 import persistence.UserModelDAO;
 
 public class GlobalProfileModel {
-	/* il Profile Model, che contiene 
-	 * tutti gli oggetti Tagtfidf del sistema, che vengono aggiornati mano 
-	 * mano che gli utenti cliccano sui siti. 
-	 * Quando si clicca su un sito infatti, i tag di delicious associati a questo url 
-	 * vengono salvati nel GlobalProfile come "entrypoint".
-	 * Mi interessa infatti sapere quali sono i valori tfidf per un certo tag. */ 
+	/* 
+	 * Sarebbe meglio che il globalProfileModel contenesse degli 
+	 * (url, List<tags>) che vengono passati dallo usermodelupdater quando 
+	 * estrae i tag dagli url non ancora aggiornati rispetto al lastupdate dell'
+	 * utente. 
+	 * Poi Ž lui il responsabile della creazione dei Tagtfidf e del loro
+	 * successivo salvataggio sul db. 
+	 * */
+	
 
 //	private GlobalProfile globalProfile;
 	/* gestori del profilo globale */

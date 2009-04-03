@@ -98,10 +98,17 @@ public class UserMatrixCalculator {
 				this.calculateCoOccurrences(occurrenceMatrix);
 			//logger.info("co-occorrenze: " + coOccurrenceMatrix);
 			logger.info("co-occorrenze: (omesso)");
-			
+					
 			//find associated tags
 			Set<RankedTag> tags = tagFinder.findTags(urlString);
 			logger.info("tags associati: " + tags);
+			
+			
+			/* TODO: qui Ž dove si estraggono i tag dall'url visitato. 
+			 * Posso effettuare qui un aggiornamento del modello globale, 
+			 * avendo l'url e i tag associati */
+			
+			
 			
 			//update temporary matrix with keywords and tags
 			this.updateTempMatrix(tempMatrix,tags,coOccurrenceMatrix);
@@ -115,6 +122,9 @@ public class UserMatrixCalculator {
 			tempMatrixForLog.append("}");
 			//logger.info("matrice temporanea (solo keyset): " + tempMatrixForLog);
 		}
+		
+		/* ho estratto i tag da tutti gli url che avevo, ora posso dire 
+		 * al GlobalProfileModel di costruire i Tagtfidf e salvarli nel db */
 		
 		return tempMatrix;
 		
