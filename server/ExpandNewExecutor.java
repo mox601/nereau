@@ -10,15 +10,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ExpandExecutor extends CommandExecutor {
+public class ExpandNewExecutor extends CommandExecutor {
 
-	public ExpandExecutor(JSONObject args) {
+	public ExpandNewExecutor(JSONObject args) {
 		super(args);
 	}
 
 	@Override
 	public String getJSONResponse() {
-		
+
 		String queryString = "", userIDString = "";
 		int userID = -1;
 		try {
@@ -30,8 +30,11 @@ public class ExpandExecutor extends CommandExecutor {
 			e.printStackTrace();
 		} 
 		User user = new User(userID);
-		Set<ExpandedQuery> expQueries = nereau.expandQuery(queryString, user);
+		/* costruisce una risposta chiamando il metodo di nereau nuovo!! */
 		
+		Set<ExpandedQuery> expQueries = nereau.expandQuery(queryString, user);
+
+
 		String JSONResponse = "";
 		try {
 			if(expQueries==null)
@@ -40,27 +43,29 @@ public class ExpandExecutor extends CommandExecutor {
 				JSONResponse = this.createJSONStandardResponse(400,"unexpanded query").toString();
 			else
 			{
+
 				JSONResponse = this.createJSONExpandResponse(expQueries);
+			
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return JSONResponse;
-		
+
 	}
 
 	private String createJSONExpandResponse(Set<ExpandedQuery> expQueries) throws JSONException {
-	
+
 		JSONObject jsonResponse = this.createJSONStandardResponse(200, "ok");
-		
+
 		JSONArray jsonExpQuerySet = new JSONArray();
-		
+
 		for(ExpandedQuery eq: expQueries) {
-			
+
 			JSONObject jsonExpQuery = new JSONObject();
 			JSONArray jsonRankedTagSet = new JSONArray();
-			
+
 			for(RankedTag rt: eq.getExpansionTags()) {
 				JSONObject jsonRankedTag = new JSONObject();
 				jsonRankedTag.put("tag", rt.getTag());
@@ -70,15 +75,17 @@ public class ExpandExecutor extends CommandExecutor {
 
 			jsonExpQuery.put("tags", jsonRankedTagSet);
 			jsonExpQuery.put("query", eq.toString());
-			
+
 			jsonExpQuerySet.put(jsonExpQuery);
-			
+
 		}
-		
+
 		jsonResponse.put("results", jsonExpQuerySet);
-		
+
 		return jsonResponse.toString();
-		
+
 	}
+
+
 
 }

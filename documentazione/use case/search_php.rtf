@@ -1,0 +1,44 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 search dal punto di vista dell'applicazione in php\
+\
+l'utente fa una query nel form e preme "go"\
+il form ha method="get" e action="?"\
+nell'url ci sono visibili i parametri della query, in questa forma: \
+per la query jimmy eat world: \
+?key=jimmy+eat+world&lang=en#\
+\
+sulla parte sinistra della pagina ci sono le etichette con i tag usati per l'espansione. \
+<td width="200" ... >\
+l'etichetta attiva \'e9 racchiusa in un\
+<div id="active" onclick="document.getElementById('active').id='inactive'; this.id='active'; nascondi_elementi_array(array_risultati); $('result').show();">\
+che prende tutti gli elementi attivi e li setta a inactive e nasconde gli elementi dell'array risultati, che forse sono i risultati della ricerca. \
+\
+C'\'e9 un problema con i tag cliccabili nelle etichette: se ci clicco sopra, va su una pagina non trovata. Perch\'e9? Dove dovrebbe andare?\
+ogni tag ha un link di questo tipo: \
+{\field{\*\fldinst{HYPERLINK "file:///tag/music;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3"}}{\fldrslt /\uc0\u8203 tag/\u8203 music;\u8203 _ylt=A0wNB9IQO9dJvAIBTRRvRh54;\u8203 _ylv=3}}\
+\
+Perch\'e9 ho music bands music bands? forse il secondo \'e9 music_bands? No, sono 2 parole ripetute 2 volte. \
+Poi c'\'e9 anche il font size parametrico e il title che ha dei numeretti. \
+Il rating \'e9 rotto, non si vedono le stelline, si vede del codice. \
+\
+quindi devo aggiungere tanti div id="active" o non active quanti sono le espansioni che ottengo con il metodo nuovo, magari separati o in colori diversi rispetto a quelli originali. \
+\
+\
+Poi a destra ho le pagine con i risultati, all'interno di un <td valign="top">\
+il primo div della query non espansa sta in un div, che se non \'e9 selezionato ha il display = none\
+<div id="result" class="resultbox" style="display: none;">\
+Poi ci sono i risultati delle espansioni in dei\
+<div id="result0" class="resultbox" style="">\
+etc etc\
+Poi c'\'e9 uno script Ajax.Updater(, ) che richiama una action\
+actions/result_parse.php\
+e gli passa dei parametri, o qualcosa del genere. \
+\
+quando uno clicca sul sito che vuole visitare, c'\'e9 questo link\
+{\field{\*\fldinst{HYPERLINK "file:///System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Resources/inspector/inspector.html?content=redirect&url=http://www.absolutepunk.net/showthread.php%3Ft%3D915002&query=world%20jimmy&expandedquery=jimmy%20AND%20clarity%20AND%20(worlds%20OR%20world)%20AND%20live&tags="}}{\fldrslt ?content=redirect&\uc0\u8203 url=http:\u8203 /\u8203 /\u8203 www.absolutepunk.net/\u8203 showthread.php%3Ft%3D915002&\u8203 query=world jimmy&\u8203 expandedquery=jimmy AND clarity AND (worlds OR world)\u8203  AND live&\u8203 tags=}}\
+che fa il redirect e passa un po' di parametri della query alla funzione redirect. }

@@ -50,6 +50,13 @@ public class Nereau {
 		return expandedQueries;
 	}
 	
+	public Set<ExpandedQuery> newExpandQuery(String queryString, User user) {
+		Set<ExpandedQuery> newExpandedQueries = 
+			this.queryExpansionFacade.expandQuery(queryString,user);
+		return newExpandedQueries;
+	}
+	
+	
 	public Map<SearchResult[], Set<RankedTag>> performSearch(Set<ExpandedQuery> queries) {
 		Map<SearchResult[], Set<RankedTag>> result = 
 			this.searchFacade.performSearch(queries);

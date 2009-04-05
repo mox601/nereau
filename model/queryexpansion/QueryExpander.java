@@ -22,6 +22,8 @@ import model.UserModel;
 
 public class QueryExpander {
 	
+	/* TODO: Ž questa classe che si occupa di espandere la query?
+	 * devo aggiungere una strategy */
 	private ExpansionTagsStrategy expansionTagsStrategy;
 	private StemmerDAO stemmerHandler;
 	
