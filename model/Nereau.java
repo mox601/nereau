@@ -50,10 +50,10 @@ public class Nereau {
 		return expandedQueries;
 	}
 	
-	public Set<ExpandedQuery> newExpandQuery(String queryString, User user) {
-		Set<ExpandedQuery> newExpandedQueries = 
+	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {
+		Set<ExpandedQuery> expandedQueriesTfidf = 
 			this.queryExpansionFacade.expandQuery(queryString,user);
-		return newExpandedQueries;
+		return expandedQueriesTfidf;
 	}
 	
 	

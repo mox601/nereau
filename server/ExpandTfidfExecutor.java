@@ -10,9 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ExpandNewExecutor extends CommandExecutor {
+public class ExpandTfidfExecutor extends CommandExecutor {
 
-	public ExpandNewExecutor(JSONObject args) {
+	public ExpandTfidfExecutor(JSONObject args) {
 		super(args);
 	}
 
@@ -30,7 +30,8 @@ public class ExpandNewExecutor extends CommandExecutor {
 			e.printStackTrace();
 		} 
 		User user = new User(userID);
-		/* costruisce una risposta chiamando il metodo di nereau nuovo!! */
+		/* costruisce una risposta chiamando il metodo di nereau nuovo!! 
+		 * TODO: per ora usa il vecchio! */
 		
 		Set<ExpandedQuery> expQueries = nereau.expandQuery(queryString, user);
 

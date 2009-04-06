@@ -28,10 +28,10 @@ public class QueryExpansionFacade {
 		return expandedQueries;
 	}
 	
-	public Set<ExpandedQuery> newExpandQuery(String queryString, User user) {
-		Set<ExpandedQuery> newExpandedQueries =
-			this.queryExpander.expandQuery(queryString,user);
-		return newExpandedQueries;
+	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {
+		Set<ExpandedQuery> expandedQueriesTfidf =
+			this.queryExpander.expandQueryTfidf(queryString,user);
+		return expandedQueriesTfidf;
 	}
 	
 

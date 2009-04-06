@@ -23,7 +23,8 @@ import model.UserModel;
 public class QueryExpander {
 	
 	/* TODO: Ž questa classe che si occupa di espandere la query?
-	 * devo aggiungere una strategy */
+	 * devo aggiungere una strategy? */
+	
 	private ExpansionTagsStrategy expansionTagsStrategy;
 	private StemmerDAO stemmerHandler;
 	
@@ -244,6 +245,11 @@ public class QueryExpander {
 				}
 		}
 		return result;
+	}
+
+	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -14,7 +14,7 @@ public class NereauCommandServer implements Runnable {
 
 	private static final String EXPAND = "expand";
 	/* per la nuova espansione */
-	private static final String EXPAND_NEW = "expand_new";
+	private static final String EXPAND_TFIDF = "expand_tfidf";
 	private static final String SAVE_VISITED_URL = "savevisitedurl";
 	private static final String UPDATE = "update";
 	private static final String UPDATE_ALL = "update_all";
@@ -65,8 +65,8 @@ public class NereauCommandServer implements Runnable {
 		//expand
 		if(command.equals(EXPAND))
 			executor = new ExpandExecutor(args);
-		else if(command.equals(EXPAND_NEW))
-			executor = new ExpandNewExecutor(args);
+		else if(command.equals(EXPAND_TFIDF))
+			executor = new ExpandTfidfExecutor(args);
 
 		//save
 		else if(command.equals(SAVE_VISITED_URL))
