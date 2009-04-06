@@ -41,10 +41,7 @@ public class QueryExpander {
 		Set<String> stemmedQueryTerms = query.getStemmedTerms();
 		
 		System.out.println("stemmed query terms: " + stemmedQueryTerms);
-		
-		//
-		//System.out.println("Stemmed query terms: \n" + stemmedQueryTerms);
-		
+				
 		UserModel userModel = user.getUserModel();
 		Map<String,Map<RankedTag,Map<String,Double>>> subMatrix = 
 			userModel.getSubMatrix(stemmedQueryTerms);

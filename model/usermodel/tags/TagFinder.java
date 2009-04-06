@@ -15,7 +15,10 @@ public class TagFinder {
 	private boolean exactUrl;
 	
 	public TagFinder() {
-		this.subUrlTagFinder = new DeliciousSubUrlTagFinderStrategy();
+		/* vecchia strategy, fatta con gli indici delle stringhe */
+//		this.subUrlTagFinder = new DeliciousSubUrlTagFinderStrategy();
+		/* nuova strategy, con Xpath */
+		this.subUrlTagFinder = new DeliciousSubUrlTagFinderXpathStrategy();
 		this.exactUrl = false;
 	}
 	

@@ -40,7 +40,7 @@ public class DeliciousSubUrlTagFinderStrategy extends
 		
 		//page content relevant substring
 		pageContent = pageContent.substring(startIndex,endIndex);
-		//logger.info("contenuto rilevante della pagina di delicious: " + pageContent);
+//		logger.info("contenuto rilevante della pagina di delicious: " + pageContent);
 		
 		while(pageContent.indexOf("</li>")!=-1) {
 			int tagValuesStart = pageContent.indexOf("<li") + ("<li").length();
@@ -56,8 +56,12 @@ public class DeliciousSubUrlTagFinderStrategy extends
 			int nameStart = tagNameValues.indexOf("\">") + ("\">").length();
 			int nameEnd = tagNameValues.indexOf("</a>");
 			*/
-			
-			int nameStart = tagValues.indexOf("<span class=\"m\">") + ("<span class=\"m\">").length();
+			/* sono sbagliati: 6/4/2009 */
+			/* nello span class ora c'Ž: 
+			 * <span class="m" title="3 (2450)">
+			 * anche il posto in classifica e la frequenza */
+			String stringBeforeTag = "<span class=\"m\">";
+			int nameStart = tagValues.indexOf(stringBeforeTag) + stringBeforeTag.length();
 			int nameEnd = tagValues.indexOf("<em>");
 			
 			String tagFrequencyValues = tagValues.substring(nameEnd);

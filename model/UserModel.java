@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import persistence.PersistenceException;
 import persistence.UserDAO;
 import persistence.UserModelDAO;
 import persistence.postgres.UserDAOPostgres;
 import persistence.postgres.UserModelDAOPostgres;
+import util.LogHandler;
 
 public class UserModel {
 	
@@ -28,8 +30,8 @@ public class UserModel {
 /* ottengo una sottomatrice che contiene solo i termini in terms */
 	public Map<String, Map<RankedTag, Map<String, Double>>> getSubMatrix(Set<String> terms) {
 		Set<String> newTerms = new HashSet<String>();
-		newTerms.addAll(terms);
-		newTerms.removeAll(this.userMatrix.keySet());
+		newTerms.addAll(terms);		
+		newTerms.removeAll(this.userMatrix.keySet());	
 		Set<String> oldTerms = new HashSet<String>();
 		oldTerms.addAll(terms);
 		oldTerms.removeAll(newTerms);
@@ -42,14 +44,16 @@ public class UserModel {
 			//System.exit(1);
 		}
 		
+				
 		this.userMatrix.putAll(persistenceMatrix);
 		
 		Map<String, Map<RankedTag, Map<String, Double>>> subMatrix = 
 			new HashMap<String, Map<RankedTag, Map<String, Double>>> ();
 		
-		for(String term: terms)
+		for(String term: terms) {
 			if(this.userMatrix.get(term)!=null)
 				subMatrix.put(term, this.userMatrix.get(term));
+		}
 
 		return subMatrix;
 	}

@@ -42,4 +42,20 @@ e gli passa dei parametri, o qualcosa del genere. \
 \
 quando uno clicca sul sito che vuole visitare, c'\'e9 questo link\
 {\field{\*\fldinst{HYPERLINK "file:///System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Resources/inspector/inspector.html?content=redirect&url=http://www.absolutepunk.net/showthread.php%3Ft%3D915002&query=world%20jimmy&expandedquery=jimmy%20AND%20clarity%20AND%20(worlds%20OR%20world)%20AND%20live&tags="}}{\fldrslt ?content=redirect&\uc0\u8203 url=http:\u8203 /\u8203 /\u8203 www.absolutepunk.net/\u8203 showthread.php%3Ft%3D915002&\u8203 query=world jimmy&\u8203 expandedquery=jimmy AND clarity AND (worlds OR world)\u8203  AND live&\u8203 tags=}}\
-che fa il redirect e passa un po' di parametri della query alla funzione redirect. }
+che fa il redirect e passa un po' di parametri della query alla funzione redirect. \
+\
+\
+Ho dei problemi nella visualizzazione: \
+se voglio visualizzare due volte i risultati dell'espansione, ho dei duplicati nei tag che partecipano. \
+\
+in output per la query jimmy \
+\
+jimmy AND clarity for tags: \
+[(tag=       <a href="/tag/bands;_ylt=A0wNBsIGO9dJEtsABytvRh54;_ylv=3" title="1 (14)" class="showTag"><span class="m" title="1 (14)">bands,rank=0.533333)]\
+\
+jimmy AND live for tags: \
+[(tag=            <a href="/tag/music;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3" title="0 (21)" class="showTag">\
+<span class="m" title="0 (21)">music,rank=0.8), \
+(tag=            <a href="/tag/music;_ylt=A0wNBsIGO9dJEtsABytvRh54;_ylv=3" title="0 (21)" class="showTag"><span class="m" title="0 (21)">music,rank=0.8), \
+(tag=       <a href="/tag/bands;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3" title="1 (14)" class="showTag"><span class="m" title="1 (14)">bands,rank=0.533333)]\
+}

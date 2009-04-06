@@ -19,8 +19,8 @@ public class ProvaEspansioni {
 		String queryString;
 		
 		if(args.length!=2) {
-			user = new User("iddio");
-			queryString = "madonna mp3 pop";
+			user = new User("mox601");
+			queryString = "rdf";
 		}
 		
 		else {
@@ -40,11 +40,6 @@ public class ProvaEspansioni {
 		
 		for(ExpandedQuery  eq: expQueries)
 			System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
-		
-		
-		
-		
-		
 		
 	}
 
