@@ -19,13 +19,21 @@ import util.Stemmer;
 import model.Query;
 import model.RankedTag;
 import model.RankedTerm;
+import model.URLTags;
 import model.VisitedURL;
 import model.usermodel.parser.URLParser;
 import model.usermodel.tags.TagFinder;
 import model.usermodel.tags.TxtSubUrlTagFinderStrategy;
 
+import model.GlobalProfileModel;
+
 public class UserMatrixCalculator {
 
+	/* si occupa di creare una matrice temporanea a partire dagli ultimi 
+	 * url visitati. 
+	 * Quando lo eseguo, costruisco un'istanza di GlobalProfileModel
+	 * che si occupa di salvare gli url e i tag a loro associati */
+	
 	public Map<RankedTag, Map<String, Map<String, Double>>> 
 		createTemporaryMatrix(List<VisitedURL> visitedURLs, boolean alreadyRetrieved) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
@@ -34,6 +42,11 @@ public class UserMatrixCalculator {
 		TagFinder tagFinder = new TagFinder();
 		Map<RankedTag, Map<String, Map<String, Double>>> tempMatrix = 
 			new HashMap<RankedTag, Map<String, Map<String, Double>>> ();
+		
+		
+		/* lista di urltags da salvare: rappresentano il GlobalProfileModel */
+		LinkedList<URLTags> urlTagsToSave = new LinkedList<URLTags>();
+		
 		
 		//examine every visited url (url + query)
 		for(VisitedURL visitedURL: visitedURLs) {
@@ -107,7 +120,13 @@ public class UserMatrixCalculator {
 			/* TODO: qui Ž dove si estraggono i tag dall'url visitato. 
 			 * Posso effettuare qui un aggiornamento del modello globale, 
 			 * avendo l'url e i tag associati */
+			System.out.println("url pagina visitata: " + urlString);
+			System.out.println("tags associati all'url: " + tags);
 			
+			/* costruisco un oggetto URLTags */
+			URLTags currentUrlWithTags = new URLTags(visitedURL, tags);
+			
+			urlTagsToSave.add(currentUrlWithTags);
 			
 			
 			//update temporary matrix with keywords and tags
@@ -125,6 +144,11 @@ public class UserMatrixCalculator {
 		
 		/* ho estratto i tag da tutti gli url che avevo, ora posso dire 
 		 * al GlobalProfileModel di costruire i Tagtfidf e salvarli nel db */
+		
+		GlobalProfileModel globalModel = new GlobalProfileModel(urlTagsToSave);
+		/* il problema Ž che forse non ho ancora salvato gli url e i tag nel db
+		 * quindi avrei delle chiavi esterne non disponibili. */
+		
 		
 		return tempMatrix;
 		

@@ -13,7 +13,6 @@ public class ProvaTagFinder {
 		TagFinder tagFinder = new TagFinder(); 
 		Set<RankedTag> tags = tagFinder.findTags(urlString);
 		System.out.println(tags);
-		
 	}
 
 }

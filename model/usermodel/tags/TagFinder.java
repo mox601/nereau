@@ -17,8 +17,8 @@ public class TagFinder {
 	public TagFinder() {
 		/* vecchia strategy, fatta con gli indici delle stringhe */
 //		this.subUrlTagFinder = new DeliciousSubUrlTagFinderStrategy();
-		/* nuova strategy, con Xpath */
-		this.subUrlTagFinder = new DeliciousSubUrlTagFinderXpathStrategy();
+		/* altra strategy che sfrutta json */
+		this.subUrlTagFinder = new BadgesDeliciousSubUrlTagFinderStrategy();
 		this.exactUrl = false;
 	}
 	

@@ -174,17 +174,20 @@ public class Tagtfidf extends Tag {
 		/* verifica se l'url esiste: 
 		 * se esiste, aggiungi un'occorrenza, 
 		 * altrimenti fai una nuova chiave e aggiungila alla mappa */
-		/* cerca subito di estrarre il valore vecchio associato all'url */
-		Integer oldValue = this.tagUrlsMap.get(url);
+		Integer oldValue = null; 
+		oldValue = this.tagUrlsMap.get(url);
 		if (oldValue == null) {
-			// aggiungo un'occorrenza del tag per l'url (inesistente) specificato 
+			// aggiungo un'occorrenza del tag per l'url (nuovo) specificato 
 			this.tagUrlsMap.put(url, 1);
 			// aumento di 1 totalUrls, contiene un url in piœ
 			this.totalUrls = this.totalUrls + 1;
 			success = true;
 		} else {
 			/* aggiorno il valore esistente, aggiungendo un'occorrenza */
+			/* TODO: uhm... */
 			this.tagUrlsMap.put(url, oldValue + 1);
+			System.out.print("tag " + this.getTag());
+			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
 			success = true; 
 		}
 		
@@ -192,7 +195,6 @@ public class Tagtfidf extends Tag {
 //			double newValue = this.tagUrlsMap.get(url).doubleValue() + 1;
 //			this.tagUrlsMap.put(url, newValue);
 //		}
-		
 		return success;
 	}
 	

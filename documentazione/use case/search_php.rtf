@@ -21,7 +21,8 @@ che prende tutti gli elementi attivi e li setta a inactive e nasconde gli elemen
 \
 C'\'e9 un problema con i tag cliccabili nelle etichette: se ci clicco sopra, va su una pagina non trovata. Perch\'e9? Dove dovrebbe andare?\
 ogni tag ha un link di questo tipo: \
-{\field{\*\fldinst{HYPERLINK "file:///tag/music;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3"}}{\fldrslt /\uc0\u8203 tag/\u8203 music;\u8203 _ylt=A0wNB9IQO9dJvAIBTRRvRh54;\u8203 _ylv=3}}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+{\field{\*\fldinst{HYPERLINK "file:///tag/music;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3"}}{\fldrslt \cf0 /\uc0\u8203 tag/\u8203 music;\u8203 _ylt=A0wNB9IQO9dJvAIBTRRvRh54;\u8203 _ylv=3}}\
 \
 Perch\'e9 ho music bands music bands? forse il secondo \'e9 music_bands? No, sono 2 parole ripetute 2 volte. \
 Poi c'\'e9 anche il font size parametrico e il title che ha dei numeretti. \
@@ -45,17 +46,7 @@ quando uno clicca sul sito che vuole visitare, c'\'e9 questo link\
 che fa il redirect e passa un po' di parametri della query alla funzione redirect. \
 \
 \
-Ho dei problemi nella visualizzazione: \
-se voglio visualizzare due volte i risultati dell'espansione, ho dei duplicati nei tag che partecipano. \
+ho cambiato la strategy che estrae i tag da delicious per l'url, ora usa JSON ma sempre con il metodo a buffo con le stringhe. \
 \
-in output per la query jimmy \
-\
-jimmy AND clarity for tags: \
-[(tag=       <a href="/tag/bands;_ylt=A0wNBsIGO9dJEtsABytvRh54;_ylv=3" title="1 (14)" class="showTag"><span class="m" title="1 (14)">bands,rank=0.533333)]\
-\
-jimmy AND live for tags: \
-[(tag=            <a href="/tag/music;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3" title="0 (21)" class="showTag">\
-<span class="m" title="0 (21)">music,rank=0.8), \
-(tag=            <a href="/tag/music;_ylt=A0wNBsIGO9dJEtsABytvRh54;_ylv=3" title="0 (21)" class="showTag"><span class="m" title="0 (21)">music,rank=0.8), \
-(tag=       <a href="/tag/bands;_ylt=A0wNB9IQO9dJvAIBTRRvRh54;_ylv=3" title="1 (14)" class="showTag"><span class="m" title="1 (14)">bands,rank=0.533333)]\
-}
+TODO\
+Ora devo modificare l'output per fargli ricevere i risultati del clustering Tfidf}

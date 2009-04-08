@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import model.GlobalProfileModel;
 import model.RankedTag;
+import model.URLTags;
 import model.User;
 import model.UserModel;
 import model.VisitedURL;
@@ -96,6 +98,11 @@ public class UserModelUpdater {
 				logger.info("ATTENZIONE: impossibile reperire url visitati dal db. motivo: \n"+e.getMessage());
 			}
 		}
+		
+		/* contiene la lista di urltags da passare al GlobalModel */
+		LinkedList<URLTags> urls = new LinkedList<URLTags>();
+		
+		
 		/* AGGIORNAMENTO DEL MODELLO UTENTE */
 		/* itera su tutte le pagine visitate */
 		//MODIFICA: lavoro su una pagina per volta (altrimenti la memoria non basta!)
@@ -112,6 +119,7 @@ public class UserModelUpdater {
 			for(RankedTag rTag: tempMatrix.keySet()) {
 				tempMatrixForLog.append(rTag + "=" + tempMatrix.get(rTag).keySet() + ",");
 			}
+
 			tempMatrixForLog.append("}");
 			//logger.info("matrice temporanea (solo keyset): " + tempMatrixForLog);
 			logger.info("matrice temporanea: " + tempMatrix);
@@ -159,10 +167,22 @@ public class UserModelUpdater {
 			userModel.update(newInsertMatrix,newUpdateMatrix,vu.getDate());
 			
 			logger.info("modello aggiornato con visitedUrls forniti...");
-
+			
+			
+			/*aggiungi i tags in un set di tags, che poi viene passato al GlobalModel*/
+			Set<RankedTag> tagSet = new HashSet<RankedTag>();
+			tagSet.addAll(tempMatrix.keySet());
+			URLTags url = new URLTags(vu, tagSet);
+			
+			urls.add(url);
+				
 		}
 		
+		/* l'aggiornamento dell'utente con tutti i suoi nuovi url Ž terminato. */
 
+		/* passo gli url al GlobalProfileModel */
+		GlobalProfileModel globalProfile = new GlobalProfileModel(urls);
+		
 		/*
 		//delete visited urls from db
 		try{

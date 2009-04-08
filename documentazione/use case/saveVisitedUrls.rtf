@@ -14,10 +14,10 @@ nell'html ho un link che rimanda al file redirect.php\
 nel redirect.php ho delle strutture dati nell'array $args\
 query; url; language\
 che verranno passate a questa funzione\
-$result = exec_cmd ('savevisitedurl', $args);\
+$result = exec_cmd ('savevisitedurl', $args);\
 \
 NB: prima si fa anche \
-var_dump($tags);\
+var_dump($tags);\
 credo per salvare i tag che sono stati usati per l'espansione\
 \
 la funzione exec_cmd($cmd, $args) \'e9 in functions.php\
@@ -30,6 +30,8 @@ Sul server nereau mi interessa cosa fa il comando savevisitedurl e cosa restitui
 \
 %%%\
 per la nuova implementazione, va bene cos\'ed: modificher\'f3 solo quello che succede sul server e quindi sul db\
+ho un'attivit\'e1 della cpu altissima da quando ho modificato alcuni vincoli delle tabelle, on update cascade e on delete cascade. \
+provo a rimetterle come prima. magari lascio solo on delete cascade. ho lasciato solo on delete cascade. \
 %%%\
 \
 NereauCommandServer \'e9 lo smistatore di comandi, a seconda del contenuto della stringa command: in questo caso, verifica che la stringa sia SAVE_VISITED_URL e crea l'esecutore SaveVisitedURLExecutor(args). \
@@ -54,7 +56,11 @@ design 12 34 56 39 55 9 1 3\
 Dopo un po' di sbattimenti, ho visto che hai deciso di estrarre i tag di un certo sito di delicious solo nel momento in cui esamini le pagine (che hanno data successiva al lastUpdate dell'utente) e calcoli la MatriceTemporanea con UserMatrixCalculator. \
 \
 TODO\
-Quindi, mentre estraggo i tag dagli url (nel frattempo sta costruendo la matrice temporanea) mi costruisco una struttura (forse gi\'e1 esiste qualcosa di simile) Url + lista di tag che poi passo al GlobalProfileModel. \
+Lo usermodelupdater \'e9 una classe che aggiorna il modello utente. \
+\'e9 thread-safe: c'\'e9 solo un'istanza attiva alla volta. \
+Quindi, mentre estraggo i tag dagli url (per caso salva anche li tag no_tag? si: a che serve?)\
+\
+(nel frattempo sta costruendo la matrice temporanea) mi costruisco una struttura (forse gi\'e1 esiste qualcosa di simile) Url + lista di tag che poi passo al GlobalProfileModel. \
 Quando li ha ricevuti tutti, il GlobalProfileModel provvede ad una trasformazione e sintesi dei dati che contiene (da URL a ------> Tagtfidf) e fa l'aggiornamento dei record della tabella tagvisitedurls, attraverso il DAOPostgres di Tagtfidf. \
 \
 In sostanza, quando si aggiorna il profilo utente, si aggiorner\'e1 anche il GlobalProfileModel, evitando cos\'ed di scaricare due volte i tag associati ad ogni url. \
@@ -63,6 +69,8 @@ Preferisco prendere i tag degli url quando gi\'e1 lo fa nereau, cio\'e9 durante 
 itera su tutte le pagine visitate (che hanno la data successiva al lastupdate dell'utente sul db). Il lastupdate dell'utente si salva alla fine, nella classe UserModelUpdater. \
 \
 avendo l'url e tutti i tag associati, posso aggiungere l'url al GlobalModel per poi fargli aggiornare i tagtfidf ricostruiti da lui, alla fine dell'estrazione di tutti i tag degli url durante l'aggiornamento utente. \
+Il globalProfileModel contiene gli (url, tag1, tag1, tagn) che andranno salvati nella tabella tagvisitedurls fatta cos\'ed: id idurl idtag. Quindi devo farlo dopo che l'url e il tag sono stati salvati sul db. Devo farlo dopo che \'e9 stato salvato lo userModel su db. \
+\
 \
 \
 \
