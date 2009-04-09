@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import model.URLTags;
 import model.User;
 import cluster.Tagtfidf;
 import persistence.GlobalProfileModelDAO;
@@ -16,10 +17,23 @@ import util.LogHandler;
 
 public class GlobalProfileModelDAOPostgres implements GlobalProfileModelDAO {
 
+
+	private URLTagsDAO urlTagsHandler;
+	
 	@Override
-	public void deleteUserData(User user) throws PersistenceException {
-		// TODO Auto-generated method stub
+	public boolean updateGlobalProfile(LinkedList<URLTags> tags) throws PersistenceException {
+		/* aggiorna il profilo globale, inserendo gli URLTags nel database
+		 * */
+		boolean updated = false;
+		/* salvo cos’ come sono gli URLTags, non devo convertirli in Tagtfidf, 
+		 * non serve */
+		this.urlTagsHandler.save(tags);
+
 		
+		
+		
+		
+		return updated;
 	}
 
 	@Override
@@ -30,7 +44,7 @@ public class GlobalProfileModelDAOPostgres implements GlobalProfileModelDAO {
 		PreparedStatement statement = null;
 		/* lista di tag estratti */
 		List<Tagtfidf> tags = new LinkedList<Tagtfidf>();
-		logger.info("creazione insieme Tagtfidf");
+		logger.info("estrazione dei Tagtfidf");
 
 		try {
 			connection = dataSource.getConnection();
@@ -53,30 +67,20 @@ public class GlobalProfileModelDAOPostgres implements GlobalProfileModelDAO {
 			dataSource.close(connection);
 		}
 		
-		
-		
-		
-		
 		return tags;
 	}
 
-	@Override
-	public boolean saveGlobalProfile(String username, String password,
-			String firstName, String lastName, String email)
-			throws PersistenceException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public boolean updateTagtfidf(Tagtfidf tag) throws PersistenceException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	/* TODO: modifica il nome della tabella - users*/
 	private final String SQL_RETRIEVE_ALL = 
 		"SELECT * " +
-		"FROM users";
+		"FROM tagvisitedurls";
+
+	
 	
 }

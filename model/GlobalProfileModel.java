@@ -48,26 +48,19 @@ public class GlobalProfileModel {
 		this.urlsToSave = urlTagsToSave;
 		this.tags = new LinkedList<Tagtfidf>();
 		this.convertUrlsToTagtfidf();
-	}
-	
-	/* trova nella lista dei Tagtfidf il tag con la stringa nel parametro */
-	private Tagtfidf findTagtfidfOLD(String tagValue) {
-//		Logger logger = LogHandler.getLogger(this.getClass().getName());
-//		logger.info("cerco nei tagtfidf gi‡ incontrati il tag: " + tagValue);
-		Iterator<Tagtfidf> tagtfidfIterator =  this.tags.iterator();
-		boolean found = false;
-		Tagtfidf currentTagtfidf = null;
-		while (tagtfidfIterator.hasNext() && !found) {
-			currentTagtfidf = tagtfidfIterator.next();
-			if (currentTagtfidf.getTag().equals(tagValue)) {
-//				logger.info("tag attuale: " + currentTagtfidf.getTag() + " uguale a tag cercato: " + tagValue);
-				found = true;
-			}
-		}
 		
-		return currentTagtfidf;
+		this.convertUrlsToTagCoOcc();
 	}
 	
+
+	
+	private void convertUrlsToTagCoOcc() {
+		// TODO trasformazione in rappresentazione dei tag in co-occorrenze. 
+		
+	}
+
+
+
 	/* cerca se Ž presente il tagtfidf con il tagValue per parametro */
 	private Tagtfidf findTagtfidf(String tagValue) {
 //		Logger logger = LogHandler.getLogger(this.getClass().getName());
@@ -132,6 +125,34 @@ public class GlobalProfileModel {
 		}
 	}
 
+	
+
+	public void updateGlobalProfile() {
+		// TODO aggiorna il profilo globale sul database
+		
+		if (this.globalProfileModelHandler.updateGlobalProfile(this.urlsToSave)) {
+			
+		}
+		
+		
+		Iterator<Tagtfidf> iterator = this.tags.iterator();
+		while (iterator.hasNext()) {
+			Tagtfidf currentTag = iterator.next();
+			
+			this.globalProfileModelHandler.updateTagtfidf(currentTag);
+		}
+		
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * @return the tags
 	 */
@@ -145,8 +166,10 @@ public class GlobalProfileModel {
 	public void setTags(List<Tagtfidf> tags) {
 		this.tags = tags;
 	}
-	
-	
+
+
+
+
 	
 	
 }

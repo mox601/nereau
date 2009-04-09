@@ -22,7 +22,9 @@ public class UserModel {
 	
 	public UserModel(User user) {
 		this.user = user;
+		// serve ad estrarre e aggiornare la matrice utente
 		this.userModelHandler = new UserModelDAOPostgres();
+		// serve ad estrarre l'utente, autenticarlo, cancellarlo, etc... 
 		this.userHandler = new UserDAOPostgres();
 		this.userMatrix = new HashMap<String, Map<RankedTag, Map<String, Double>>>();
 	}

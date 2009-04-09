@@ -145,9 +145,10 @@ public class UserMatrixCalculator {
 		/* ho estratto i tag da tutti gli url che avevo, ora posso dire 
 		 * al GlobalProfileModel di costruire i Tagtfidf e salvarli nel db */
 		
-		GlobalProfileModel globalModel = new GlobalProfileModel(urlTagsToSave);
+//		GlobalProfileModel globalModel = new GlobalProfileModel(urlTagsToSave);
 		/* il problema Ž che forse non ho ancora salvato gli url e i tag nel db
-		 * quindi avrei delle chiavi esterne non disponibili. */
+		 * quindi avrei delle chiavi esterne non disponibili. 
+		 * quindi non lo faccio ora */
 		
 		
 		return tempMatrix;
