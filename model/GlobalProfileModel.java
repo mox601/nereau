@@ -13,6 +13,7 @@ import cluster.Tagtfidf;
 import persistence.GlobalProfileModelDAO;
 import persistence.UserDAO;
 import persistence.UserModelDAO;
+import persistence.postgres.URLTagsDAOPostgres;
 import util.LogHandler;
 
 public class GlobalProfileModel {
@@ -43,11 +44,13 @@ public class GlobalProfileModel {
 	private int usersNumber;
 	// url ricevuti dallo usermatrixcalculator. 
 	private LinkedList<URLTags> urlsToSave;
+	private URLTagsDAO URLTagsHandler;
 	
 	public GlobalProfileModel(LinkedList<URLTags> urlTagsToSave) {
 		this.urlsToSave = urlTagsToSave;
 		this.tags = new LinkedList<Tagtfidf>();
 		this.convertUrlsToTagtfidf();
+		this.URLTagsHandler = new URLTagsDAOPostgres();
 		
 		this.convertUrlsToTagCoOcc();
 	}

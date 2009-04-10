@@ -43,7 +43,7 @@ public class URLTags {
 		this.tags = tags;
 	}
 	/* questi sono gli url visitati dagli utenti, e contengono i tag associati. 
-	 * Vanno salvati nella tabella tagvisitedurls, che contiene (id idurl idtag). 
+	 * Vanno salvati nella tabella tagvisitedurls, che contiene (id idurl idtag value). 
 	 * quindi dovr— gi‡ aver effettuato il salvataggio degli url e dei tag.  */
 	
 	
