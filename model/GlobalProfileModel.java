@@ -11,10 +11,12 @@ import java.util.logging.Logger;
 import cluster.Tagtfidf;
 
 import persistence.GlobalProfileModelDAO;
+import persistence.PersistenceException;
 import persistence.UserDAO;
 import persistence.UserModelDAO;
 import persistence.postgres.URLTagsDAOPostgres;
 import util.LogHandler;
+import persistence.URLTagsDAO;
 
 public class GlobalProfileModel {
 	/* 
@@ -51,7 +53,6 @@ public class GlobalProfileModel {
 		this.tags = new LinkedList<Tagtfidf>();
 		this.convertUrlsToTagtfidf();
 		this.URLTagsHandler = new URLTagsDAOPostgres();
-		
 		this.convertUrlsToTagCoOcc();
 	}
 	
@@ -97,7 +98,7 @@ public class GlobalProfileModel {
 			URLTags currentUrl = urlIterator.next();	
 //			logger.info("URLTags da convertire: " + currentUrl.getUrlString() + " con tags: " + currentUrl.getTags());
 			Iterator<RankedTag> tagIterator = currentUrl.getTags().iterator();
-			/* itera sui tags del currentUrl*/
+			/* itera sui tags del currentUrl */
 			/* costruisci un tag tfidf per ogni tag associato all'url, ma se gi‡ esiste nei tags gi‡ incontrati 
 			 * un tag con quel valore, aggiungi il currentUrl a quel tag */
 			while(tagIterator.hasNext()) {
@@ -131,31 +132,15 @@ public class GlobalProfileModel {
 	
 
 	public void updateGlobalProfile() {
-		// TODO aggiorna il profilo globale sul database
-		
-		if (this.globalProfileModelHandler.updateGlobalProfile(this.urlsToSave)) {
-			
+		try {
+			this.URLTagsHandler.save(urlsToSave);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
-		Iterator<Tagtfidf> iterator = this.tags.iterator();
-		while (iterator.hasNext()) {
-			Tagtfidf currentTag = iterator.next();
-			
-			this.globalProfileModelHandler.updateTagtfidf(currentTag);
-		}
-		
 	}
 
 
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * @return the tags
 	 */

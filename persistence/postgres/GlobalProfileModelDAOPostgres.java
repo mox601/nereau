@@ -18,7 +18,7 @@ import util.LogHandler;
 public class GlobalProfileModelDAOPostgres implements GlobalProfileModelDAO {
 
 
-	private URLTagsDAO urlTagsHandler;
+//	private URLTagsDAO urlTagsHandler;
 	
 	@Override
 	public boolean updateGlobalProfile(LinkedList<URLTags> tags) throws PersistenceException {
@@ -27,7 +27,7 @@ public class GlobalProfileModelDAOPostgres implements GlobalProfileModelDAO {
 		boolean updated = false;
 		/* salvo cos’ come sono gli URLTags, non devo convertirli in Tagtfidf, 
 		 * non serve */
-		this.urlTagsHandler.save(tags);
+//		this.urlTagsHandler.save(tags);
 
 		
 		

@@ -1,5 +1,7 @@
 package model.test;
 
+import static org.junit.Assert.*;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,7 +30,7 @@ public class GlobalProfileModelTest {
 		/* START primo url */
 		String firstUrlString = "www.libero.it";
 		VisitedURL firstUrl = new VisitedURL(firstUrlString, null, null);
-		RankedTag tag1 = new RankedTag("posta");
+		RankedTag tag1 = new RankedTag("video");
 		RankedTag tag2 = new RankedTag("news");
 		RankedTag tag3 = new RankedTag("search");
 		
@@ -44,7 +46,7 @@ public class GlobalProfileModelTest {
 		String secondUrlString = "www.safari.it";
 		VisitedURL secondUrl = new VisitedURL(secondUrlString, null, null);
 		RankedTag tag4 = new RankedTag("news");
-		RankedTag tag5 = new RankedTag("browser");
+		RankedTag tag5 = new RankedTag("design");
 		RankedTag tag6 = new RankedTag("search");
 		
 		Set<RankedTag> tagsTwo = new HashSet<RankedTag>();
@@ -59,8 +61,8 @@ public class GlobalProfileModelTest {
 		String thirdUrlString = "www.magari.it";
 		VisitedURL thirdUrl = new VisitedURL(thirdUrlString, null, null);
 		RankedTag tag7 = new RankedTag("news");
-		RankedTag tag8 = new RankedTag("browser");
-		RankedTag tag9 = new RankedTag("hello_world");
+		RankedTag tag8 = new RankedTag("design");
+		RankedTag tag9 = new RankedTag("software");
 		
 		Set<RankedTag> tagsThree = new HashSet<RankedTag>();
 		tagsThree.add(tag7);
@@ -77,6 +79,9 @@ public class GlobalProfileModelTest {
 		/* visualizza i tags */
 		printListTagstfidf(globalProfile.getTags());	
 		/* TODO: non Ž completo, non ci sono assert */
+		
+//		assertEquals(urlTagsToSave, globalProfile.getTags());
+		globalProfile.updateGlobalProfile();
 		
 	}
 

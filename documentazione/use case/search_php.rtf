@@ -42,11 +42,73 @@ actions/result_parse.php\
 e gli passa dei parametri, o qualcosa del genere. \
 \
 quando uno clicca sul sito che vuole visitare, c'\'e9 questo link\
-{\field{\*\fldinst{HYPERLINK "file:///System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Resources/inspector/inspector.html?content=redirect&url=http://www.absolutepunk.net/showthread.php%3Ft%3D915002&query=world%20jimmy&expandedquery=jimmy%20AND%20clarity%20AND%20(worlds%20OR%20world)%20AND%20live&tags="}}{\fldrslt ?content=redirect&\uc0\u8203 url=http:\u8203 /\u8203 /\u8203 www.absolutepunk.net/\u8203 showthread.php%3Ft%3D915002&\u8203 query=world jimmy&\u8203 expandedquery=jimmy AND clarity AND (worlds OR world)\u8203  AND live&\u8203 tags=}}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+{\field{\*\fldinst{HYPERLINK "file:///System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Resources/inspector/inspector.html?content=redirect&url=http://www.absolutepunk.net/showthread.php%3Ft%3D915002&query=world%20jimmy&expandedquery=jimmy%20AND%20clarity%20AND%20(worlds%20OR%20world)%20AND%20live&tags="}}{\fldrslt \cf0 ?content=redirect&\uc0\u8203 url=http:\u8203 /\u8203 /\u8203 www.absolutepunk.net/\u8203 showthread.php%3Ft%3D915002&\u8203 query=world jimmy&\u8203 expandedquery=jimmy AND clarity AND (worlds OR world)\u8203  AND live&\u8203 tags=}}\
 che fa il redirect e passa un po' di parametri della query alla funzione redirect. \
 \
 \
 ho cambiato la strategy che estrae i tag da delicious per l'url, ora usa JSON ma sempre con il metodo a buffo con le stringhe. \
 \
 TODO\
-Ora devo modificare l'output per fargli ricevere i risultati del clustering Tfidf}
+Ora devo modificare l'output per fargli ricevere i risultati del clustering Tfidf. \
+\
+Nel server nereau vecchio: \
+Nel momento in cui arriva una richiesta di ricerca con alcune parole chiave, si chiede al sistema vecchio una lista di tutti tags che erano stati considerati per l'espansione e che "in potenza" potrebbero produrre espansioni. \
+Dovrebbero essere compresi anche i tag che non compaiono nelle etichette di nereau vecchio, per avere pi\'fa libert\'e1. \
+Con quelli, ottengo il vettore dei termini che cacolerebbe nereau vecchio e mando questi oggetti: (tag, vettore_termini) al sistema nuovo. \
+Il sistema nuovo riceve questi oggetti e avendo fatto il clustering dei tag, riesce a suddividere i tag della query in cluster distinti, usando due diverse rappresentazioni dei tag: tf*idf e co-occorrenze. \
+\
+clustering tf*idf\
+\
+\
+clustering co-occorrenze\
+\
+\
+\
+\
+\
+\
+\
+search in Nereau - come funziona attualmente: \
+nereau.java chiama un metodo Set<ExpandedQuery> expandQuery(query, user) per avere le query espanse dell'utente relative ad una query. \
+Se ne occupa un oggetto QueryExpansionFacade, che ha il metodo expandQuery(query, user). Poi attiva un oggetto queryExpander con metodo expandQuery(query, user) che funziona cos\'ed: \
+prende la query e fa lo stemming dei termini; \
+estrae il modello utente e prende la sottomatrice dei termini stemmati. \
+Map<String, Map<RankedTag, Map<String, Double>>> submatrix = getSubMatrix. \
+Poi, chiama expand(stemmedQueryTerms, submatrix) e ottiene le query espanse. \
+\
+expand(stemmedterms, submatrix) funziona cos\'ed: \
+pesa ogni termine della query come 1/numerodistemmedterms; \
+ha un oggetto strategy expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix) che con questo metodo trova i tag dell'espansione. Come funziona?\
+Per ogni tag dell'espansione, costruisce una mappa di valori di cooccorrenze per i tags (?); \
+\{\
+itera su tutti i termini delle chiavi della subMatrix e aggiorna i pesi con una regola strana... \
+Poi seleziona i termini rilevanti usando i termini stemmed e i valori di co-occorrenze4tag. \
+se i termini rilevanti non sono nulli, crea una nuova ExpandedQuery con i termini rilevanti, e aggiunge i termini\
+\}\
+\
+\
+findExpansionTags(stemmedQueryTerms, subMatrix)\
+controlla la subMatrix, e itera \
+per tutti i termini stemmed, \
+\{\
+se non c'\'e9 come chiave nella submatrix, cancella i commoTags e fai break; \
+altrimenti, prendi dalla subMatrix tutte le chiavi relative al termine in questione, ottenendo i tags4term. Mano mano, aggiunge i termini nuovi al commonTags cos\'ed:  (ogni volta, fai l'intersezione tra vecchi e nuovi e tieni solo quelli comuni)\
+\}\
+\
+poi, sceglie solo i termini rilevanti nel treeset tags, rimuovendo il null_tag e trovando il maxranking dei tag. \
+Poi scorre tutti i tags facendo un pop alla volta e se \'e9 null, continua, mentre se il rank del RankedTag attuale / max ranking \'e9 minore di un parametro globale ParameterHandler.MIN_EXPANSIONTAGS_RELATIVE_VALUE, e il maxtag \'e9 NULL, allora aggiungi il RankedTag al risultato. altrimenti aggiungilo comunque. \
+In sintesi?\
+Dove intervengo con l'espansione di Nereau 0.8?\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}

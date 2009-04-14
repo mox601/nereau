@@ -29,27 +29,44 @@ id google url1 freq\
 id gmail url3 freq\
 \
 %%% SQL\
-CREATE TABLE tagvisitedurls\
+CREATE TABLE visitedurltags\
 (\
   id serial NOT NULL,\
+  idvisitedurl integer NOT NULL,\
   idtag integer NOT NULL,\
-  idurl integer NOT NULL,\
-  "value" real,\
-  CONSTRAINT primarykey PRIMARY KEY (id),\
-  CONSTRAINT id_tags FOREIGN KEY (idtag)\
+  "value" real NOT NULL,\
+  CONSTRAINT visitedurltags_pkey PRIMARY KEY (id),\
+  CONSTRAINT visitedurltags_idtags_fkey FOREIGN KEY (idtag)\
       REFERENCES tags (id) MATCH SIMPLE\
-      ON UPDATE NO ACTION ON DELETE NO ACTION,\
-  CONSTRAINT id_url FOREIGN KEY (idurl)\
+      ON UPDATE NO ACTION ON DELETE CASCADE,\
+  CONSTRAINT visitedurltags_idvisitedurl_fkey FOREIGN KEY (idvisitedurl)\
       REFERENCES visitedurls (id) MATCH SIMPLE\
-      ON UPDATE NO ACTION ON DELETE NO ACTION\
+      ON UPDATE NO ACTION ON DELETE NO ACTION,\
+  CONSTRAINT tag_visitedurl_unique UNIQUE (idvisitedurl, idtag)\
 )\
 WITH (OIDS=FALSE);\
-ALTER TABLE tagvisitedurls OWNER TO web81_nereau;\
+ALTER TABLE visitedurltags OWNER TO web81_nereau;R TABLE tagvisitedurls OWNER TO web81_nereau;\
 \
 %%%\
 \
 (id idTagX idUrlN freq)\
 \
+devo ancora modificare le chiavi: \
+idtag + idurl deve essere super chiave - unique: se una delle due \'e9 diversa, stiamo parlando di un'altra tupla. \
+non posso avere\
+1 2 3 5\
+2 2 3 8\
+perch\'e9 2 e 3 si riferiscono allo stesso tag e allo stesso url. \
+ho messo CONSTRAINT tag_visitedurl_unique UNIQUE (idvisitedurl, idtag) \
+\
+poi nell'inserimento di un nuovo valore, uso questa tecnica tipo UPSERT scritta qui, di postgres\
+\pard\pardeftab720\ql\qnatural
+
+\f1\fs26 \cf0 http://www.postgresql.org/docs/8.3/static/sql-update.html
+\f0\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+TODO\
 \pard\pardeftab720\ql\qnatural
 
 \f1\fs26 \cf0 quindi, per ottenere tutti i Tagtfidf del sistema\
@@ -57,4 +74,15 @@ faccio un select unique tagvalue e poi faccio una query per ogni valore ottenuto
 \
 In qualche modo nel db dovr\'f3 aggiornare la tabella Tagtfidf ogni volta che un utente visita un sito, mettendoci dentro i tag che sono stati usati per quell'url. Perci\'f3 vorrei conoscere i tag associati ad ogni url visitato con un click dall'utente. \
 L'insieme dei tagtfidf rappresenta quindi un GlobalProfile che \'e9 aggiornato ogni volta che un utente clicca su un sito. Si aggiorna aggiungendo un'occorrenza a tutti i tag che annotano l'url cliccato.\
+\
+\
+%%% Tag co-occurrences %%%\
+poi servir\'e1 una tabella che permetta di ricostruire una matrice tag-tag con le co-occorrenze di un tag con tutti gli altri. \
+tag1: tag2-3 tag8-9 tag22-7\
+memorizzo solamente le chiavi cio\'e9 i tag per i quali esiste un valore di co-occorrenza diverso da 0, per risparmiare spazio. \
+La tabella per salvare queste informazioni potrebbe essere \
+id idtag1 idtag2 value. \
+(Il concetto \'e9 molto simile alla mappa che gi\'e1 esiste in nereau. )\
+\
+\
 }

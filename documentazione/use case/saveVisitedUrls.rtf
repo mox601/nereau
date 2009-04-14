@@ -77,6 +77,23 @@ La tabella \'e9 tagvisitedurls \
 con tante righe del tipo \
 (id idtag idurl value) \
 dove value \'e9 il numero di volte che si \'e9 incontrata una annotazione con quel tag riferita a quell'url. \
+se ho per esempio due tabelle con le stesse colonne, posso fare un merge "pilotato"?\
+per esempio, ho \
+1 3 5 22\
+2 3 6 33\
+3 4 2 87\
+e \
+4 3 5 7\
+8 3 6 44\
+10 44 2 45\
+Voglio che la tabella 2 venga costruita cos\'ed: \
+4 3 5 (22+7)\
+8 3 6 (33+44)\
+10 44 2 45\
+3 4 2 87\
+cio\'e9, se in due tuple ho lo stesso valore nei due attributi idtag e idurl, allora devo fare UPDATE e sommare il valore contenuto nell'ultimo attributo. Altrimenti, INSERT normale\
+L'operazione si chiama UPSERT. \'c9 possibile in postgres?\
+http://www.samsaffron.com/blog/archive/2007/04/04/14.aspx\
 \
 \
 \

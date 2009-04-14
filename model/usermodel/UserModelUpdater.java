@@ -184,7 +184,7 @@ public class UserModelUpdater {
 		GlobalProfileModel globalProfile = new GlobalProfileModel(urls);
 		/*TODO: dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
-		 * tagsvisitedurl */
+		 * tagsvisitedurl, usando gli id degli url e dei tags per—. */
 		globalProfile.updateGlobalProfile();
 		
 		

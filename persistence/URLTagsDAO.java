@@ -8,7 +8,7 @@ import model.URLTags;
 
 public interface URLTagsDAO {
 	
-	void save(LinkedList<URLTags> tags) throws PersistenceException;
+	void save(LinkedList<URLTags> urls) throws PersistenceException;
 
 
 }

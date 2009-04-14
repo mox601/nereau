@@ -29,6 +29,7 @@ public class CommonExpansionTagsStrategy extends ExpansionTagsStrategy {
 				commonTags.addAll(tags4term);
 				tagsInitialized = true;
 			}
+			// fa l'intersezione
 			else
 				commonTags.retainAll(tags4term);
 			logger.info("intersezione: " + commonTags);
