@@ -22,7 +22,7 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 		int tagId = 0; 
 		tagId = tagHandler.retrieveTagId(tag);
 		
-		 /* poi costruisci un tagtfidf estraendo i dati dalla tabella visitedurltags */
+		 /* TODO: poi costruisci un tagtfidf estraendo i dati dalla tabella visitedurltags */
 		
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
@@ -40,6 +40,7 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 						result.getInt("idvisitedurl") + " " +
 						result.getInt("idtag") + " " + 
 						result.getInt("value"));
+			
 			}
 		}
 		catch (SQLException e) {

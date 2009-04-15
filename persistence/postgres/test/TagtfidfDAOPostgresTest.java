@@ -22,6 +22,7 @@ public class TagtfidfDAOPostgresTest {
 		} catch (PersistenceException e) {
 			e.printStackTrace();
 		}
+		
 		System.out.println("tag id = " + tagObj.getTag());
 		
 	}
