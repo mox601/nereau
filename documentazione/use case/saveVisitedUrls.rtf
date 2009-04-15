@@ -99,7 +99,7 @@ WORKS!\
 http://www.postgresql.org/docs/current/static/plpgsql-control-structures.html#PLPGSQL-UPSERT-EXAMPLE\
 query upsert in postgres per i visitedurltags: \
 \
-CREATE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS\
+CREATE OE REPLACE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS\
 $$\
 BEGIN \
 LOOP\

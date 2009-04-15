@@ -10,12 +10,11 @@ public class TagDAOPostgresTest {
 	
 	@Test
 	public void retrieveTagIdTest() throws PersistenceException {
-		String tag = "physics";
-		TagDAOPostgres tagHandler = new TagDAOPostgres();;
+		String tag = "entertainment";
+		TagDAOPostgres tagHandler = new TagDAOPostgres();
 		int id = -1;  
 		id = tagHandler.retrieveTagId(tag);
 		System.out.println("tag id = " + id);
-		
 	}
 
 }
