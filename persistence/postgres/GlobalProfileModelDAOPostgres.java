@@ -76,6 +76,8 @@ public class GlobalProfileModelDAOPostgres implements GlobalProfileModelDAO {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	
 
 	private final String SQL_RETRIEVE_ALL = 
 		"SELECT * " +

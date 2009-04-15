@@ -37,6 +37,12 @@ public class URLTags {
 		this.tags = tags;
 	}
 
+	
+	public URLTags(String url, Set<RankedTag> tags) {
+		this.urlString = url;
+		this.tags = tags;
+	}
+	
 
 	public URLTags(VisitedURL vu, Set<RankedTag> tags) {
 		this.urlString = vu.getURL();

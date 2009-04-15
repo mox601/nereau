@@ -68,7 +68,7 @@ clustering co-occorrenze\
 \
 \
 \
-\
+%%%%%%%%%%%%%%%%%%%%%%%%%\
 search in Nereau - come funziona attualmente: \
 nereau.java chiama un metodo Set<ExpandedQuery> expandQuery(query, user) per avere le query espanse dell'utente relative ad una query. \
 Se ne occupa un oggetto QueryExpansionFacade, che ha il metodo expandQuery(query, user). Poi attiva un oggetto queryExpander con metodo expandQuery(query, user) che funziona cos\'ed: \
@@ -98,7 +98,11 @@ altrimenti, prendi dalla subMatrix tutte le chiavi relative al termine in questi
 \
 poi, sceglie solo i termini rilevanti nel treeset tags, rimuovendo il null_tag e trovando il maxranking dei tag. \
 Poi scorre tutti i tags facendo un pop alla volta e se \'e9 null, continua, mentre se il rank del RankedTag attuale / max ranking \'e9 minore di un parametro globale ParameterHandler.MIN_EXPANSIONTAGS_RELATIVE_VALUE, e il maxtag \'e9 NULL, allora aggiungi il RankedTag al risultato. altrimenti aggiungilo comunque. \
+\
 In sintesi?\
+%%%%%%%%%%%%%%%%%%%%%%%%%\
+\
+\
 Dove intervengo con l'espansione di Nereau 0.8?\
 \
 \

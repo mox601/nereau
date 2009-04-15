@@ -92,9 +92,30 @@ Voglio che la tabella 2 venga costruita cos\'ed: \
 10 44 2 45\
 3 4 2 87\
 cio\'e9, se in due tuple ho lo stesso valore nei due attributi idtag e idurl, allora devo fare UPDATE e sommare il valore contenuto nell'ultimo attributo. Altrimenti, INSERT normale\
-L'operazione si chiama UPSERT. \'c9 possibile in postgres?\
+L'operazione si chiama UPSERT. \'c9 possibile in postgres? SI\
 http://www.samsaffron.com/blog/archive/2007/04/04/14.aspx\
 \
+WORKS!\
+http://www.postgresql.org/docs/current/static/plpgsql-control-structures.html#PLPGSQL-UPSERT-EXAMPLE\
+query upsert in postgres per i visitedurltags: \
+\
+CREATE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS\
+$$\
+BEGIN \
+LOOP\
+UPDATE visitedurltags SET value = (value + val) WHERE idtag = tag AND idvisitedurl = url;\
+IF found THEN \
+RETURN;\
+END IF;\
+BEGIN\
+INSERT INTO visitedurltags(id, idvisitedurl, idtag, value) VALUES (DEFAULT, url, tag, val);\
+RETURN;\
+EXCEPTION WHEN unique_violation THEN\
+END;\
+END LOOP;\
+END;\
+$$\
+LANGUAGE plpgsql;\
 \
 \
 \

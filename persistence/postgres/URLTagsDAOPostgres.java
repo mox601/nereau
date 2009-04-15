@@ -51,11 +51,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			if (result.next()) {
 				idTag = result.getInt("id");
 			}
-
-			
-			save(idTag, idUrl);
-			
-		
+			save(idTag, idUrl);		
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
@@ -68,12 +64,25 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("saving idtag: " + idTag + " idurl: " + idUrl);
 		
 		try {
 			statement = connection.prepareStatement(SQL_UPSERT_TAG_URL);
+			int occurrence = 1;
+			/* TODO: trova un modo di salvare la stored procedure pgpsql una volta
+			 * invece di riscriverla ogni volta. COME? */
 			statement.setInt(1, idTag);
 			statement.setInt(2, idUrl);
-			statement.executeUpdate();
+			statement.setInt(3, occurrence);
+			ResultSet result;
+			result = statement.executeQuery();
+			if (result.next()) {
+//				System.out.println("idurl: " + result.getInt("idvisitedurl") + 
+//						" idtag:  " + result.getInt("idtag") + 
+//						" value: " + result.getInt("value"));
+			}
+			
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
@@ -83,15 +92,33 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	
 	/* dalla documentazione: http://www.postgresql.org/docs/8.3/static/sql-update.html*/
 	
-	/* come lascio il valore di default sulla chiave? manuale di insert */
-	private final String SQL_UPSERT_TAG_URL = 
-		"BEGIN; \n" +
-		"SAVEPOINT sp1; " +
-		"INSERT INTO visitedurltags VALUES(?, ?, ?, ?);"  +
-		"ROLLBACK TO sp1" +
-		"UPDATE visitedurltags SET value = value + ? WHERE idtag = ? AND idurl = ?;" +
-		"COMMIT;";
+	/*
+	CREATE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS
+	$$
+	BEGIN 
+	LOOP
+	UPDATE visitedurltags SET value = (value + val) WHERE idtag = tag AND idvisitedurl = url;
+	IF found THEN 
+	RETURN;
+	END IF;
+	BEGIN
+	INSERT INTO visitedurltags(id, idvisitedurl, idtag, value) VALUES (DEFAULT, url, tag, val);
+	RETURN;
+	EXCEPTION WHEN unique_violation THEN
+	END;
+	END LOOP;
+	END;
+	$$
+	LANGUAGE plpgsql; 
+	 * */
 	
+	
+	
+	
+	/* URL, TAG, VALUE */
+	private final String SQL_UPSERT_TAG_URL = 
+		"SELECT merge_visitedurltags(?, ?, ?);";
+
 
 	public void save(URLTags url) throws PersistenceException {
 		/* salva su db tutte le coppie (tag1, url), (tag2, url)...*/
@@ -100,6 +127,9 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statementUrlId = null;
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("salvo l'url: " + url.getUrlString());
+		
 		try {
 			statementUrlId = connection.prepareStatement(SQL_RETRIEVE_VISITEDURL_ID);
 			statementUrlId.setString(1, url.getUrlString());

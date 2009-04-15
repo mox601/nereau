@@ -2,6 +2,7 @@ package persistence.postgres;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -69,4 +70,48 @@ public class TagDAOPostgres implements TagDAO {
 		"); \n" +
 		"COMMIT TRANSACTION; \n";
 
+	@Override
+	public int retrieveTagId(String tag) throws PersistenceException {
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		int id = -1;
+		try {
+			String query = this.prepareStatementForRetrieve(tag);
+			statement = connection.prepareStatement(query);
+			statement.setString(1, tag);
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				id = result.getInt("id");
+			}
+		}
+		catch (SQLException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		finally {
+			dataSource.close(statement);
+			dataSource.close(connection);
+		}
+		
+		return id;
+	}
+
+	private String prepareStatementForRetrieve(String tag) {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("estrazione tag: " + tag);
+		StringBuffer query = new StringBuffer();
+		query.append(SQL_SELECT_ID_TAG);
+		logger.info("query: \n" + query);
+		return query.toString();
+	}
+
+		
+	private final String SQL_SELECT_ID_TAG = 
+		"SELECT id " +
+		"FROM tags " +
+		"WHERE tag = ?;";
+	
+//	la solitudine ripaga con l'eccellenza
+
+	
 }

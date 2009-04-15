@@ -7,5 +7,6 @@ import model.RankedTag;
 public interface TagDAO {
 
 	void save(Set<RankedTag> tags) throws PersistenceException;
+	int retrieveTagId(String tag) throws PersistenceException;
 
 }
