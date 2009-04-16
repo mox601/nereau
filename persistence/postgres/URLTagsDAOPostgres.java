@@ -14,7 +14,7 @@ import persistence.PersistenceException;
 import persistence.URLTagsDAO;
 import util.LogHandler;
 
-/* salva gli url e i tag associati. 
+/* salva le associazioni tra gli url e i tag. 
  * deve fare distinzione tra inserimenti e aggiornamenti dei dati. 
  * La tabella Ž tagvisitedurls, con tante righe del tipo 
  * (id idtag idurl value) 
@@ -36,7 +36,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	}
 	
 	
-	public void save(String tag, Integer idUrl) throws PersistenceException {
+	public void save(Integer idUrl, String tag) throws PersistenceException {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
@@ -51,7 +51,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			if (result.next()) {
 				idTag = result.getInt("id");
 			}
-			save(idTag, idUrl);		
+			save(idUrl, idTag);		
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
@@ -60,28 +60,32 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	
 
 
-	private void save(Integer idTag, Integer idUrl) throws PersistenceException {
+	private void save(Integer idUrl, Integer idTag) throws PersistenceException {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("saving idtag: " + idTag + " idurl: " + idUrl);
+		logger.info("saving idurl: " + idUrl + " idtag: " + idTag);
 		
 		try {
 			statement = connection.prepareStatement(SQL_UPSERT_TAG_URL);
 			int occurrence = 1;
 			/* TODO: trova un modo di salvare la stored procedure pgpsql una volta
 			 * invece di riscriverla ogni volta. COME? */
-			statement.setInt(1, idTag);
-			statement.setInt(2, idUrl);
+			
+			statement.setInt(1, idUrl);
+			statement.setInt(2, idTag);
 			statement.setInt(3, occurrence);
 			ResultSet result;
 			result = statement.executeQuery();
+			
+			/*
 			if (result.next()) {
-//				System.out.println("idurl: " + result.getInt("idvisitedurl") + 
-//						" idtag:  " + result.getInt("idtag") + 
-//						" value: " + result.getInt("value"));
+				System.out.println("idurl: " + result.getInt("idvisitedurl") + 
+						" idtag:  " + result.getInt("idtag") + 
+						" value: " + result.getInt("value"));
 			}
+			*/
 			
 		}
 		catch (SQLException e) {
@@ -131,6 +135,10 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		logger.info("salvo l'url: " + url.getUrlString());
 		
 		try {
+			/* mi restituisce il primo id con cui Ž apparso quell'url 
+			 * TODO: Ž un problema avere due visitedurls diversi 
+			 * con la stessa stringa url? 
+			 * */
 			statementUrlId = connection.prepareStatement(SQL_RETRIEVE_VISITEDURL_ID);
 			statementUrlId.setString(1, url.getUrlString());
 			ResultSet result;
@@ -141,7 +149,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			}
 
 			for(RankedTag rTag: url.getTags()) {
-				save(rTag.getTag(), idUrl);
+				save(idUrl, rTag.getTag());
 			}
 			
 		} catch (SQLException e) {

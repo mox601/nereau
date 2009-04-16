@@ -169,7 +169,8 @@ public class Tagtfidf extends Tag {
 	/* occhio al tipo di ritorno, vorrei fosse rappresentativo. 
 	 * TRUE/FALSE? */
 	/* TODO: ho levato il parametro Integer frequency:  
-	 * perché dovrei poter specificare un valore per l'occorrenza dell'url? */
+	 * perché dovrei poter specificare un valore per l'occorrenza dell'url? 
+	 * perché quando costruisco il Tag estraendolo dal database ha senso... */
 	public boolean addUrlOccurrency(String url) {
 		boolean success = false;
 		/* verifica se l'url esiste: 
@@ -198,6 +199,36 @@ public class Tagtfidf extends Tag {
 //		}
 		return success;
 	}
+	
+	
+	/* altro metodo, utile nella costruzione degli url quando li 
+	 * estraggo dal database 
+	 * TODO: test addurlOccurrences*/
+	public boolean addUrlOccurrences(String url, Integer freq) {
+		boolean success = false;
+		/* verifica se l'url esiste: 
+		 * se esiste, aggiungi un'occorrenza, 
+		 * altrimenti fai una nuova chiave e aggiungila alla mappa */
+		Integer oldValue = null; 
+		oldValue = this.tagUrlsMap.get(url);
+		if (oldValue == null) {
+			// aggiungo le occorrenze del tag per l'url (nuovo) specificato 
+			this.tagUrlsMap.put(url, freq);
+			this.totalUrls = this.totalUrls + 1;
+			success = true;
+		} else {
+			this.tagUrlsMap.put(url, oldValue + freq);
+			System.out.print("tag " + this.getTag());
+			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
+			success = true; 
+		}
+	
+		return success;
+	}
+	
+	
+	
+	
 	
 	/* restituisce la frequenza di un url di un tag */
 	public Integer getUrlFrequency(String url) {

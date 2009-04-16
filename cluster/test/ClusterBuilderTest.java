@@ -6,6 +6,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import persistence.PersistenceException;
+import persistence.postgres.TagtfidfDAOPostgres;
+
 import cluster.ClusterBuilder;
 import cluster.Node;
 import cluster.Tagtfidf;
@@ -21,8 +24,13 @@ public class ClusterBuilderTest {
 		/* estrae tutti i tags dal database e ne costruisce una lista di
 		 *  clusters (Node) */
 		/* TODO: DEMO */
-		/* TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres(); */
-		/* List<Tagtfidf> extractedTags = tagTfidfHandler.retrieveAllTags(); */
+		TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres();
+		try {
+			List<Tagtfidf> extractedTags = tagTfidfHandler.retrieveAllTags();
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/* poi costruisce un cluster a partire da ogni tag 
 		 * for (Tagtfidf tag: extractedTags) {
