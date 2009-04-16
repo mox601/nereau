@@ -13,7 +13,8 @@ public class ClusterBuilder {
 	}
 	
 	/* metodo che costruisce i clusters iterativamente 
-	 * algoritmo gerarchico di shepitsen */
+	 * algoritmo gerarchico di shepitsen. 
+	 * TODO: Deve restituire un Tree, con una root. */
 	public void buildClusters() {
 		System.out.println("INIZIO");
 		double similarity = 1.0;

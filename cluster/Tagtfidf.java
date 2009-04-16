@@ -40,7 +40,8 @@ public class Tagtfidf extends Tag {
 	
 	public Tagtfidf(List<Tagtfidf> tagsToMerge) {
 		
-	/* costruisce un tag average con i tagsToMerge */
+	/* costruisce un tag medio con i tagsToMerge. 
+	 * ƒ il centroide dei tag passati nella lista. */
 		
 		this.tagUrlsMap = new HashMap<String, Integer>();
 		

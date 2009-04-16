@@ -245,7 +245,11 @@ public class QueryExpander {
 	}
 
 	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {
-		// TODO Auto-generated method stub
+		/* si deve basare sui tag che hanno partecipato all'espansione 
+		 * vecchia, deve ricevere in qualche modo i vettori dei tag e
+		 * i valori dei termini per poi sommarli e formare espansioni diverse */
+
+		
 		return null;
 	}
 

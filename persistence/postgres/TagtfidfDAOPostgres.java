@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import cluster.Tagtfidf;
 import persistence.PersistenceException;
@@ -60,6 +61,14 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 		"SELECT *" +
 		"FROM visitedurltags" +
 		"WHERE idtag = ?;";
+
+
+
+	@Override
+	public List<Tagtfidf> retrieveAllTags() throws PersistenceException {
+		// TODO estrai tutti i tagtfidf dalla tabella visitedurltags
+		return null;
+	}
 	
 	
 

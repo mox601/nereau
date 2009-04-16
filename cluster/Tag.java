@@ -11,7 +11,4 @@ public abstract class Tag {
 	private Map<String, Integer> tagMap;
 	
 	
-	
-	
-
 }

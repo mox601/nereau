@@ -17,13 +17,19 @@ public class ClusterBuilderTest {
 	private List<Node> clustersToMerge;
 	
 	@Before
-	public void setUpNodesForClustering() {
+	public void setUpNodesForClusteringFromDatabase() {
 		/* estrae tutti i tags dal database e ne costruisce una lista di
 		 *  clusters (Node) */
-		/* usa questo costruttore per ogni tag estratto */
-		// new Tagtfidf(String tag, Map<String, Integer> tagUrlsMap);
-		/* poi costruisce un cluster a partire da ogni tag */
-		// Node(String value, Tagtfidf tagCentroid);
+		/* TODO: DEMO */
+		/* TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres(); */
+		/* List<Tagtfidf> extractedTags = tagTfidfHandler.retrieveAllTags(); */
+		
+		/* poi costruisce un cluster a partire da ogni tag 
+		 * for (Tagtfidf tag: extractedTags) {
+		/* 		Node currentNode = Node(nodeValue, tag);
+		 * 		this.clustersToMerge.add(currentNode); 
+		 * }
+		 * */
 		
 	}
 	

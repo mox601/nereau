@@ -50,6 +50,7 @@ public class Nereau {
 		return expandedQueries;
 	}
 	
+	/* nuovo comando per l'espansione con Tagtfidf*/
 	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {
 		Set<ExpandedQuery> expandedQueriesTfidf = 
 			this.queryExpansionFacade.expandQuery(queryString,user);
