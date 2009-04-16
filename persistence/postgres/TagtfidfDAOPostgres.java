@@ -16,7 +16,6 @@ import persistence.TagtfidfDAO;
 
 public class TagtfidfDAOPostgres implements TagtfidfDAO {
 
-	
 	@Override
 	public Tagtfidf retrieveTag(String tag) throws PersistenceException {
 		TagDAOPostgres tagHandler = null;
@@ -84,37 +83,38 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 		PreparedStatement statement = null;
 		
 		try {
-			String query = SQL_JOIN_VISITEDURLTAGS_URLS_TAGS; 
+			String query = SQL_JOIN_VISITEDURLTAGS_URLS_TAGS_UNIQUE_TAGS; 
 			/* Potrei anche fare una query piœ intelligente, 
 			 * che mi da tutti i record che hanno un certo tag
-			 * TODO: come fare la query? */
+			 */
+			
+			/* TODO: faccio due query diverse: 
+			 * 1) vedo tutti i tag presenti e costruisco per ognuno un Tagtfidf; 
+			 * 2) itero su ogni Tagtfidf costruito e faccio una query per estrarre
+			 * tutti gli url associati a quel tag. */
 			statement = connection.prepareStatement(query);
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				String actualTagString = result.getString("tag");
-				String actualUrlString = result.getString("url");
-				Integer actualFrequency = result.getInt("value");
-				System.out.println(actualUrlString + " " + 
-						actualTagString + " " + actualFrequency);
-				/* per ogni riga del risultato, */ 
-				 /* query stupida, metodo di costruzione stupido... */
-				if (allTags.containsKey(actualTagString)) {
-					allTags.get(actualTagString).addUrlOccurrences(actualUrlString, actualFrequency);
-				} else {
-					Map<String, Integer> tagUrlsMap = new HashMap<String, Integer>();
-					/* costruzione della mappa degli url per il tag corrente */
-					// si pu— fare? boh!
-					Tagtfidf tagTfidf = new Tagtfidf(actualTagString, tagUrlsMap);
-					allTags.put(actualTagString, tagTfidf);
-				}
-
-				
-			
+				System.out.println(actualTagString);
+				/* creo un tagtfidf vuoto! per ogni record trovato 
+				 * e lo aggiungo alla lista */
+//				Tagtfidf actualTag = new Tagtfidf(actualTagString);
+//				allTags.put(actualTagString, actualTag);
 			}
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
 		}
+		/* secondo batch di query: una per ogni tagtfidf. 
+		 * faccio una query sul db per ottenere gli url relativi al tagtfidf 
+		 * in questione */
+		
+		
+		
+		
+		
+		
 		finally {
 			dataSource.close(statement);
 			dataSource.close(connection);
@@ -130,6 +130,15 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 		"INNER JOIN visitedurltags ON visitedurls.id = visitedurltags.idvisitedurl) " +
 		"AS TAGS_URL " +
 		"INNER JOIN tags ON TAGS_URL.idtag = tags.id;";
+
+	
+	private static final String SQL_JOIN_VISITEDURLTAGS_URLS_TAGS_UNIQUE_TAGS = 
+		"SELECT DISTINCT tag FROM " +
+		"(SELECT * FROM visitedurls " +
+		"INNER JOIN visitedurltags ON visitedurls.id = visitedurltags.idvisitedurl) " +
+		"AS TAGS_URL " +
+		"INNER JOIN tags ON TAGS_URL.idtag = tags.id;";
+
 
 	
 
