@@ -103,7 +103,7 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 				} else {
 					Map<String, Integer> tagUrlsMap = new HashMap<String, Integer>();
 					/* costruzione della mappa degli url per il tag corrente */
-					
+					// si pu— fare? boh!
 					Tagtfidf tagTfidf = new Tagtfidf(actualTagString, tagUrlsMap);
 					allTags.put(actualTagString, tagTfidf);
 				}
