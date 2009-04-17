@@ -129,7 +129,7 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 					/* TODO: crea un Tagtfidf completo, con tutti gli attributi */
 					String actualUrl = resultTag.getString("url");
 //					System.out.println("url estratto: " + actualUrl);
-					tag.addUrlOccurrency(actualUrl);
+					tag.addUrlOccurrences(actualUrl, 1);
 				}
 
 			}

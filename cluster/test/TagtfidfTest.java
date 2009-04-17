@@ -117,7 +117,7 @@ public class TagtfidfTest {
 		// il tag deve esistere
 		Integer oldFrequency =  tag1.getUrlFrequency(oldUrl);
 		assertNotNull(oldFrequency);
-		tag1.addUrlOccurrency(oldUrl);
+		tag1.addUrlOccurrences(oldUrl, 1);
 		assertEquals(new Integer(1 + oldFrequency), tag1.getUrlFrequency(oldUrl));
 		
 		/* aggiunge al tag un'occorrenza di un sito nuovo */

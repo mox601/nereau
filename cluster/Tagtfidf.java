@@ -199,6 +199,7 @@ public class Tagtfidf extends Tag {
 	/* TODO: ho levato il parametro Integer frequency:  
 	 * perché dovrei poter specificare un valore per l'occorrenza dell'url? 
 	 * perché quando costruisco il Tag estraendolo dal database ha senso... */
+	/* DEPRECATED , use addUrlOccurrences(String, int) instead */
 	public boolean addUrlOccurrency(String url) {
 		boolean success = false;
 		/* verifica se l'url esiste: 
@@ -220,11 +221,7 @@ public class Tagtfidf extends Tag {
 			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
 			success = true; 
 		}
-		
-//		if (this.tagUrlsMap.containsKey(url)) {
-//			double newValue = this.tagUrlsMap.get(url).doubleValue() + 1;
-//			this.tagUrlsMap.put(url, newValue);
-//		}
+	
 		return success;
 	}
 	
@@ -245,6 +242,7 @@ public class Tagtfidf extends Tag {
 			this.totalUrls = this.totalUrls + 1;
 			success = true;
 		} else {
+			/* put fa il rimpiazzo della chiave, valore se la chiave giá esisteva */
 			this.tagUrlsMap.put(url, oldValue + freq);
 			System.out.print("tag " + this.getTag());
 			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
