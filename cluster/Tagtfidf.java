@@ -38,6 +38,16 @@ public class Tagtfidf extends Tag {
 		this.totalUrls = new Integer(this.tagUrlsMap.size());
 	}
 	
+	public Tagtfidf(String tagValue) {
+		this.tag = tagValue;
+		this.tagUrlsMap = new HashMap<String, Integer>();
+		this.totalUrls = new Integer(this.tagUrlsMap.size());
+	}
+	
+	
+	
+	
+	
 	public Tagtfidf(List<Tagtfidf> tagsToMerge) {
 		
 	/* costruisce un tag medio con i tagsToMerge. 
@@ -147,6 +157,24 @@ public class Tagtfidf extends Tag {
 		cosineSimilarity = numeratore / denominatore;
 		
 		return cosineSimilarity;
+	}
+	
+	
+	public String toString() {
+		String tagRepresentation;
+		StringBuffer sBuffer = new StringBuffer();
+		
+		sBuffer.append(getTag() + " :" );
+		
+		sBuffer.append(" {");
+		for (String key: this.getKeys()) {
+			Integer freq = this.getUrlFrequency(key);
+			sBuffer.append(" " + key + ": " + freq + " -");
+		}
+		sBuffer.append(" }");
+		
+		tagRepresentation = sBuffer.toString();
+		return tagRepresentation;
 	}
 	
 	

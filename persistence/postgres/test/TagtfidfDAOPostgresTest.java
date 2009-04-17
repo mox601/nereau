@@ -34,7 +34,7 @@ public class TagtfidfDAOPostgresTest {
 	
 	@Test
 	public void testRetrieveAllTags() {
-		
+		/* TODO: demo claudio */
 		TagtfidfDAOPostgres tagsHandler = new TagtfidfDAOPostgres();
 		List<Tagtfidf> tagsList = new LinkedList<Tagtfidf>();
 		
@@ -44,6 +44,11 @@ public class TagtfidfDAOPostgresTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		for (Tagtfidf tag: tagsList) {
+			System.out.println(tag.toString());
+		}
+		
 	}
 	
 	
