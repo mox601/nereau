@@ -25,17 +25,56 @@ import util.LogHandler;
 public class URLTagsDAOPostgres implements URLTagsDAO {
 
 	public void save(LinkedList<URLTags> urls) throws PersistenceException {
-		DataSource dataSource = DataSource.getInstance();
-		Connection connection = dataSource.getConnection();
+//		DataSource dataSource = DataSource.getInstance();
+//		Connection connection = dataSource.getConnection();
 		
 		for (URLTags url: urls) {
 			save(url);
 		}
 		
-		dataSource.close(connection);	
+//		dataSource.close(connection);	
 	}
 	
 	
+	public void save(URLTags url) throws PersistenceException {
+		/* salva su db tutte le coppie (tag1, url), (tag2, url)...*/
+		
+		/* prima, estrai il valore dell'idurl */
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statementUrlId = null;
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("salvo l'url: " + url.getUrlString());
+		
+		try {
+			/* mi restituisce il primo id con cui Ž apparso quell'url 
+			 * TODO: Ž un problema avere due visitedurls diversi !!!
+			 * con la stessa stringa url? SI 
+			 * Potrei fare una nuova tabella con solo gli url visitati, 
+			 * senza distinguere due url quando sono visitati da due utenti
+			 * diversi!!!
+			 * */
+			statementUrlId = connection.prepareStatement(SQL_RETRIEVE_VISITEDURL_ID);
+			statementUrlId.setString(1, url.getUrlString());
+			ResultSet result;
+			result = statementUrlId.executeQuery();
+			Integer idUrl = -1;
+			if (result.next()) {
+				idUrl = result.getInt("id");
+			}
+	
+			for(RankedTag rTag: url.getTags()) {
+				save(idUrl, rTag.getTag());
+			}
+			
+		} catch (SQLException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		
+		
+	}
+
+
 	public void save(Integer idUrl, String tag) throws PersistenceException {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
@@ -93,7 +132,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		}
 	}
 
-	
+	/* UPSERT */
 	/* dalla documentazione: http://www.postgresql.org/docs/8.3/static/sql-update.html*/
 	
 	/*
@@ -124,41 +163,6 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		"SELECT merge_visitedurltags(?, ?, ?);";
 
 
-	public void save(URLTags url) throws PersistenceException {
-		/* salva su db tutte le coppie (tag1, url), (tag2, url)...*/
-		
-		/* prima, estrai il valore dell'idurl */
-		DataSource dataSource = DataSource.getInstance();
-		Connection connection = dataSource.getConnection();
-		PreparedStatement statementUrlId = null;
-		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("salvo l'url: " + url.getUrlString());
-		
-		try {
-			/* mi restituisce il primo id con cui Ž apparso quell'url 
-			 * TODO: Ž un problema avere due visitedurls diversi 
-			 * con la stessa stringa url? 
-			 * */
-			statementUrlId = connection.prepareStatement(SQL_RETRIEVE_VISITEDURL_ID);
-			statementUrlId.setString(1, url.getUrlString());
-			ResultSet result;
-			result = statementUrlId.executeQuery();
-			Integer idUrl = -1;
-			if (result.next()) {
-				idUrl = result.getInt("id");
-			}
-
-			for(RankedTag rTag: url.getTags()) {
-				save(idUrl, rTag.getTag());
-			}
-			
-		} catch (SQLException e) {
-			throw new PersistenceException(e.getMessage());
-		}
-		
-		
-	}
-	
 	private final String SQL_RETRIEVE_VISITEDURL_ID = 
 		"SELECT id " +
 		"FROM visitedurls " +

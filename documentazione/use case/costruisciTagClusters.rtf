@@ -7,7 +7,8 @@
 \f0\fs24 \cf0 il sistema costruisce i cluster di tutti i tag presenti nel sistema, usando tutti gli url visitati da tutti gli utenti e i loro tag associati. \
 \
 La rappresentazione dei tag pu\'f3 essere di due tipi: \
-1) TagTfidf tag-url dove ogni valore \'e9 il tf(t1, u1) (l'idf \'e9 salvato come attributo del tag o globale), cio\'e9 il numero di volte che il tag t1 \'e9 stato usato per annotare l'url u1 in questione. L'algoritmo di clustering \'e9 quello gerarchico di Shepitsen, che \'e9 gi\'e1 progettato per questa rappresentazione\
+1) TagTfidf tag-url dove ogni valore \'e9 il tf(t1, u1) (l'idf \'e9 salvato come attributo del tag o globale), cio\'e9 il numero di volte che il tag t1 \'e9 stato usato per annotare l'url u1 in questione. L'algoritmo di clustering \'e9 quello gerarchico di Shepitsen, che \'e9 gi\'e1 progettato per questa rappresentazione. \
+Nel fondere due o pi\'fa tag, si usa il tag medio. Cambio di rappresentazione dei Tagtfidf. \
 \
 2) co-occorrenza tag-tag, dove ogni tag \'e9 rappresentato come le relative co-occorrenze. Posso usare lo stesso algoritmo gerarchico, basato su coseno-somiglianza? Secondo Cattuto2008 per calcolare la somiglianza si potrebbe fare in 2 (3) modi: co-occorrenza oppure coseno somiglianza di distribuzioni di co-occorrenza. \
 \
@@ -37,7 +38,6 @@ Quindi una nuova linguetta per ogni cluster di tag. \
 \
 Devo capire come vengono scambiati i tag tra nereau e l'interfaccia php e \
 fare una nuova parte di php che riceve il cluster dal server nereau nel momento in cui si presentano i risultati per un'espansione. \
-\
 \
 I risultati (appartenenza tag-cluster) sono poi salvati in una tabella del database. \
 Genera un certo numero di cluster di tags (a grana pi\'fa o meno fine, in base alla distribuzione dei tag scelti dall'espansione di nereau 0.7)\

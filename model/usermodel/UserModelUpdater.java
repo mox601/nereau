@@ -169,7 +169,8 @@ public class UserModelUpdater {
 			logger.info("modello aggiornato con visitedUrls forniti...");
 			
 			
-			/*aggiungi i tags in un set di tags, che poi viene passato al GlobalModel*/
+			/* aggiungi i tags in un set di tags, che poi viene passato al GlobalModel*/
+			
 			Set<RankedTag> tagSet = new HashSet<RankedTag>();
 			tagSet.addAll(tempMatrix.keySet());
 			URLTags url = new URLTags(vu, tagSet);

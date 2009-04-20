@@ -122,8 +122,8 @@ public class TagtfidfTest {
 		
 		/* aggiunge al tag un'occorrenza di un sito nuovo */
 		String newUrl = "http://www.abkhfjdsohgos.it/";
-		/* l'url aggiunto in questo caso non deve esistere prima */
-		assertNull(tag1.getUrlFrequency(newUrl));
+		/* l'url aggiunto in questo caso non deve esistere prima, frequenza 0 */
+		assertEquals((Integer) 0, tag1.getUrlFrequency(newUrl));
 		tag1.addUrlOccurrency(newUrl);
 		assertEquals(new Integer(1), tag1.getUrlFrequency(newUrl));
 			
@@ -183,7 +183,8 @@ public class TagtfidfTest {
 //		System.out.println("numero di url 1: " + numberOfUrls);
 		for (int i = 0; i < numberOfUrls; i++) {
 
-			String key = "a";
+			String number = Integer.toString(i);
+			String key = "a".concat(number);
 //			System.out.println(url);
 			
 			int urlTagFrequency = (int) (Math.random() * 100);
@@ -231,14 +232,26 @@ public class TagtfidfTest {
 		tagsToMerge.add(tag2);
 		Tagtfidf mergedTags = new Tagtfidf(tagsToMerge);
 		
-		/* il tag merged deve contenere chiavi con i valori che sono la somma dei 
+		/* il tag merged deve contenere chiavi con i valori che sono la media dei 
 		 * valori corrispondenti alle chiavi sommate */
 		mergedTags.getKeys();
 		Set<String> mergedKeys = new HashSet<String>(tag1.getKeys());
 		mergedKeys.addAll(tag2.getKeys());
 //		ArrayList<String> expectedKeyList = new ArrayList<String>(mergedKeys);
-		Set<String> actualSet = new HashSet<String>(mergedTags.getKeys());
-		assertEquals(mergedKeys, actualSet);
+		Set<String> actualKeySet = new HashSet<String>(mergedTags.getKeys());
+		assertEquals(mergedKeys, actualKeySet);
+		
+		for (String mergedKey: mergedKeys) {
+			Integer freq1 = tag1.getUrlFrequency(mergedKey);
+			Integer freq2 = tag2.getUrlFrequency(mergedKey);
+			Integer averageFreq = (freq1 + freq2) / tagsToMerge.size();
+			/* verifica che la somma delle occorrenze sia corretta nel 
+			 * tag fusione: cioé la media! 
+			 * TODO: allora passo a double 
+			 * per rappresentare le occorrenze? sono possibili dei valori con 
+			 * la virgola!! */
+			assertEquals(mergedTags.getUrlFrequency(mergedKey), averageFreq);
+		}
 		
 	}
 	
