@@ -114,11 +114,11 @@ public class GlobalProfileModel {
 //					logger.info("aggiungo l'url " + currentUrl.getUrlString() +" al tag " + currentTag.getTag());
 					/* verifica! */
 //					System.out.println("tag trovato: " + presentTag.getTag());
-					presentTag.addUrlOccurrences(currentUrl.getUrlString(), 1);	
+					presentTag.addUrlOccurrences(currentUrl.getUrlString(), 1.0);	
 				} else {
 					/* altrimenti, crea un nuovo tag Tfidf */
-					Map<String, Integer> tagUrlsMap = new HashMap<String, Integer>();
-					tagUrlsMap.put(currentUrl.getUrlString(), 1);
+					Map<String, Double> tagUrlsMap = new HashMap<String, Double>();
+					tagUrlsMap.put(currentUrl.getUrlString(), 1.0);
 					Tagtfidf newTagtfidf = new Tagtfidf(currentTag.getTag(), tagUrlsMap);
 					this.tags.add(newTagtfidf);
 //					logger.info("tag nuovo: " + newTagtfidf.getTag());

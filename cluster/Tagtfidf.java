@@ -27,12 +27,13 @@ public class Tagtfidf extends Tag {
 	// le Map<K, V> accettano solo istanze di classi come K e V
 //	private Map<String, Map<RankedTag, Map<String, Double>>> userMatrix;
 	private String tag;
-	private Map<String, Integer> tagUrlsMap;
+	//cambio di rappresentazione: da Integer a Double
+	private Map<String, Double> tagUrlsMap;
 	/* numero di risorse annotate con il tag attuale: Ž la lunghezza degli elementi 
 	 * della mappa tagUrl? */
 	private Integer totalUrls;
 	
-	public Tagtfidf(String tag, Map<String, Integer> tagUrlsMap) {
+	public Tagtfidf(String tag, Map<String, Double> tagUrlsMap) {
 		this.tag = tag;
 		this.tagUrlsMap = tagUrlsMap;
 		this.totalUrls = new Integer(this.tagUrlsMap.size());
@@ -40,7 +41,7 @@ public class Tagtfidf extends Tag {
 	
 	public Tagtfidf(String tagValue) {
 		this.tag = tagValue;
-		this.tagUrlsMap = new HashMap<String, Integer>();
+		this.tagUrlsMap = new HashMap<String, Double>();
 		this.totalUrls = new Integer(this.tagUrlsMap.size());
 	}
 	
@@ -52,7 +53,7 @@ public class Tagtfidf extends Tag {
 	/* costruisce un tag medio con la lista di tagsToMerge. 
 	 * ƒ il centroide dei tag passati nella lista. */
 		int numTags = tagsToMerge.size();
-		this.tagUrlsMap = new HashMap<String, Integer>();
+		this.tagUrlsMap = new HashMap<String, Double>();
 		/* prendo tutte le chiavi che compaiono in tutti i tag (senza ripetizioni) */
 		ArrayList<String> tagsKeys = this.getAllKeys(tagsToMerge);
 		this.totalUrls = tagsKeys.size();
@@ -63,7 +64,7 @@ public class Tagtfidf extends Tag {
 			/* estrai tutti i valori corrispondenti a questa chiave e sommali tra loro 
 			 * al termine aggiungi la nuova (key,sumValue) */
 			Iterator<Tagtfidf> it = tagsToMerge.iterator();
-			Integer accumulatore = 0;
+			Double accumulatore = 0.0;
 			while(it.hasNext()) {
 				Tagtfidf currentTag = it.next();
 				if (currentTag.getTagUrlsMap().containsKey(key)) {
@@ -88,8 +89,8 @@ public class Tagtfidf extends Tag {
 	
 	/* metodo duplicato? 
 	 * quando non Ž presente un url, restituisce 0 */
-	public Integer getValue(String url) {
-		Integer value = null;
+	public Double getValue(String url) {
+		Double value = null;
 		if (this.getTagUrlsMap().containsKey(url)) {
 			value = this.getTagUrlsMap().get(url);
 		}
@@ -119,16 +120,15 @@ public class Tagtfidf extends Tag {
 	public Double compareToTag(Tagtfidf tagToCompare) {
 		Double cosineSimilarity = 0.0;
 		Double numeratore = 0.0;
-		Iterator<Entry<String, Integer>> iterator1 = this.getTagUrlsMap().entrySet().iterator();
+		Iterator<Entry<String, Double>> iterator1 = this.getTagUrlsMap().entrySet().iterator();
 		
 		while (iterator1.hasNext()) {
-			Map.Entry<String, Integer> keyValue1 = (Entry<String, Integer>) iterator1.next();
-			Integer value2 = null;
-			value2 = tagToCompare.getUrlFrequency(keyValue1.getKey());
+			Map.Entry<String, Double> keyValue1 = (Entry<String, Double>) iterator1.next();
+			Double value2 = tagToCompare.getUrlFrequency(keyValue1.getKey());
 //			System.out.println("chiave " + keyValue1.getKey() + " valore " + keyValue1.getValue());
 			
 			/* fai il prodotto e aggiungi all'accumulatore */			
-			if (value2 != null) {
+			if (value2 != 0.0) {
 //				System.out.println("keyfound: " + keyValue1.getKey() + " value: " + keyValue1.getValue());
 				numeratore = numeratore + (keyValue1.getValue() * value2);			
 			}
@@ -162,7 +162,7 @@ public class Tagtfidf extends Tag {
 		
 		sBuffer.append(" {");
 		for (String key: this.getKeys()) {
-			Integer freq = this.getUrlFrequency(key);
+			Double freq = this.getUrlFrequency(key);
 			sBuffer.append(" " + key + ": " + freq + " -");
 		}
 		sBuffer.append(" }");
@@ -175,13 +175,11 @@ public class Tagtfidf extends Tag {
 	public Double getModule() {
 		Double module = 0.0;
 		/* somma tutti i quadrati degli elementi della mappa. */
-		Collection<Integer> values = this.getTagUrlsMap().values();
+		Collection<Double> values = this.getTagUrlsMap().values();
 		
-		Iterator<Integer> it = values.iterator();
-		while (it.hasNext()) {
-			Integer value = (Integer) it.next();
+		for (Double value: values) {
 			module = module + Math.pow(value, 2);
-//			System.out.println(module.intValue());
+//			System.out.println(module.intValue());	
 		}
 		module = Math.sqrt(module.doubleValue());
 		return module;
@@ -199,18 +197,18 @@ public class Tagtfidf extends Tag {
 		/* verifica se l'url esiste: 
 		 * se esiste, aggiungi un'occorrenza, 
 		 * altrimenti fai una nuova chiave e aggiungila alla mappa */
-		Integer oldValue = null; 
+		Double oldValue = null; 
 		oldValue = this.tagUrlsMap.get(url);
-		if (oldValue == null) {
+		if (oldValue == 0.0) {
 			// aggiungo un'occorrenza del tag per l'url (nuovo) specificato 
-			this.tagUrlsMap.put(url, 1);
+			this.tagUrlsMap.put(url, 1.0);
 			// aumento di 1 totalUrls, contiene un url in piœ
 			this.totalUrls = this.totalUrls + 1;
 			success = true;
 		} else {
 			/* aggiorno il valore esistente, aggiungendo un'occorrenza */
 			/* TODO: uhm... */
-			this.tagUrlsMap.put(url, oldValue + 1);
+			this.tagUrlsMap.put(url, oldValue + 1.0);
 //			System.out.print("tag " + this.getTag());
 //			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
 			success = true; 
@@ -223,20 +221,20 @@ public class Tagtfidf extends Tag {
 	/* altro metodo, utile nella costruzione degli url quando li 
 	 * estraggo dal database 
 	 * TODO: test addurlOccurrences*/
-	public boolean addUrlOccurrences(String url, Integer freq) {
+	public boolean addUrlOccurrences(String url, Double freq) {
 		boolean success = false;
 		/* verifica se l'url esiste: 
 		 * se esiste, aggiungi un'occorrenza, 
 		 * altrimenti fai una nuova chiave e aggiungila alla mappa */
-		Integer oldValue = null; 
-		oldValue = this.tagUrlsMap.get(url);
-		if (oldValue == null) {
+		Double oldValue = null; 
+		oldValue = this.getUrlFrequency(url);
+		if (oldValue == 0.0) {
 			// aggiungo le occorrenze del tag per l'url (nuovo) specificato 
 			this.tagUrlsMap.put(url, freq);
 			this.totalUrls = this.totalUrls + 1;
 			success = true;
 		} else {
-			/* put fa il rimpiazzo della chiave, valore se la chiave gi‡ esisteva */
+			/* put rimpiazza la (chiave, valore) se la chiave gi‡ esisteva */
 			this.tagUrlsMap.put(url, oldValue + freq);
 //			System.out.print("tag " + this.getTag());
 //			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
@@ -245,14 +243,10 @@ public class Tagtfidf extends Tag {
 		return success;
 	}
 	
-	
-	
-	
-	
 	/* restituisce la frequenza di un url di un tag. 
 	 * se non Ž presente l'url, restituisce 0 */
-	public Integer getUrlFrequency(String url) {
-		Integer frequency = 0;
+	public Double getUrlFrequency(String url) {
+		Double frequency = 0.0;
 		if (this.getTagUrlsMap().containsKey(url)) {
 			frequency =  this.getTagUrlsMap().get(url);
 		}
@@ -277,14 +271,14 @@ public class Tagtfidf extends Tag {
 	/**
 	 * @return the tagUrlsMap
 	 */
-	public Map<String, Integer> getTagUrlsMap() {
+	public Map<String, Double> getTagUrlsMap() {
 		return tagUrlsMap;
 	}
 
 	/**
 	 * @param tagUrlsMap the tagUrlsMap to set
 	 */
-	public void setTagUrlsMap(Map<String, Integer> tagUrlsMap) {
+	public void setTagUrlsMap(Map<String, Double> tagUrlsMap) {
 		this.tagUrlsMap = tagUrlsMap;
 	}
 

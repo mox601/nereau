@@ -21,25 +21,25 @@ import cluster.Tagtfidf;
 public class TagtfidfTest {
 	
 	private String blogTag;
-	private HashMap<String, Integer> tagUrlsMap1;
+	private HashMap<String, Double> tagUrlsMap1;
 	private String blogUrl1; 
 	private String blogUrl2; 
 	private String blogUrl3; 
-	private Integer blogUrl1Freq;
-	private Integer blogUrl2Freq;
-	private Integer blogUrl3Freq;
+	private Double blogUrl1Freq;
+	private Double blogUrl2Freq;
+	private Double blogUrl3Freq;
 	
 	private Tagtfidf tag1;
 //	private Tag tag1;
 	
 	String designTag; 
-	private HashMap<String, Integer> tagUrlsMap2;
+	private HashMap<String, Double> tagUrlsMap2;
 	private String designUrl1;
 	private String designUrl2;
 	private String designUrl3;
-	private Integer designUrl1Freq;
-	private Integer designUrl2Freq;
-	private Integer designUrl3Freq;
+	private Double designUrl1Freq;
+	private Double designUrl2Freq;
+	private Double designUrl3Freq;
 	private Tagtfidf tag2; 
 
 	
@@ -47,21 +47,21 @@ public class TagtfidfTest {
 	@Before
 	public void setUp() {
 		blogTag = "blog";
-		tagUrlsMap1 =  new HashMap<String, Integer>();
-		tagUrlsMap2 =  new HashMap<String, Integer>();
+		tagUrlsMap1 =  new HashMap<String, Double>();
+		tagUrlsMap2 =  new HashMap<String, Double>();
 
 		/* uso degli url che su delicious sono stati taggati con l'url blog, 
 		 * e uso il numero totale delle annotazioni dell'url per rappresentare la
 		 * frequenza con cui l'url é stato taggato con il tag in questione. 
 		 * É solo per scopi di test. */
 		blogUrl1 = "http://www.notcot.org/";
-		blogUrl1Freq = new Integer(7200);
+		blogUrl1Freq = new Double(7200);
 		tagUrlsMap1.put(blogUrl1, blogUrl1Freq);
 		blogUrl2 = "http://www.noupe.com/";
-		blogUrl2Freq = new Integer(3277);
+		blogUrl2Freq = new Double(3277);
 		tagUrlsMap1.put(blogUrl2, blogUrl2Freq);
 		blogUrl3 = "http://www.formfiftyfive.com/";
-		blogUrl3Freq = new Integer(2500);
+		blogUrl3Freq = new Double(2500);
 		tagUrlsMap1.put(blogUrl3, blogUrl3Freq);
 		tag1 = new Tagtfidf(blogTag, tagUrlsMap1);
 		/* ho inserito tutti i (chiave,valore) nella Map. 
@@ -73,13 +73,13 @@ public class TagtfidfTest {
 		/* devo mettere almeno 1 url in comune */
 		designTag = "design";
 		designUrl1 = "http://iamphotoshop.com/";
-		designUrl1Freq = new Integer(395);
+		designUrl1Freq = new Double(395);
 		tagUrlsMap2.put(designUrl1, designUrl1Freq);
 		designUrl2 = "http://www.noupe.com/adobe/40-high-quality-adobe-fireworks-tutorials-and-resources.html";
-		designUrl2Freq = new Integer(399);
+		designUrl2Freq = new Double(399);
 		tagUrlsMap2.put(designUrl2, designUrl2Freq);
 		designUrl3 = "http://www.formfiftyfive.com/";
-		designUrl3Freq = new Integer(2000);
+		designUrl3Freq = new Double(2000);
 		tagUrlsMap2.put(designUrl3, designUrl3Freq);
 		tag2 = new Tagtfidf(designTag, tagUrlsMap2);
 
@@ -115,10 +115,10 @@ public class TagtfidfTest {
 		/* aggiunge un'occorrenza di un sito noto */
 		String oldUrl = "http://www.notcot.org/";
 		// il tag deve esistere
-		Integer oldFrequency =  tag1.getUrlFrequency(oldUrl);
-		assertNotNull(oldFrequency);
-		tag1.addUrlOccurrences(oldUrl, 1);
-		assertEquals(new Integer(1 + oldFrequency), tag1.getUrlFrequency(oldUrl));
+		Double oldFrequency =  tag1.getUrlFrequency(oldUrl);
+//		assertNotNull(oldFrequency);
+		tag1.addUrlOccurrences(oldUrl, 1.0);
+		assertEquals(new Double(1.0 + oldFrequency), tag1.getUrlFrequency(oldUrl));
 		
 		/* aggiunge al tag un'occorrenza di un sito nuovo */
 		String newUrl = "http://www.abkhfjdsohgos.it/";
@@ -140,9 +140,9 @@ public class TagtfidfTest {
 	@Test
 	public void testModule() {
 		Double expectedModule = 0.0;		
-		Iterator<Integer> it = tagUrlsMap1.values().iterator();
+		Iterator<Double> it = tagUrlsMap1.values().iterator();
 		while (it.hasNext()) {
-			Integer value = (Integer) it.next();
+			Double value = (Double) it.next();
 			expectedModule = expectedModule + Math.pow(value, 2); 
 		}
 		expectedModule = Math.sqrt(expectedModule);
@@ -175,9 +175,9 @@ public class TagtfidfTest {
 		/* crea due tag con molti url, in numero random */
 		
 		String firstTagString = "tag_one";
-		Map<String, Integer> firstTagUrlsMap = new HashMap<String, Integer>();
+		Map<String, Double> firstTagUrlsMap = new HashMap<String, Double>();
 		String secondTagString = "tag_two";
-		Map<String, Integer> secondTagUrlsMap = new HashMap<String, Integer>();
+		Map<String, Double> secondTagUrlsMap = new HashMap<String, Double>();
 		
 		int numberOfUrls = (int) (Math.random() * 100);
 //		System.out.println("numero di url 1: " + numberOfUrls);
@@ -187,12 +187,12 @@ public class TagtfidfTest {
 			String key = "a".concat(number);
 //			System.out.println(url);
 			
-			int urlTagFrequency = (int) (Math.random() * 100);
+			Double urlTagFrequency = (Double) (Math.random() * 100);
 			firstTagUrlsMap.put(key, urlTagFrequency);
 			
 			if (i % 2 == 0) {
 				/*aggiungi la stessa chiave con diverso valore all'altro tag */
-				secondTagUrlsMap.put(key, urlTagFrequency + (int) Math.random() * 40);
+				secondTagUrlsMap.put(key, urlTagFrequency + (Double) Math.random() * 40);
 			}
 
 		}
@@ -242,9 +242,9 @@ public class TagtfidfTest {
 		assertEquals(mergedKeys, actualKeySet);
 		
 		for (String mergedKey: mergedKeys) {
-			Integer freq1 = tag1.getUrlFrequency(mergedKey);
-			Integer freq2 = tag2.getUrlFrequency(mergedKey);
-			Integer averageFreq = (freq1 + freq2) / tagsToMerge.size();
+			Double freq1 = tag1.getUrlFrequency(mergedKey);
+			Double freq2 = tag2.getUrlFrequency(mergedKey);
+			Double averageFreq = (freq1 + freq2) / tagsToMerge.size();
 			/* verifica che la somma delle occorrenze sia corretta nel 
 			 * tag fusione: cioé la media! 
 			 * TODO: allora passo a double 

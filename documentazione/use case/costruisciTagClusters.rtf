@@ -8,7 +8,7 @@
 \
 La rappresentazione dei tag pu\'f3 essere di due tipi: \
 1) TagTfidf tag-url dove ogni valore \'e9 il tf(t1, u1) (l'idf \'e9 salvato come attributo del tag o globale), cio\'e9 il numero di volte che il tag t1 \'e9 stato usato per annotare l'url u1 in questione. L'algoritmo di clustering \'e9 quello gerarchico di Shepitsen, che \'e9 gi\'e1 progettato per questa rappresentazione. \
-Nel fondere due o pi\'fa tag, si usa il tag medio. Cambio di rappresentazione dei Tagtfidf. \
+Nel fondere due o pi\'fa tag, si usa il tag medio. Cambio di rappresentazione dei Tagtfidf, ho un double nelle occorrenze del sito. Nel database non ha senso cambiarlo, visto che i double si userebbero solamente quando si fa il clustering dei tag. nel db la tabella visitedurltags salva solamente i tag degli url visitati effettivamente, non i valori dei centroidi dei clusters costruiti. ma comunque \'e9 un real, non ricordo perch\'e9.  \
 \
 2) co-occorrenza tag-tag, dove ogni tag \'e9 rappresentato come le relative co-occorrenze. Posso usare lo stesso algoritmo gerarchico, basato su coseno-somiglianza? Secondo Cattuto2008 per calcolare la somiglianza si potrebbe fare in 2 (3) modi: co-occorrenza oppure coseno somiglianza di distribuzioni di co-occorrenza. \
 \

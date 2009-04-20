@@ -62,22 +62,22 @@ public class NodeTest {
 		 * precedente */
 		
 		String tag1Name = "design";
-		Map<String, Integer> tag1UrlsMap = new HashMap<String, Integer>();
+		Map<String, Double> tag1UrlsMap = new HashMap<String, Double>();
 		String alist = "www.alistapart.com/";
-		int freqAlist = 1; 
+		Double freqAlist = 1.0; 
 		tag1UrlsMap.put(alist, freqAlist);
 		String beyond ="www.googlebeyond.com/";
-		int freqBeyond = 2;
+		Double freqBeyond = 2.0;
 		tag1UrlsMap.put(beyond, freqBeyond);
 		Tagtfidf tag1 = new Tagtfidf(tag1Name, tag1UrlsMap);
 		
 		
 		String tag2Name = "creativity";
-		Map<String, Integer> tag2UrlsMap = new HashMap<String, Integer>();
-		int freqAlist2 = 3;
+		Map<String, Double> tag2UrlsMap = new HashMap<String, Double>();
+		Double freqAlist2 = 3.0;
 		tag2UrlsMap.put(alist, freqAlist2);
 		String google = "www.googlehacker.com/";
-		int freqGoogle = 7;
+		Double freqGoogle = 7.0;
 		tag2UrlsMap.put(google, freqGoogle);
 		Tagtfidf tag2 = new Tagtfidf(tag2Name, tag2UrlsMap);
 		
@@ -122,13 +122,13 @@ public class NodeTest {
 		String cluster_value = "cluster_value";
 		Float sim = new Float("2.0");
 		String tag_name = "search";
-		HashMap<String, Integer> tagUrlsMap = new HashMap<String, Integer>();
+		HashMap<String, Double> tagUrlsMap = new HashMap<String, Double>();
 		
 		String url1 = "www.google.it";
-		Integer url1freq = 7;
+		Double url1freq = 7.0;
 		
 		String url2 = "www.yahoo.it";
-		Integer url2freq = 14;
+		Double url2freq = 14.0;
 		
 		tagUrlsMap.put(url1, url1freq);
 		tagUrlsMap.put(url2, url2freq);
