@@ -3,6 +3,9 @@ package cluster;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import util.LogHandler;
 
 public class ClusterBuilder {
 	
@@ -16,10 +19,11 @@ public class ClusterBuilder {
 	 * algoritmo gerarchico di shepitsen. 
 	 * TODO: Deve restituire un Tree, con una root. */
 	public void buildClusters() {
-		System.out.println("INIZIO TAGTFIDF CLUSTERING");
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("START TAGTFIDF CLUSTERING");
 		double similarity = 1.0;
 		while (similarity > 0.0) {
-			System.out.println("similarity: " + similarity);
+			logger.info("current similarity: " + similarity);
 			/* calcola la somiglianza tra tutti i cluster attuali, 
 			 * e accorpa quelli con somiglianza uguale alla similarity */
 			
@@ -27,19 +31,16 @@ public class ClusterBuilder {
 			/* li passa a un metodo insieme alla somiglianza, e ottiene 
 			 * una lista di coppie con somiglianza = similarity */
 			LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, similarity);
-			
-			
-			
-			/* itera su queste coppie e crea un cluster fusione per ogni coppia */
-			
+
+			/* itera su queste coppie e crea un cluster fusione per ogni coppia */			
 			Iterator<LinkedList<Node>> couplesIterator = mergingClusters.iterator();
 			while(couplesIterator.hasNext()) {
 				LinkedList<Node> actualMergingCouple = couplesIterator.next();
 				/* crea un cluster merge */
 				Node newCluster = new Node(actualMergingCouple, similarity);
 				/* elimina i due cluster fusi dal clustersToMerge */
-				System.out.println("sto fondendo: " + actualMergingCouple.getFirst() 
-						 + " e " + actualMergingCouple.getLast());
+				logger.info("merging clusters: " + actualMergingCouple.getFirst() 
+						 + " AND " + actualMergingCouple.getLast());
 				clustersToMerge.remove(actualMergingCouple.getFirst());
 				clustersToMerge.remove(actualMergingCouple.getLast());
 				/* aggiungi il cluster merged nel clustersToMerge */
@@ -47,12 +48,14 @@ public class ClusterBuilder {
 			}			
 			similarity = similarity - 0.15;
 		}
-		System.out.println("FINE CLUSTERING TFIDF");
+		logger.info("END CLUSTERING TFIDF");
 		
 	}
 
 	private LinkedList<LinkedList<Node>> getClusterWithSimilarity(
 			List<Node> clustersToMerge, double similarity) {
+
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		
 		/* in queste coppie Ž possibile che ci siano dei tag ripetuti, 
 		 * che si devono fondere con due tag diversi: 
@@ -63,8 +66,7 @@ public class ClusterBuilder {
 		
 		/* TODO: da queste coppie vanno levati questi casi limite. 
 		 * NON devono esistere coppie con un elemento almeno in un'altra coppia */
-		
-		
+			
 		LinkedList<LinkedList<Node>> listOfAllCouples = new LinkedList<LinkedList<Node>>();
 		ClusterCombinator clusterCombinator = new ClusterCombinator(clustersToMerge);
 		listOfAllCouples = clusterCombinator.getClusterCombinations();
@@ -91,7 +93,7 @@ public class ClusterBuilder {
 				safeToAdd = isItSafeToAdd(listOfCouples, actualCouple);
 				if (safeToAdd) {
 					listOfCouples.add(actualCouple);
-					System.out.println("somiglianza tra " + firstCentroidTag.getTag() + 
+					logger.info("somiglianza tra " + firstCentroidTag.getTag() + 
 							" e " + secondCentroidTag.getTag() +": " + interClusterSimilarity);
 				}
 

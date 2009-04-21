@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
+
+import util.LogHandler;
 
 public class Tagtfidf extends Tag {
 	
@@ -118,6 +121,8 @@ public class Tagtfidf extends Tag {
 	/* 
 	 * confronto tra due tag usando la coseno somiglianza */
 	public Double compareToTag(Tagtfidf tagToCompare) {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("comparing tag: " + this.getTag() + " to tag: " + tagToCompare.getTag());
 		Double cosineSimilarity = 0.0;
 		Double numeratore = 0.0;
 		Iterator<Entry<String, Double>> iterator1 = this.getTagUrlsMap().entrySet().iterator();
@@ -149,6 +154,8 @@ public class Tagtfidf extends Tag {
 //		System.out.println("denominatore: " + denominatore);
 		
 		cosineSimilarity = numeratore / denominatore;
+		
+		logger.info("calculated similarity: " + cosineSimilarity);
 		
 		return cosineSimilarity;
 	}

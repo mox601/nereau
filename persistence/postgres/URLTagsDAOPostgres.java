@@ -114,6 +114,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			
 			statement.setInt(1, idUrl);
 			statement.setInt(2, idTag);
+			/*TODO: in realt‡ sul db ho un real, problemi? */
 			statement.setInt(3, occurrence);
 			ResultSet result;
 			result = statement.executeQuery();
