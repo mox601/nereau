@@ -16,6 +16,9 @@ public class Node {
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
 	
+	/* mi serve un id fittizio? */
+	private int idNode;
+	
 	private Tagtfidf centroid;
 	
 	/* contiene all'inizio solo un tag, poi i nodi si fondono e contengono sempre piœ 
@@ -39,6 +42,8 @@ public class Node {
 	}
 	
 	public Node(String value, Tagtfidf tagCentroid) {
+		//id del Nodo?
+//		this.idNode = -1;
 		this.value = value;
 //		this.similarity = similarity;
 		this.centroid = tagCentroid;

@@ -66,7 +66,7 @@ poi nell'inserimento di un nuovo valore, uso questa tecnica tipo UPSERT scritta 
 \f0\fs24 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
-TODO\
+\
 \pard\pardeftab720\ql\qnatural
 
 \f1\fs26 \cf0 quindi, per ottenere tutti i Tagtfidf del sistema\
@@ -74,6 +74,49 @@ faccio un select unique tagvalue e poi faccio una query per ogni valore ottenuto
 \
 In qualche modo nel db dovr\'f3 aggiornare la tabella Tagtfidf ogni volta che un utente visita un sito, mettendoci dentro i tag che sono stati usati per quell'url. Perci\'f3 vorrei conoscere i tag associati ad ogni url visitato con un click dall'utente. \
 L'insieme dei tagtfidf rappresenta quindi un GlobalProfile che \'e9 aggiornato ogni volta che un utente clicca su un sito. Si aggiorna aggiungendo un'occorrenza a tutti i tag che annotano l'url cliccato.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 %%%%%%%%%%%%%%%%%
+\f0\fs24 \
+salvataggio dei clusters in una tabella clusters\
+(\
+id_cluster, \
+id_tag (pu\'f3 essere null per i cluster),\
+similarity_value,  \
+id_cluster_father (pu\'f3 essere null per la radice)\
+)\
+\
+%%%% codice sql\
+-- Table: clusters\
+\
+-- DROP TABLE clusters;\
+\
+CREATE TABLE clusters\
+(\
+  id serial NOT NULL,\
+  idtag integer NOT NULL,\
+  similarity real,\
+  idfather integer,\
+  CONSTRAINT id_primarykey PRIMARY KEY (id),\
+  CONSTRAINT clusterfather FOREIGN KEY (idfather)\
+      REFERENCES clusters (id) MATCH SIMPLE\
+      ON UPDATE NO ACTION ON DELETE NO ACTION,\
+  CONSTRAINT idtag_foreignkey FOREIGN KEY (idtag)\
+      REFERENCES tags (id) MATCH SIMPLE\
+      ON UPDATE NO ACTION ON DELETE NO ACTION\
+)\
+WITH (OIDS=FALSE);\
+ALTER TABLE clusters OWNER TO web81_nereau;\
+%%%\
+\
+%%%%%%%%%%%%%%%%%
+\f1\fs26 \
+\pard\pardeftab720\ql\qnatural
+\cf0 \
+\
+\
+\
 \
 \
 %%% Tag co-occurrences %%%\

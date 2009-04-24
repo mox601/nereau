@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import persistence.PersistenceException;
 import persistence.postgres.TagtfidfDAOPostgres;
+import persistence.postgres.TreeDAOPostgres;
 
 import util.LogHandler;
 
@@ -65,7 +66,7 @@ public class ClusterBuilder {
 		/* ora si pu— salvare il risultato del clustering gerarchico nel database */
 //		logger.info("saving hierarchical clustering on database");
 
-		this.treeHandler.saveClusteringOnDatabase(actualClustering);
+//		this.treeHandler.saveClusteringOnDatabase(actualClustering);
 		
 	}
 	
