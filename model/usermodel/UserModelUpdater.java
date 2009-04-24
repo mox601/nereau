@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import model.GlobalProfileModel;
+import model.PersonalProfileModel;
 import model.RankedTag;
 import model.URLTags;
 import model.User;
@@ -188,6 +189,13 @@ public class UserModelUpdater {
 		 * tagsvisitedurl, usando gli id degli url e dei tags per—. */
 		globalProfile.updateGlobalProfile();
 		
+		
+		/* tag co-occurrences 
+		 * ora passo gli stessi urls ad un'altra classe che rappresenta le
+		 * info da aggiornare per quanto riguarda il profilo personale delle
+		 * co-occorrenze tag-tag */
+		PersonalProfileModel personalProfile = new PersonalProfileModel(urls);
+		personalProfile.updateProfile();
 		
 		
 		

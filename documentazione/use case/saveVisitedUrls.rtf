@@ -41,10 +41,6 @@ salvo il visitedurl nella tabella: visitedurls\
 e salvo i dati: ...\
 poi salva anche tutti i tag associati usati per l'espansione nella tabella visitedurltags. MA NON LO FA. PERCH\'c9? Ma non mi interessa. \
 \
-NO:\
-in UserMatrixCalculator estrae i tag dagli url visitati dall'utente. \
-devo farglielo fare prima, quando salvo l'url visitato e i suoi tag associati. \
-cio\'e9 nel saveVisitedUrl devo aggiungere anche i tag dell'url. \
 \
 \
 \
@@ -69,7 +65,7 @@ itera su tutte le pagine visitate (che hanno la data successiva al lastupdate de
 avendo l'url e tutti i tag associati, posso aggiungere l'url al GlobalModel per poi fargli aggiornare i tagtfidf ricostruiti da lui, alla fine dell'estrazione di tutti i tag degli url durante l'aggiornamento utente. \
 Il globalProfileModel contiene gli (url, tag1, tag1, tagn) che andranno salvati nella tabella tagvisitedurls fatta cos\'ed: id idurl idtag. Quindi devo farlo dopo che l'url e il tag sono stati salvati sul db. Devo farlo dopo che \'e9 stato salvato lo userModel su db. \
 \
-TODO\
+DONE\
 classe URLTagsDAOPostgres\
 salva gli url e i tag associati. \
 deve fare distinzione tra inserimenti e aggiornamenti dei dati. \
@@ -99,7 +95,7 @@ WORKS!\
 http://www.postgresql.org/docs/current/static/plpgsql-control-structures.html#PLPGSQL-UPSERT-EXAMPLE\
 query upsert in postgres per i visitedurltags: \
 \
-CREATE OE REPLACE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS\
+CREATE OR REPLACE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS\
 $$\
 BEGIN \
 LOOP\
@@ -118,12 +114,51 @@ $$\
 LANGUAGE plpgsql;\
 \
 \
-TODO\
-modificare GlobalProfileModel affinch\'e9 faccia il salvataggio degli URLTags sul database nella tabella visitedurltags e nella tabella che poi servir\'e1 a tagco-occurrences. DEMO con unit test\
 \
+modificare GlobalProfileModel affinch\'e9 faccia il salvataggio degli URLTags sul database nella tabella visitedurltags \
+TODO\
+e nella tabella che poi servir\'e1 a tagco-occurrences. \
+DEMO con unit test\
+\
+\
+\
+\
+%%%%%%%%%%%%%%%%%%%%%%%%\
 come salvo i tag co-occurrences sul db? come faceva claudio con le co-occorrenze? \
 faceva cos\'ed: (id, id_classe, id_termine, valore)\
 per poi ricostruire oggetti di questo tipo: \
+\
+io far\'f3 cos\'ed: \
+(id, id_utente, id_tag_, id_tag, valore)\
+per poter distinguere anche tra utenti diversi?\
+\
+Come creo un grafo e poi come lo divido in clusters?\
+su michlmayr 2007, si calcolano le co-occorrenze dei tag-tag in maniera banale, cio\'e9 rappresentando il tutto come un grafo con i nodi che sono i tag e gli archi pesati che sono le co-occorrenze, e poi aggiungendo 1 al peso di un arco quando si incontra una co-occorrenza dei due tag (un sito con tag t1 e t2 per esempio. )\
+ovviamente non si tiene conto di url taggati con un solo tag, altrimenti dovremmo avere archi e nodi pesati. \
+come si fanno i cluster? non si fanno, lo fanno per costruire dei profili utente che cambiano nel tempo. \
+\
+Mika2005 fa delle ontologie leggere dai dati di tagging. \
+\
+Qui in michlmayr si usa la co-occorrenza su scala pi\'fa piccola: solo per questa collezione di bookmark, relativa ad un utente unico. Io estendo il discorso a tutti gli utenti considerati come comunit\'e1. \
+Loro poi fanno evaporazione dei pesi dei tag per modellare il tempo, ma per me non andr\'e1 fatto. \
+\
+Begelman2006 fa un clustering, ma scarta molti tag con co-occorrenze poco rilevanti e poi genera i clusters. \
+Poi fa un clustering con un algoritmo greedy, che \'e9 la combinazione tra spectral bisection e calcolo della modularit\'e1 del clustering calcolato. Procede solo se il clustering \'e9 accettato, cio\'e9 se la modularit\'e1 aumenta e prosegue ricorsivamente. Altrimenti rifiuta il clustering. \
+\
+Se mi capitano dei tag che non sono presenti nel clustering calcolato off-line, dove li piazzo? posso confrontare il vettore delle co-occorrenze del tag assente nel clustering con il centroide di ogni cluster calcolato. Come pu\'f3 funzionare il calcolo del centroide di un insieme di tags rappresentati con le co-occorrenze? \
+\
+Lo fa per suggerire tag simili al tag selezionato, e il numero di tag li passa come parametro scelto a mano. \
+%%%%%%%%%%%%%%%%%%%%%%%%\
+\
+in UserModelUpdater si estraggono i tags degli url visitati dall'utente. \'c9 il momento in cui costruisco un oggetto GlobalProfileModel che si occupa di salvare i dati in visitedurltags. \
+Poi devo ricostruire questi oggetti Tagtfidf e farne un clustering con ClusterBuilder: \
+Ottengo un Tree che deve essere salvato sul database. \
+\
+\
+\
+\
+\
+\
 \
 \
 \

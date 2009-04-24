@@ -23,6 +23,10 @@ import util.LogHandler;
  * */
 
 public class URLTagsDAOPostgres implements URLTagsDAO {
+	
+	
+	private String urlString;
+	private String tagString;
 
 	public void save(LinkedList<URLTags> urls) throws PersistenceException {
 //		DataSource dataSource = DataSource.getInstance();
@@ -43,8 +47,9 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statementUrlId = null;
+		this.urlString = url.getUrlString();
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("salvo l'url: " + url.getUrlString());
+		logger.info("salvo l'url: " + this.urlString);
 		
 		try {
 			/* mi restituisce il primo id con cui Ž apparso quell'url 
@@ -80,6 +85,8 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
 		
+		this.tagString = tag;
+		
 		/* estrai l'id di ogni tag prima di eseguire l'inserimento */
 		try {
 			statement = connection.prepareStatement(SQL_RETRIEVE_TAG_ID);
@@ -98,13 +105,15 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	}
 	
 
-
+/* aggiunge UNA occorrenza per la coppia tag url 
+ * significa che si Ž visitato un url con quel tag */
 	private void save(Integer idUrl, Integer idTag) throws PersistenceException {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("saving idurl: " + idUrl + " idtag: " + idTag);
+		logger.info("saving " + this.urlString + " " + this.tagString + 
+				" idurl: " + idUrl + " idtag: " + idTag);
 		
 		try {
 			statement = connection.prepareStatement(SQL_UPSERT_TAG_URL);
@@ -114,7 +123,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			
 			statement.setInt(1, idUrl);
 			statement.setInt(2, idTag);
-			/*TODO: in realt‡ sul db ho un real, problemi? */
+			/*TODO: in realt‡ sul db ho un real, problemi? pare di no */
 			statement.setInt(3, occurrence);
 			ResultSet result;
 			result = statement.executeQuery();

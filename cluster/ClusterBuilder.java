@@ -5,19 +5,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import persistence.PersistenceException;
+import persistence.postgres.TagtfidfDAOPostgres;
+
 import util.LogHandler;
 
 public class ClusterBuilder {
 	
 	private List<Node> clustersToMerge;
+	private Tree actualClustering;
+	private TreeDAOPostgres treeHandler;
 	
 	public ClusterBuilder(List<Node> clusters) {
 		this.clustersToMerge = clusters;
 	}
 	
+	public ClusterBuilder() {
+		this.clustersToMerge = new LinkedList<Node>();
+	}
+	
 	/* metodo che costruisce i clusters iterativamente 
 	 * algoritmo gerarchico di shepitsen. 
 	 * TODO: Deve restituire un Tree, con una root. */
+	
 	public void buildClusters() {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("START TAGTFIDF CLUSTERING");
@@ -48,9 +58,46 @@ public class ClusterBuilder {
 			}			
 			similarity = similarity - 0.15;
 		}
+		/* esiste un solo nodo, che Ž la radice dell'albero. */
+		this.actualClustering = new Tree(clustersToMerge.get(0));
 		logger.info("END CLUSTERING TFIDF");
 		
+		/* ora si pu— salvare il risultato del clustering gerarchico nel database */
+//		logger.info("saving hierarchical clustering on database");
+
+		this.treeHandler.saveClusteringOnDatabase(actualClustering);
+		
 	}
+	
+	
+	public void retrieveAllTagsFromDatabase() {
+		/* estrae tutti i tags dal database e ne costruisce una lista di
+		 *  clusters (Node) */
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("extracting all tags from database");
+		this.clustersToMerge = new LinkedList<Node>();
+		TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres();
+		List<Tagtfidf> extractedTags = new LinkedList<Tagtfidf>();
+		try {
+			extractedTags = tagTfidfHandler.retrieveAllTags();
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		logger.info("building singleton clusters to be clustered");
+		/* poi costruisce un cluster a partire da ogni tag */
+		for (Tagtfidf tag: extractedTags) {
+			Node currentNode = new Node(tag.getTag(), tag);
+			this.clustersToMerge.add(currentNode); 
+			logger.info("tag: " + currentNode.getCentroid().toString());
+		}
+
+		
+	}	
+	
+	
+	
 
 	private LinkedList<LinkedList<Node>> getClusterWithSimilarity(
 			List<Node> clustersToMerge, double similarity) {
@@ -81,7 +128,6 @@ public class ClusterBuilder {
 			
 			/* confronto i tag dei cluster (centroidi) */
 			double interClusterSimilarity = firstCentroidTag.compareToTag(secondCentroidTag);
-		
 			
 			if (interClusterSimilarity >= similarity) {
 				/* se hanno somiglianza giusta per essere combinati, li aggiungo 
@@ -120,8 +166,6 @@ public class ClusterBuilder {
 				isSafe = false;
 			}
 		}
-
-	
 		return isSafe;
 	}
 
@@ -137,6 +181,20 @@ public class ClusterBuilder {
 	 */
 	public void setClustersToMerge(List<Node> clustersToMerge) {
 		this.clustersToMerge = clustersToMerge;
+	}
+
+	/**
+	 * @return the actualClustering
+	 */
+	public Tree getActualClustering() {
+		return actualClustering;
+	}
+
+	/**
+	 * @param actualClustering the actualClustering to set
+	 */
+	public void setActualClustering(Tree actualClustering) {
+		this.actualClustering = actualClustering;
 	}
 
 }
