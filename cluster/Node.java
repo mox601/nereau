@@ -19,6 +19,20 @@ public class Node {
 	/* mi serve un id fittizio? */
 	private int idNode;
 	
+	/**
+	 * @return the idNode
+	 */
+	public int getIdNode() {
+		return idNode;
+	}
+
+	/**
+	 * @param idNode the idNode to set
+	 */
+	public void setIdNode(int idNode) {
+		this.idNode = idNode;
+	}
+
 	private Tagtfidf centroid;
 	
 	/* contiene all'inizio solo un tag, poi i nodi si fondono e contengono sempre piœ 
@@ -42,8 +56,6 @@ public class Node {
 	}
 	
 	public Node(String value, Tagtfidf tagCentroid) {
-		//id del Nodo?
-//		this.idNode = -1;
 		this.value = value;
 //		this.similarity = similarity;
 		this.centroid = tagCentroid;
@@ -64,6 +76,10 @@ public class Node {
 		
 		while (childrenIterator.hasNext()) {
 			Node currentChild = childrenIterator.next();
+			/* ogni nodo deve consocere l'id del padre, per il salvataggio 
+			 * sul database. 
+			 * basta che ogni nodo conosca il suo id, 
+			 * poi lo chiedo al father quale id ha.  */
 			currentChild.setFather(this);
 			/* aggiungi i tag da fondere alla lista */
 			tagsToMerge.add(currentChild.getCentroid());
@@ -73,7 +89,12 @@ public class Node {
 		/* valore preso dal Tagtfidf */
 		this.value = this.centroid.getTag();
 //		this.value = bufferValue.toString();
-//		this.value = this.value.substring(0, this.value.length() - 1);		
+//		this.value = this.value.substring(0, this.value.length() - 1);
+		
+		
+		/* l'id di un nodo lo si assegna quando si costruisce il clustering. 
+		 * quando il clustering Ž completo, si assegnano gli id */
+	
 
 
 	}

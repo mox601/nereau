@@ -10,6 +10,8 @@ public class Tree {
 
 	private Node root;
 
+	private IdGenerator idGenerator;
+
 	public Tree(Node node) {
 		this.setRoot(node);
 	}
@@ -87,6 +89,25 @@ public class Tree {
 		}
 		
 		return leaves;
+	}
+	
+	public void assignIds() {
+		/* assegna gli id a tutti i nodi dell'albero visitandolo in preordine */
+		idGenerator = new IdGenerator();
+		int startingId = idGenerator.getId();
+		Node startingNode = this.getRoot();
+		this.visitAndAssignId(startingNode, startingId);
+		
+	}
+
+	/* visita in preordine e assegnazione degli id. */
+	private void visitAndAssignId(Node node, int id) {
+		node.setIdNode(id);
+		System.out.println("id " + id + " assegnato al nodo: " + node.getValue());	
+		for (Node child: node.getChildren()) {
+			visitAndAssignId(child, idGenerator.getId());
+		}
+		
 	}
 	
 }

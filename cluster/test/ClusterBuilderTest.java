@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import persistence.PersistenceException;
 import persistence.postgres.TagtfidfDAOPostgres;
+import persistence.postgres.TreeDAOPostgres;
 
 import cluster.ClusterBuilder;
 import cluster.Node;
@@ -24,6 +25,7 @@ public class ClusterBuilderTest {
 	
 	private List<Node> clustersToMerge;
 	private List<Node> clustersBeforeClustering;
+	private TreeDAOPostgres treeHandler;
 	
 	@Before
 	public void setUpNodesForClusteringFromDatabase() {
@@ -33,6 +35,8 @@ public class ClusterBuilderTest {
 		this.clustersToMerge = new LinkedList<Node>();
 		//copia per dopo
 		this.clustersBeforeClustering = new LinkedList<Node>();
+		/* per salvare il Tree sul database */
+		this.treeHandler = new TreeDAOPostgres();
 		
 		TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres();
 		List<Tagtfidf> extractedTags = new LinkedList<Tagtfidf>();
@@ -87,6 +91,12 @@ public class ClusterBuilderTest {
 		clusterer.buildClusters();
 		Tree actualClustering = clusterer.getActualClustering();
 		
+		try {
+			this.treeHandler.save(actualClustering);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		
 	}
 	

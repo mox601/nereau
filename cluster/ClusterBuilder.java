@@ -49,6 +49,11 @@ public class ClusterBuilder {
 				LinkedList<Node> actualMergingCouple = couplesIterator.next();
 				/* crea un cluster merge */
 				Node newCluster = new Node(actualMergingCouple, similarity);
+				int a = actualMergingCouple.getFirst().getIdNode();
+				int b = actualMergingCouple.getLast().getIdNode();
+				/* TODO: trova modo di assegnare un id unico basandosi sugli id 
+				 * dei figli... */
+//				newCluster.setIdNode(a + b);
 				/* elimina i due cluster fusi dal clustersToMerge */
 				logger.info("merging clusters: " + actualMergingCouple.getFirst() 
 						 + " AND " + actualMergingCouple.getLast());
@@ -62,9 +67,16 @@ public class ClusterBuilder {
 		/* esiste un solo nodo, che Ž la radice dell'albero. */
 		this.actualClustering = new Tree(clustersToMerge.get(0));
 		logger.info("END CLUSTERING TFIDF");
+
+		
+		/* devo assegnare un id ad ogni nodo dell'albero, altrimenti nel 
+		 * salvataggio sul database non saprei come modellare la relazione
+		 * figlio-padre: quale id metto nella colonna father del figlio? */
+		
+		actualClustering.assignIds();
 		
 		/* ora si pu— salvare il risultato del clustering gerarchico nel database */
-//		logger.info("saving hierarchical clustering on database");
+		logger.info("saving hierarchical clustering on database");
 
 //		this.treeHandler.saveClusteringOnDatabase(actualClustering);
 		
@@ -86,12 +98,14 @@ public class ClusterBuilder {
 			e.printStackTrace();
 		}
 		
-		logger.info("building singleton clusters to be clustered");
+		logger.info("creating singleton clusters to be clustered");
+		
+
 		/* poi costruisce un cluster a partire da ogni tag */
 		for (Tagtfidf tag: extractedTags) {
 			Node currentNode = new Node(tag.getTag(), tag);
 			this.clustersToMerge.add(currentNode); 
-			logger.info("tag: " + currentNode.getCentroid().toString());
+			logger.info("tag: " + currentNode.getCentroid().toString() + "with id: " + currentNode.getIdNode());
 		}
 
 		
