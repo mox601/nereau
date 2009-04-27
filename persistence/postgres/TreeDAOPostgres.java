@@ -10,6 +10,7 @@ import model.RankedTag;
 import cluster.Node;
 import cluster.Tree;
 import persistence.PersistenceException;
+import java.sql.SQLException;
 import persistence.TreeDAO;
 import util.LogHandler;
 
@@ -22,15 +23,22 @@ public class TreeDAOPostgres implements TreeDAO {
 		 * che permetta quando ho tipo 5 tag di estrarre una gerarchia
 		 * coerente con la gerarchia globale, ma limitata a quei 5 tags */
 		
-		
 		/* deve essere una sola transazione atomica, altrimenti 
 		 * potrebbero esserci accessi alla tabella clusters 
 		 * quando si trova in uno stato inconsistente */
 		
-		/* cancella tutte le tuple dell tabella clusters, 
+		Node root = clustering.getRoot();
+		
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("comincio la visita dell'albero e lo salvo");
+				
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		
+		/* cancella tutte le tuple della tabella clusters, 
 		 * tanto non Ž rilevante modificarla */
 		//DELETE FROM CLUSTERS;
-		
 		
 		/* visita l'albero, e per ogni nodo che incontri inserisci una tupla 
 		 * nella tabella, costruita cos’: 
@@ -41,25 +49,22 @@ public class TreeDAOPostgres implements TreeDAO {
 		 * id_cluster_father (pu— essere null per la radice))
 		 * 
 		 * */
+		try {
+			visitAndSaveSubTree(root, dataSource, connection, statement);	
+		}
+		catch (PersistenceException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		finally {
+			dataSource.close(statement);
+			dataSource.close(connection);
+		}
 		
-		Node root = clustering.getRoot();
-		
-		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("comincio la visita dell'albero e lo salvo");
-		
-		
-		
-		DataSource dataSource = DataSource.getInstance();
-		Connection connection = dataSource.getConnection();
-		PreparedStatement statement = null;
-	
-		visitAndSaveSubTree(root);
-		
-		
+
 	}
 	
 	
-	private void visitAndSaveSubTree(Node node) {
+	private void visitAndSaveSubTree(Node node, DataSource dataSource, Connection connection, PreparedStatement statement) throws PersistenceException {
 		
 		/* qui devo mantenere l'id che Ž stato assegnato dal database alla tupla 
 		 * inserita, che Ž il padre delle prossime tuple */
@@ -75,28 +80,71 @@ public class TreeDAOPostgres implements TreeDAO {
 		}
 		
 		/* nome del tag: se Ž un cluster, non ha senso metterlo. */
-		String tagName = "";
+		String tagName = "-";
+		int idTag = -1;
+		Float similarity;
+		
 		if (node.isLeaf()) {
 			tagName = node.getCentroid().getTag();
+			/* devo estrarre l'id che il tag ha sul database */
+			TagDAOPostgres tagHandler = new TagDAOPostgres();
+			try {
+				idTag = tagHandler.retrieveTagId(tagName);
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// la somiglianza non ha senso sulle foglie
+			similarity = new Float(1.0);
 			
 		} else {
-			tagName = "-";
+			similarity = new Float(node.getSimilarity());
+		} 
+		
+		
+		
+		try {
+			String query = prepareStatementForInsert();
+			/* query per salvare i dati del nodo e l'id del padre */	
+			System.out.println("saving node: " + node.getValue());
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, node.getIdNode());
+			statement.setInt(2, idTag);
+			statement.setFloat(3, similarity);
+			statement.setInt(4, fatherId);
+			
+			System.out.println("statement: " + statement.toString());
+			
+//			statement.executeUpdate();
 		}
-	
-		/* query per salvare i dati del nodo e l'id del padre */	
-		System.out.println("saving node: ");
-		System.out.println("INSERT INTO clusters values(" +
-				node.getIdNode() + ", " +
-				tagName + ", " +
-				node.getSimilarity() + ", " + 
-				fatherId + ")");
-	
+		
+		catch (SQLException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		
+		
 		for (Node child: node.getChildren()) {
-			visitAndSaveSubTree(child);
+			visitAndSaveSubTree(child, dataSource, connection, statement);
 		}
 	}
 
+	private String prepareStatementForInsert() {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		StringBuffer query = new StringBuffer();
+		query.append(SQL_INSERT_CLUSTER);
+		logger.info("query: \n" + query);
+		return query.toString();
+	}
 
+	
+	
+	private static String SQL_INSERT_CLUSTER = 
+		"INSERT INTO clusters values (" +
+		"?, ?, ?, ?)";
+	
+
+	
+	
 	@Override
 	public Tree retrieve(List<RankedTag> tags) throws PersistenceException {
 		/* da una lista di rankedtags - quelli scelti da nereau vecchio - 
