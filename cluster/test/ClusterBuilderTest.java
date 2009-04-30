@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import model.RankedTag;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -99,6 +101,28 @@ public class ClusterBuilderTest {
 		}		
 		
 	}
+	
+	@Test
+	public void retrieveClustersFromDatabase() {
+	/* estrai solo la gerarchia relativa ad alcuni RankedTag che ti passo */	
+		List<RankedTag> tags = new LinkedList();
+		
+		
+		try {
+			Tree extractedClusters = this.treeHandler.retrieve(tags);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		
+	}
+	
+	
 	
 	
 }

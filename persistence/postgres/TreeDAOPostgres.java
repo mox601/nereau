@@ -2,6 +2,7 @@ package persistence.postgres;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,6 +16,10 @@ import persistence.TreeDAO;
 import util.LogHandler;
 
 public class TreeDAOPostgres implements TreeDAO {
+
+
+
+
 
 	@Override
 	public void save(Tree clustering) throws PersistenceException {
@@ -36,24 +41,33 @@ public class TreeDAOPostgres implements TreeDAO {
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
 		
-		/* cancella tutte le tuple della tabella clusters, 
-		 * tanto non Ž rilevante modificarla */
-		//DELETE FROM CLUSTERS;
-		
-		/* visita l'albero, e per ogni nodo che incontri inserisci una tupla 
-		 * nella tabella, costruita cos’: 
-		 * 
-		 * (id_cluster, 
-		 * id_tag (pu— essere null per i cluster),
-		 * similarity_value,  
-		 * id_cluster_father (pu— essere null per la radice))
-		 * 
-		 * */
 		try {
+			/* cancella tutte le tuple della tabella clusters, 
+			 * tanto non Ž rilevante modificarla */
+			//DELETE FROM CLUSTERS;
+			
+			String deleteQuery = this.prepareStatementForDelete();
+			statement = connection.prepareStatement(deleteQuery);
+			statement.executeUpdate();
+			System.out.println("deleting all clusters rows: " + deleteQuery);
+			
+			/* visita l'albero, e per ogni nodo che incontri inserisci una tupla 
+			 * nella tabella, costruita cos’: 
+			 * 
+			 * (id_cluster, 
+			 * id_tag (pu— essere null per i cluster),
+			 * similarity_value,  
+			 * id_cluster_father (pu— essere null per la radice))
+			 * 
+			 * */
+			
 			visitAndSaveSubTree(root, dataSource, connection, statement);	
 		}
 		catch (PersistenceException e) {
 			throw new PersistenceException(e.getMessage());
+		} catch (SQLException e) {
+			// per l'execute update
+			e.printStackTrace();
 		}
 		finally {
 			dataSource.close(statement);
@@ -64,6 +78,15 @@ public class TreeDAOPostgres implements TreeDAO {
 	}
 	
 	
+	private String prepareStatementForDelete() {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		StringBuffer query = new StringBuffer();
+		query.append(SQL_DELETE_CLUSTER);
+		logger.info("delete cluster table: " + query);
+		return query.toString();
+		}
+
+
 	private void visitAndSaveSubTree(Node node, DataSource dataSource, Connection connection, PreparedStatement statement) throws PersistenceException {
 		
 		/* qui devo mantenere l'id che Ž stato assegnato dal database alla tupla 
@@ -115,7 +138,7 @@ public class TreeDAOPostgres implements TreeDAO {
 			
 			System.out.println("statement: " + statement.toString());
 			
-//			statement.executeUpdate();
+			statement.executeUpdate();
 		}
 		
 		catch (SQLException e) {
@@ -140,8 +163,11 @@ public class TreeDAOPostgres implements TreeDAO {
 	
 	private static String SQL_INSERT_CLUSTER = 
 		"INSERT INTO clusters values (" +
-		"?, ?, ?, ?)";
+		"?, ?, ?, ?);";
 	
+
+	private static String SQL_DELETE_CLUSTER = 
+	"DELETE FROM CLUSTERS;";
 
 	
 	
@@ -149,12 +175,27 @@ public class TreeDAOPostgres implements TreeDAO {
 	public Tree retrieve(List<RankedTag> tags) throws PersistenceException {
 		/* da una lista di rankedtags - quelli scelti da nereau vecchio - 
 		 * estrae una gerarchia dal database con solo quei tag.  */
-		/* Ž meglio farlo qui oppure estrarre tutta la gerarchia e poi 
-		 * tagliarla in memoria? */
 		//viene usato durante l'espansione
 		// TODO retrieve Tree from database
+		Tree extractedTree = null;
+		
+		
+		for (RankedTag currentTag: tags) {
+			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
+			
+			
+		}
+		
+		
+		
+		return extractedTree;
+	}
+	
+	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) {
+		
 		return null;
 	}
+	
 	
 	
 
