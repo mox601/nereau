@@ -178,19 +178,32 @@ public class TreeDAOPostgres implements TreeDAO {
 		//viene usato durante l'espansione
 		// TODO retrieve Tree from database
 		Tree extractedTree = null;
+		LinkedList<LinkedList<Node>> hierarchiesList = new LinkedList<LinkedList<Node>>();
 		
 		
+		/* estrae tutte le liste degli antenati di ogni tag */
 		for (RankedTag currentTag: tags) {
 			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
-			
-			
+			hierarchiesList.add(singleTagHierarchy);
 		}
 		
-		
+		/* algoritmo che ricostruisce un albero a partire da una lista di gerarchie */
+		extractedTree = buildTreeFromHierarchies(hierarchiesList);
 		
 		return extractedTree;
 	}
 	
+	private Tree buildTreeFromHierarchies(
+			LinkedList<LinkedList<Node>> hierarchiesList) {
+		Tree reconstructedTree = null
+		
+		
+		
+		
+		return reconstructedTree;
+	}
+
+
 	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) {
 		
 		return null;
