@@ -10,6 +10,7 @@ public class Tree {
 
 	private Node root;
 
+	private IdGenerator nestedSetsIdGenerator;
 	private IdGenerator idGenerator;
 
 	public Tree(Node node) {
@@ -93,20 +94,31 @@ public class Tree {
 	
 	public void assignIds() {
 		/* assegna gli id a tutti i nodi dell'albero visitandolo in preordine */
-		idGenerator = new IdGenerator();
-		int startingId = idGenerator.getId();
+		nestedSetsIdGenerator = new IdGenerator();
+		idGenerator = new IdGenerator();		
+		int startingNestedSetsId = nestedSetsIdGenerator.getId();
+		int rowId = idGenerator.getId();
 		Node startingNode = this.getRoot();
-		this.visitAndAssignId(startingNode, startingId);
+		this.visitAndAssignIds(startingNode, rowId, startingNestedSetsId);
 		
 	}
 
-	/* visita in preordine e assegnazione degli id. */
-	private void visitAndAssignId(Node node, int id) {
-		node.setIdNode(id);
-		System.out.println("id " + id + " assegnato al nodo: " + node.getValue());	
+	/* visita in preordine e assegnazione degli id. ora si assegnano secondo 
+	 * la struttura del database nested sets */
+	private void visitAndAssignIds(Node node, int rowId, int nestedSetId) {
+		
+		//vecchio id
+		node.setIdNode(rowId);
+		
+		System.out.println("id " + rowId + " assegnato al nodo: " + node.getValue());
+		// left 
+		node.setLeft(nestedSetId);
 		for (Node child: node.getChildren()) {
-			visitAndAssignId(child, idGenerator.getId());
+			visitAndAssignIds(child, idGenerator.getId(), nestedSetsIdGenerator.getId());
 		}
+		//right dopo aver assegnato id a tutto il sotto albero 
+		node.setRight(nestedSetsIdGenerator.getId());
+		System.out.println("nodo: " + node.getValue() + " left: " + node.getLeft() + " right: " + node.getRight());
 		
 	}
 	

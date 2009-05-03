@@ -16,8 +16,40 @@ public class Node {
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
 	
-	/* mi serve un id fittizio? */
+	/* mi serve un id fittizio. obsoleto, ora ho left e right */
 	private int idNode;
+	
+	/* id per la rappresentazione sul database con nestedsets */
+	private int left;
+	/**
+	 * @return the left
+	 */
+	public int getLeft() {
+		return left;
+	}
+
+	/**
+	 * @param left the left to set
+	 */
+	public void setLeft(int left) {
+		this.left = left;
+	}
+
+	/**
+	 * @return the right
+	 */
+	public int getRight() {
+		return right;
+	}
+
+	/**
+	 * @param right the right to set
+	 */
+	public void setRight(int right) {
+		this.right = right;
+	}
+
+	private int right;
 	
 	/**
 	 * @return the idNode

@@ -73,6 +73,8 @@ public class ClusterBuilder {
 		 * salvataggio sul database non saprei come modellare la relazione
 		 * figlio-padre: quale id metto nella colonna father del figlio? */
 		
+		
+		/* ora funziona con i nested sets */
 		actualClustering.assignIds();
 		
 		/* ora si pu— salvare il risultato del clustering gerarchico nel database */

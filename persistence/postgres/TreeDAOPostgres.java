@@ -20,7 +20,7 @@ public class TreeDAOPostgres implements TreeDAO {
 
 
 
-
+	/* da cambiare, devo salvare una struttura di nested sets */
 	@Override
 	public void save(Tree clustering) throws PersistenceException {
 		/* salva il clustering (sotto forma di Tree) sul database, 
@@ -42,14 +42,14 @@ public class TreeDAOPostgres implements TreeDAO {
 		PreparedStatement statement = null;
 		
 		try {
-			/* cancella tutte le tuple della tabella clusters, 
+			/* cancella tutte le tuple della tabella clusters_sets, 
 			 * tanto non Ž rilevante modificarla */
 			//DELETE FROM CLUSTERS;
 			
 			String deleteQuery = this.prepareStatementForDelete();
 			statement = connection.prepareStatement(deleteQuery);
-			statement.executeUpdate();
-			System.out.println("deleting all clusters rows: " + deleteQuery);
+//			statement.executeUpdate();
+			System.out.println("deleting all clusters_sets rows: " + deleteQuery);
 			
 			/* visita l'albero, e per ogni nodo che incontri inserisci una tupla 
 			 * nella tabella, costruita cos’: 
@@ -58,6 +58,9 @@ public class TreeDAOPostgres implements TreeDAO {
 			 * id_tag (pu— essere null per i cluster),
 			 * similarity_value,  
 			 * id_cluster_father (pu— essere null per la radice))
+			 * 
+			 * Ž cambiata la tabella: ora uso i nested sets, la tabella Ž fatta cos’: 
+			 * (id, idtag, left, right, similarity)
 			 * 
 			 * */
 			
@@ -82,7 +85,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		StringBuffer query = new StringBuffer();
 		query.append(SQL_DELETE_CLUSTER);
-		logger.info("delete cluster table: " + query);
+		logger.info("deleting clusters_sets table content: " + query);
 		return query.toString();
 		}
 
@@ -93,13 +96,13 @@ public class TreeDAOPostgres implements TreeDAO {
 		 * inserita, che Ž il padre delle prossime tuple */
 		
 		System.out.println("visito il nodo: " + node.toString());
-		int fatherId = -1; 
+//		int fatherId = -1; 
 		
 		if (node.getFather() == null) {
 			System.out.println("nodo root");
-			fatherId = 0;
+//			fatherId = 0;
 		} else {
-			fatherId = node.getFather().getIdNode();	
+//			fatherId = node.getFather().getIdNode();	
 		}
 		
 		/* nome del tag: se Ž un cluster, non ha senso metterlo. */
@@ -117,7 +120,7 @@ public class TreeDAOPostgres implements TreeDAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// la somiglianza non ha senso sulle foglie
+			// la somiglianza non ha senso se visito le foglie
 			similarity = new Float(1.0);
 			
 		} else {
@@ -133,12 +136,13 @@ public class TreeDAOPostgres implements TreeDAO {
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, node.getIdNode());
 			statement.setInt(2, idTag);
-			statement.setFloat(3, similarity);
-			statement.setInt(4, fatherId);
+			statement.setInt(3, node.getLeft());
+			statement.setInt(4, node.getRight());			
+			statement.setFloat(5, similarity);
 			
 			System.out.println("statement: " + statement.toString());
 			
-			statement.executeUpdate();
+//			statement.executeUpdate();
 		}
 		
 		catch (SQLException e) {
@@ -162,12 +166,12 @@ public class TreeDAOPostgres implements TreeDAO {
 	
 	
 	private static String SQL_INSERT_CLUSTER = 
-		"INSERT INTO clusters values (" +
-		"?, ?, ?, ?);";
+		"INSERT INTO clusters_sets values (" +
+		"?, ?, ?, ?, ?);";
 	
 
 	private static String SQL_DELETE_CLUSTER = 
-	"DELETE FROM CLUSTERS;";
+	"DELETE FROM CLUSTERS_SETS;";
 
 	
 	
@@ -195,7 +199,7 @@ public class TreeDAOPostgres implements TreeDAO {
 	
 	private Tree buildTreeFromHierarchies(
 			LinkedList<LinkedList<Node>> hierarchiesList) {
-		Tree reconstructedTree = null
+		Tree reconstructedTree = null;
 		
 		
 		
@@ -205,6 +209,8 @@ public class TreeDAOPostgres implements TreeDAO {
 
 
 	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) {
+		
+		
 		
 		return null;
 	}
