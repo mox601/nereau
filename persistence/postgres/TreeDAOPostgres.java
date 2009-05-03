@@ -48,8 +48,8 @@ public class TreeDAOPostgres implements TreeDAO {
 			
 			String deleteQuery = this.prepareStatementForDelete();
 			statement = connection.prepareStatement(deleteQuery);
-//			statement.executeUpdate();
-			System.out.println("deleting all clusters_sets rows: " + deleteQuery);
+			statement.executeUpdate();
+			logger.info("deleting all clusters_sets rows: " + deleteQuery);
 			
 			/* visita l'albero, e per ogni nodo che incontri inserisci una tupla 
 			 * nella tabella, costruita cos’: 
@@ -91,7 +91,8 @@ public class TreeDAOPostgres implements TreeDAO {
 
 
 	private void visitAndSaveSubTree(Node node, DataSource dataSource, Connection connection, PreparedStatement statement) throws PersistenceException {
-		
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+
 		/* qui devo mantenere l'id che Ž stato assegnato dal database alla tupla 
 		 * inserita, che Ž il padre delle prossime tuple */
 		
@@ -132,7 +133,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		try {
 			String query = prepareStatementForInsert();
 			/* query per salvare i dati del nodo e l'id del padre */	
-			System.out.println("saving node: " + node.getValue());
+			logger.info("saving node: " + node.getValue());
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, node.getIdNode());
 			statement.setInt(2, idTag);
@@ -140,9 +141,9 @@ public class TreeDAOPostgres implements TreeDAO {
 			statement.setInt(4, node.getRight());			
 			statement.setFloat(5, similarity);
 			
-			System.out.println("statement: " + statement.toString());
+			logger.info("statement: " + statement.toString());
 			
-//			statement.executeUpdate();
+			statement.executeUpdate();
 		}
 		
 		catch (SQLException e) {

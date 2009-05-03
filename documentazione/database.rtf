@@ -77,7 +77,7 @@ L'insieme dei tagtfidf rappresenta quindi un GlobalProfile che \'e9 aggiornato o
 \
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
-\cf0 %%%%%%%%%%%%%%%%%
+\cf0 %%%%%%%%%%%%%%%%% OBSOLETO
 \f0\fs24 \
 salvataggio dei clusters in una tabella clusters\
 (\
@@ -110,10 +110,39 @@ WITH (OIDS=FALSE);\
 ALTER TABLE clusters OWNER TO web81_nereau;\
 %%%\
 \
+\
+%%%NUOVA TABELLA clusters_sets con rappresentazione con nested sets\
+- Table: clusters_sets\
+\
+-- DROP TABLE clusters_sets;\
+\
+CREATE TABLE clusters_sets\
+(\
+  id serial NOT NULL,\
+  idtag integer,\
+  "left" integer NOT NULL,\
+  "right" integer NOT NULL,\
+  similarity real,\
+  CONSTRAINT pkey PRIMARY KEY (id),\
+  CONSTRAINT clusters_sets_left_key UNIQUE ("left"),\
+  CONSTRAINT clusters_sets_right_key UNIQUE ("right")\
+)\
+WITH (OIDS=FALSE);\
+ALTER TABLE clusters_sets OWNER TO web81_nereau;\
+\
+%%%\
+\
+\
+\
+\
+\
+\
 %%%%%%%%%%%%%%%%%
 \f1\fs26 \
 \pard\pardeftab720\ql\qnatural
 \cf0 devo salvare i cluster nella tabella clusters. la transazione deve essere isolata, deve impedire read di altre transazioni che coinvolgano la stessa tabella. TODO. \
+\
+\
 \
 \
 \

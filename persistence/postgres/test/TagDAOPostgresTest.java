@@ -16,5 +16,7 @@ public class TagDAOPostgresTest {
 		id = tagHandler.retrieveTagId(tag);
 		System.out.println("tag id = " + id);
 	}
+	
+	
 
 }
