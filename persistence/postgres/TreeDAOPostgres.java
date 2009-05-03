@@ -2,6 +2,7 @@ package persistence.postgres;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -96,7 +97,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		/* qui devo mantenere l'id che é stato assegnato dal database alla tupla 
 		 * inserita, che é il padre delle prossime tuple */
 		
-		System.out.println("visito il nodo: " + node.toString());
+		logger.info("visito il nodo: " + node.toString());
 //		int fatherId = -1; 
 		
 		if (node.getFather() == null) {
@@ -127,8 +128,6 @@ public class TreeDAOPostgres implements TreeDAO {
 		} else {
 			similarity = new Float(node.getSimilarity());
 		} 
-		
-		
 		
 		try {
 			String query = prepareStatementForInsert();
@@ -181,20 +180,16 @@ public class TreeDAOPostgres implements TreeDAO {
 		/* da una lista di rankedtags - quelli scelti da nereau vecchio - 
 		 * estrae una gerarchia dal database con solo quei tag.  */
 		//viene usato durante l'espansione
-		// TODO retrieve Tree from database
 		Tree extractedTree = null;
 		LinkedList<LinkedList<Node>> hierarchiesList = new LinkedList<LinkedList<Node>>();
-		
 		
 		/* estrae tutte le liste degli antenati di ogni tag */
 		for (RankedTag currentTag: tags) {
 			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
+			/* l'ultimo nodo nella gerarchia é il nodo del rankedtag che si sta calcolando */
 			hierarchiesList.add(singleTagHierarchy);
 		}
-		
-		/* algoritmo che ricostruisce un albero a partire da una lista di gerarchie */
-		extractedTree = buildTreeFromHierarchies(hierarchiesList);
-		
+		extractedTree = buildTreeFromHierarchies(hierarchiesList);	
 		return extractedTree;
 	}
 	
@@ -202,21 +197,107 @@ public class TreeDAOPostgres implements TreeDAO {
 			LinkedList<LinkedList<Node>> hierarchiesList) {
 		Tree reconstructedTree = null;
 		
-		
+		/* algoritmo che ricostruisce un albero a partire da una lista di gerarchie */
+		while (hierarchiesList.size() != 1) {
+			/* 1 - cerco la coppia (lista) di RankedTags che ha un ancestor 
+			 * con la similarity piú alta di tutti gli altri */
+			LinkedList<Node> nodesToMerge = findHighestSimilarityAncestor(hierarchiesList);
+			
+			/* 2 - fondo i RankedTag che ho scelto in un nodo con la similarity trovata */
+			
+			/* 3 - rimuovo dalla lista delle gerarchie tutte le gerarchie dei tag da rimuovere */
+
+			/* 4 - proseguo finché non ho un solo elemento nella lista delle gerarchie */
+			
+		}
 		
 		
 		return reconstructedTree;
 	}
 
 
-	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) {
+	private LinkedList<Node> findHighestSimilarityAncestor(
+			LinkedList<LinkedList<Node>> hierarchiesList) {
+		LinkedList<Node> nodes = null;
 		
+		return nodes;
 		
+	}
+
+
+	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) throws PersistenceException {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("extracting ancestors of tag: " + tag.getTag());
+		LinkedList<Node> ancestors = new LinkedList<Node>();
+		/* faccio una query ed estraggo tutti gli antenati del tag, 
+		 * prima estraendo l'id nella tabella tags */
 		
-		return null;
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			String query = prepareStatementForExtraction();
+			statement = connection.prepareStatement(query);
+			statement.setString(1, tag.getTag());			
+			logger.info("statement: " + statement.toString());
+			
+			ResultSet result = statement.executeQuery();
+			while(result.next()) {
+				/* nel result set ho le ultime 5 colonne che contengono i dati 
+				 * di ogni nodo della gerarchia, ordinati per ...? */
+				//devo estrarre id, left, right, similarity
+				int nodeId = result.getInt(6);
+				int left = result.getInt(8);
+				int right = result.getInt(9);
+				float similarity = result.getFloat(10);
+				String nodeValue = String.valueOf(nodeId);
+				
+				Node currentAncestor = new Node(nodeValue, similarity);
+				
+				//setta gli id del nodo
+				currentAncestor.setIdNode(nodeId);
+				currentAncestor.setLeft(left);
+				currentAncestor.setRight(right);
+				
+				logger.info("found ancestor with value: " + nodeValue + " left: " + 
+						currentAncestor.getLeft() + " right: " + currentAncestor.getRight());
+				
+				ancestors.add(currentAncestor);
+				
+				
+			}
+
+		
+		}
+		
+		catch (SQLException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		
+		return ancestors;
+	}
+
+
+	private String prepareStatementForExtraction() {
+		StringBuffer query = new StringBuffer();
+		query.append(SQL_EXTRACT_CLUSTER_HIERARCHY);		
+		return query.toString();
 	}
 	
 	
+	/* é un cross join: ho le prime colonne a sx che sono il tag selezionato 
+	 * e quelle a dx sono la gerarchia */
+	/* ripreso da http://www.intelligententerprise.com/001020/celko.jhtml
+	 * */
+	private static String SQL_EXTRACT_CLUSTER_HIERARCHY = 
+		"SELECT * " +
+		"FROM clusters_sets AS C1, clusters_sets AS C2 " +
+		"WHERE C1.left BETWEEN C2.left AND C2.right " +
+		"AND C1.idtag = " +
+		"(SELECT id " +
+		"FROM tags " +
+		"WHERE tag = ?);";
 	
 
 }
