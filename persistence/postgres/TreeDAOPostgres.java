@@ -193,21 +193,53 @@ public class TreeDAOPostgres implements TreeDAO {
 		return extractedTree;
 	}
 	
+	
 	private Tree buildTreeFromHierarchies(
 			LinkedList<LinkedList<Node>> hierarchiesList) {
-		Tree reconstructedTree = null;
-		
 		/* algoritmo che ricostruisce un albero a partire da una lista di gerarchie */
-		while (hierarchiesList.size() != 1) {
-			/* 1 - cerco la coppia (lista) di RankedTags che ha un ancestor 
+		
+		
+		Tree reconstructedTree = null;
+		LinkedList<Node> nodesList = new LinkedList<Node>();
+		
+		/* devo avere un nodo per ogni gerarchia, sono le foglie dell'albero che
+		 * devo costruire */
+		for (LinkedList<Node> hierarchy: hierarchiesList) {
+			/* costruisco un nodo per ogni gerarchia, 
+			 * assegnandogli la gerarchia stessa come attributo */
+			Node currentNode = new Node(hierarchy.getLast().getValue());
+			currentNode.setHierarchy(hierarchy);
+			/* aggiungo alla lista dei Node da fondere per 
+			 * la costruzione del cluster */
+			nodesList.add(currentNode);
+		}
+		
+		
+		
+		
+		while (nodesList.size() != 1) {
+			/* TODO algoritmo per la ricostruzione */
+			/* 1 - cerco la coppia (lista) di Nodes che ha un ancestor 
 			 * con la similarity piú alta di tutti gli altri */
-			LinkedList<Node> nodesToMerge = findHighestSimilarityAncestor(hierarchiesList);
-			
-			/* 2 - fondo i RankedTag che ho scelto in un nodo con la similarity trovata */
-			
-			/* 3 - rimuovo dalla lista delle gerarchie tutte le gerarchie dei tag da rimuovere */
+			LinkedList<Node> nodesToMerge = findNodesWithHighestAncestorSimilarity(nodesList);
 
-			/* 4 - proseguo finché non ho un solo elemento nella lista delle gerarchie */
+			/* 2 - fondo i Node che ho scelto in un nodo con la similarity trovata */
+			//la similarity é presa dall'antenato comune
+			double similarity = 0.0;
+			/* la gerarchia del nodo fuso é calcolata dalle due gerarchie dei nodi */
+			Node mergedNode = new Node(nodesToMerge, similarity);
+
+
+			
+			// l' ho giá calcolata con il costruttore del Node			
+//			LinkedList<Node> mergedHierarchy = mergeNodesHierarchies(nodesToMerge);
+//			mergedNode.setHierarchy(mergedHierarchy);
+
+			/* 3 - rimuovo dalla lista dei Node tutti i Node vecchi che ora ho fuso */
+
+			/* 4 - aggiungo il Node fusione nei nodesToMerge */ 
+			
+			/* 5 - proseguo finché non ho un solo elemento nella lista dei Node */
 			
 		}
 		
@@ -216,13 +248,7 @@ public class TreeDAOPostgres implements TreeDAO {
 	}
 
 
-	private LinkedList<Node> findHighestSimilarityAncestor(
-			LinkedList<LinkedList<Node>> hierarchiesList) {
-		LinkedList<Node> nodes = null;
-		
-		return nodes;
-		
-	}
+
 
 
 	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) throws PersistenceException {
@@ -301,3 +327,4 @@ public class TreeDAOPostgres implements TreeDAO {
 	
 
 }
+

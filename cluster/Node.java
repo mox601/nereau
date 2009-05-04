@@ -5,18 +5,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/* class Node = Cluster */
 public class Node {
 	
 	private Node father;
 	private List<Node> children;
-	// gli alberi e i nodi mi servono per modellare l'algoritmo di clustering
 	private String value; 
-	/* per l'algoritmo di clustering */
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
 	
-	/* mi serve un id fittizio. obsoleto, ora ho left e right */
+	private LinkedList<Node> hierarchy;
+	
+	/* mi serve un id fittizio. ora ho anche left e right */
 	private int idNode;
 	
 	/* id per la rappresentazione sul database con nestedsets */
@@ -99,6 +99,18 @@ public class Node {
 		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
 		Float sim = new Float(similarity);
 		this.setSimilarity(sim);
+		
+		/* devo settare gli ancestors 
+		 * da due nodi che HANNO la gerarchia, 
+		 * restituisco una gerarchia del nodo padre */
+		
+		if (clustersToMerge.getFirst().hierarchy != null && 
+				clustersToMerge.getLast().hierarchy != null) {
+			LinkedList<Node> mergedHierarchies = 
+				this.mergeHierarchies(clustersToMerge.getFirst(), clustersToMerge.getLast());
+			this.setHierarchy(mergedHierarchies);
+		}
+	
 //		Node mergedClusterNode = new Node(value, tagCentroid);
 		this.setChildren(clustersToMerge);
 		/* questo nodo Ž il padre per tutti i cluster fusi */
@@ -126,9 +138,6 @@ public class Node {
 		
 		/* l'id di un nodo lo si assegna quando si costruisce il clustering. 
 		 * quando il clustering Ž completo, si assegnano gli id */
-	
-
-
 	}
 	
 	
@@ -136,6 +145,46 @@ public class Node {
 	/* Override dei metodi equals e hashCode per il confronto tra oggetti */
 	// TODO: cambiare se cambia la definizione dell'oggetto
 	
+	/* fonde le gerarchie dei due nodi */
+	private LinkedList<Node> mergeHierarchies(Node first, Node second) {
+		LinkedList<Node> mergedAncestorsList = new LinkedList<Node>();
+		
+		/* cerco a partire dal penultimo elemento di first il primo nodo in 
+		 * comune con gli elementi di second 
+		 * */
+		
+		//dalla fine!!
+		Iterator<Node> firstIterator = first.hierarchy.descendingIterator();
+		boolean found = false;
+		
+		while (firstIterator.hasNext() && found != true) {
+			Node ancestorA = firstIterator.next();	
+			int toIndex = second.hierarchy.size() - 1;
+			Iterator<Node> secondIterator = second.hierarchy.descendingIterator();
+			while (secondIterator.hasNext()) {
+				Node ancestorB = secondIterator.next();
+				if ( (ancestorA.left == ancestorB.left) && 
+						(ancestorA.right == ancestorB.right) ) {
+					/* rappresentano lo stesso antenato, il nodo per cui
+					 * sto creando la lista degli antenati
+					 * creo una sottolista dall'inizio fino a questo elemento, 
+					 * che si trova a distanza toIndex */
+					found = true;
+					mergedAncestorsList = (LinkedList<Node>) ancestorB.getHierarchy().subList(0, toIndex);
+
+					System.out.println("ho trovato l'antenato comune - id: " + 
+							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
+				}
+				/* diminuisco il counter per calcolare l'indice della seconda lista */
+				toIndex = toIndex - 1;
+			} // second iterator
+			
+		} // first iterator
+		
+		
+		
+		return mergedAncestorsList;
+	}
 
 	private Tagtfidf calculateAverageTag(List<Node> clustersToMerge) {		
 		List<Tagtfidf> tagsToMerge = new LinkedList<Tagtfidf>();
@@ -317,6 +366,20 @@ public class Node {
 
 	public Tagtfidf getCentroid() {
 		return centroid;
+	}
+
+	/**
+	 * @return the hierarchy
+	 */
+	public LinkedList<Node> getHierarchy() {
+		return hierarchy;
+	}
+
+	/**
+	 * @param hierarchy the hierarchy to set
+	 */
+	public void setHierarchy(LinkedList<Node> hierarchy) {
+		this.hierarchy = hierarchy;
 	}
 
 
