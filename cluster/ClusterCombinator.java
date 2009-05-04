@@ -23,10 +23,8 @@ public class ClusterCombinator {
 	 * calcolare le distanze */
 	
 	public LinkedList<LinkedList<Node>> getClusterCombinations() {
-		
 		// devo ottenere una lista di liste di cluster, 
 		// tutte le combinazioni
-		
 //		List<Node> clustersToCombine = new LinkedList<Node>();
 //		List<List<Node>> combinationList = new List<List<Node>>();
 		LinkedList<LinkedList<Node>> combinationList = new LinkedList<LinkedList<Node>>();

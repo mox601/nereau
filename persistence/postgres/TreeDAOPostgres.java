@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import model.RankedTag;
 
+import cluster.ClusterCombinator;
 import cluster.Node;
 import cluster.Tree;
 import persistence.PersistenceException;
@@ -228,17 +229,15 @@ public class TreeDAOPostgres implements TreeDAO {
 			double similarity = 0.0;
 			/* la gerarchia del nodo fuso é calcolata dalle due gerarchie dei nodi */
 			Node mergedNode = new Node(nodesToMerge, similarity);
-
-
 			
 			// l' ho giá calcolata con il costruttore del Node			
 //			LinkedList<Node> mergedHierarchy = mergeNodesHierarchies(nodesToMerge);
 //			mergedNode.setHierarchy(mergedHierarchy);
 
 			/* 3 - rimuovo dalla lista dei Node tutti i Node vecchi che ora ho fuso */
-
+			nodesList.removeAll(nodesToMerge);
 			/* 4 - aggiungo il Node fusione nei nodesToMerge */ 
-			
+			nodesList.add(mergedNode);
 			/* 5 - proseguo finché non ho un solo elemento nella lista dei Node */
 			
 		}
@@ -249,6 +248,46 @@ public class TreeDAOPostgres implements TreeDAO {
 
 
 
+
+
+	private LinkedList<Node> findNodesWithHighestAncestorSimilarity(
+			LinkedList<Node> nodesList) {
+		// TODO Auto-generated method stub
+		
+		// restituisce i due nodi con l'antenato 
+		// che ha il valore piú alto di similarity
+		LinkedList<Node> twoNodes = new LinkedList<Node>();
+		
+		/* ottengo tutte le combinazioni di coppie tra i nodi passati */
+		ClusterCombinator nodesCombinator= new ClusterCombinator(nodesList);
+		LinkedList<LinkedList<Node>> combinations = nodesCombinator.getClusterCombinations();
+		
+		/* per ogni coppia trovo il valore del primo nodo antenato 
+		 * e verifico se supera il valore massimo trovato finora */
+		
+		double maxSimilarity = 0.0;
+		
+		
+		for (LinkedList<Node> couple: combinations) {
+			double actualSimilarity = 0.0;
+			
+			Node ancestor = Node.calculateFirstAncestor(couple);
+			
+			if (actualSimilarity > maxSimilarity) {
+				//aggiorno l'antenato e la sua similarity trovata
+				maxSimilarity = actualSimilarity;
+
+				
+			}
+			
+		}
+		
+		
+		
+		
+		
+		return null;
+	}
 
 
 	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) throws PersistenceException {

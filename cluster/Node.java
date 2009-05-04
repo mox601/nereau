@@ -141,6 +141,31 @@ public class Node {
 	}
 	
 	
+	
+	public static Node calculateFirstAncestor(LinkedList<Node> couple) {
+		Node firstAncestor = null;
+		
+		Iterator<Node> firstIterator = couple.getFirst().getHierarchy().descendingIterator();
+
+		/* parte dall'ultimo nodo della gerarchia del nodo 1 e cerca un nodo 
+		 * uguale nella gerarchia del nodo 2 
+		 * quando lo trova, mette quale similarity? */
+		
+		while (firstIterator.hasNext()) {
+			Iterator<Node> secondIterator = couple.getLast().getHierarchy().descendingIterator();
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		return firstAncestor;
+	}
+	
+	
 
 	/* Override dei metodi equals e hashCode per il confronto tra oggetti */
 	// TODO: cambiare se cambia la definizione dell'oggetto
