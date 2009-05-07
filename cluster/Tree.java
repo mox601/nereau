@@ -64,7 +64,6 @@ public class Tree {
 	}
 
 	public Tree mergeTreesWithNewRoot(Tree firstTree, Node newRoot) {
-		
 		List<Node> oldTrees = new LinkedList<Node>();
 		/* add children to the new root node */
 		oldTrees.add(this.getRoot());
@@ -76,10 +75,8 @@ public class Tree {
 
 	public List<Node> getLeaves() {
 		List<Node> leaves = new LinkedList<Node>(); 
-		
 		Node actualNode = this.getRoot();
 		List<Node> children = actualNode.getChildren();
-		
 		if (actualNode.isLeaf()) {
 			leaves.add(actualNode);
 		} else {
@@ -88,9 +85,132 @@ public class Tree {
 				leaves.addAll(subTree.getLeaves());
 			}
 		}
-		
 		return leaves;
 	}
+	
+	/* metodo duplicato, per ottenere le foglie a partire da un nodo diverso 
+	 * dal root */
+	
+	public LinkedList<Node> getLeaves(Node node) {
+		LinkedList<Node> leaves = new LinkedList<Node>(); 
+		Node actualNode = node;
+		if (actualNode.isLeaf()) {
+			leaves.add(actualNode);
+		} else {
+			List<Node> children = actualNode.getChildren();
+			for(Node child : children) {
+				Tree subTree = this.getSubTree(child);
+				leaves.addAll(subTree.getLeaves());
+			}
+		}
+		return leaves;
+	}
+	
+	
+	/* restituisce il valore di similarity che si deve usare per 
+	 * generare un cluster di qualit‡ buona. Con quale strategia? */
+	double getCutSimilarity() {
+		double similarity = 0.0;
+		
+		
+		
+		return similarity;
+	}
+	
+	
+	
+	
+	
+	
+	/* da un albero, restituisce il clustering esatto ottenuto tagliando 
+	 * la gerarchia ad un certo valore di similarity */
+	public LinkedList<LinkedList<Node>> cutTreeAtSimilarity(double similarity) {
+		// restituisce una linkedlist di linked list di node
+		LinkedList<LinkedList<Node>> clustering = new LinkedList<LinkedList<Node>>();
+		
+		/* 
+		 * TODO: clutering da un albero 
+		 * avendo una gerarchia, devo decidere a che livello tagliare e
+		 * ottenere il clustering effettivo dal quale accorpare poi i tag
+		 * di ogni cluster. 
+		 * Questa funzione deve restituire una lista di clusters (LinkedList<Node>). 
+		 * In base alla similarity scelta, l'algoritmo scende nella gerarchia: 
+		 * incontrer‡  dei nodi, ognuno con un valore di similarity. 
+		 * Se il valore del nodo Ž < di quello scelto, prosegue
+		 * altrimenti, crea una lista di nodi e ci mette le foglie del nodo 
+		 * che sta visitando. 
+		 * */
+		
+		visitNodeAndGetClustering(this.getRoot(), similarity, clustering);
+		
+		return clustering;
+		
+	}
+	
+	void visitNodeAndGetClustering(Node node, double similarity, 
+			LinkedList<LinkedList<Node>> clustering) {
+		/* visita in preordine */
+		
+		if (node.getSimilarity().doubleValue() < similarity) {
+			
+			/* se Ž una foglia, con similarity piœ bassa di quella 
+			 * specificata, comunque aggiungi la lista col nodo singolo */
+			if (node.isLeaf()) {
+				LinkedList<Node> leaf = new LinkedList<Node>();
+				leaf.add(node);
+				clustering.add(leaf);
+			}
+			
+			/* passa a visitare i figli, 
+			 * questo nodo Ž troppo generale per la similarity scelta.  */
+			for (Node child: node.getChildren()) {
+				visitNodeAndGetClustering(child, similarity, clustering);
+			}
+		} else {
+			/* la similarity Ž = o > di quella scelta, 
+			 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
+			/* TODO: caso limite, se similarity Ž = a quella attuale. */
+			System.out.println("similarity corrente: " + node.getSimilarity());
+			LinkedList<Node> leaves = this.getLeaves(node);
+			clustering.add(leaves);
+		}
+		return;
+	}
+	
+		
+	public String toString() {
+		String treeString = "";
+		/* visita in preordine e stampa i nodi */
+		StringBuffer buffer = new StringBuffer();
+		visitNodeAndPrintToString(root, 0, buffer);
+		treeString = buffer.toString();
+		return treeString;
+	}
+
+	private void visitNodeAndPrintToString(Node node, int level, StringBuffer buffer) {
+		StringBuffer indentBuffer = new StringBuffer();
+		
+		if (node.getFather() != null) {
+			indentBuffer.append("\n");
+			for (int i = 0; i <= level; i++) {
+				indentBuffer.append("	");
+			}	
+		}
+		
+		/* stampo il contenuto del nodo */
+		
+//		String nodeString = indentBuffer.toString() + node.getValue() + " {" + node.getLeft() + ", " + 
+//							node.getRight() +  "}";
+		
+		buffer.append(indentBuffer.toString() + node.toString());
+		
+		for (Node child: node.getChildren()) {
+			visitNodeAndPrintToString(child, level + 1, buffer);
+		}
+		
+	}
+	
+	
 	
 	public void assignIds() {
 		/* assegna gli id a tutti i nodi dell'albero visitandolo in preordine */
@@ -106,10 +226,8 @@ public class Tree {
 	/* visita in preordine e assegnazione degli id. ora si assegnano secondo 
 	 * la struttura del database nested sets */
 	private void visitAndAssignIds(Node node, int rowId, int nestedSetId) {
-		
 		//vecchio id
 		node.setIdNode(rowId);
-		
 		System.out.println("id " + rowId + " assegnato al nodo: " + node.getValue());
 		// left 
 		node.setLeft(nestedSetId);

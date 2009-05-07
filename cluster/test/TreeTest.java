@@ -15,7 +15,8 @@ import cluster.Tree;
 
 public class TreeTest {
 	
-	private Tree tree; 
+	private Tree tree;
+	private Tree otherTree;
 	private Node a;
 	private Node b;
 	private Node c;
@@ -58,7 +59,6 @@ public class TreeTest {
 		tree = new Tree(a);
 
 	}
-	
 	
 	@Test
 	public void testContains() {
@@ -127,6 +127,8 @@ public class TreeTest {
 		Tree firstTree = new Tree(f);
 		Tree mergedTree = tree.mergeTreesWithNewRoot(firstTree, newRoot); 
 		
+		otherTree = mergedTree;
+		
 		List<Node> oldRoots = new LinkedList<Node>();
 		oldRoots.add(a);
 		oldRoots.add(f);
@@ -146,6 +148,49 @@ public class TreeTest {
 		assertEquals(expectedLeaves, obtainedLeaves);
 		
 	}
+
+
+	@Test
+	public void testPrintTree() {
+		System.out.println(tree.toString());
+	}	
+	
+	
+	@Test
+	public void testCutTreeAndGetClustering() {
+		
+		/* dato un albero con le similarity, 
+		 * costruisci una lista di liste di nodi che 
+		 * rappresentano il clustering effettuato tagliando l'albero al 
+		 * valore similarity specificato */
+		
+		a.setSimilarity(new Float(0.1));
+		b.setSimilarity(new Float(0.2));
+		c.setSimilarity(new Float(0.8));
+		d.setSimilarity(new Float(1.0));
+		e.setSimilarity(new Float(1.0));
+		
+		System.out.println(tree.toString());
+		
+		LinkedList<LinkedList<Node>> clustering = tree.cutTreeAtSimilarity(0.8);
+		
+		for (LinkedList<Node> cluster: clustering) {
+			System.out.print("<");
+			for (Node node: cluster) {
+				System.out.print(node.toString() + ", ");
+			}
+			System.out.println("> ");
+		}		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

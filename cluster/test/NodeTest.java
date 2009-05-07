@@ -192,6 +192,9 @@ public class NodeTest {
 	}
 	
 	
+	
+	
+	
 	@Test
 	public void testChild() {
 		a.addChild(b);

@@ -102,7 +102,6 @@ public class ClusterBuilder {
 		
 		logger.info("creating singleton clusters to be clustered");
 		
-
 		/* poi costruisce un cluster a partire da ogni tag */
 		for (Tagtfidf tag: extractedTags) {
 			Node currentNode = new Node(tag.getTag(), tag);
@@ -112,9 +111,7 @@ public class ClusterBuilder {
 
 		
 	}	
-	
-	
-	
+
 
 	private LinkedList<LinkedList<Node>> getClusterWithSimilarity(
 			List<Node> clustersToMerge, double similarity) {

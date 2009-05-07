@@ -16,6 +16,7 @@ public class ClusterCombinator {
 	public ClusterCombinator(List<Node> clusters) {
 		this.clustersToCombine = clusters;
 		int clusterNumber = clusters.size();
+		System.out.println("calling combinator with clusterNumber = " + clusterNumber);
 		this.combinator = new CombinationGenerator(clusterNumber, 2);
 	}
 	
@@ -31,7 +32,7 @@ public class ClusterCombinator {
 		
 		int[] indices;
 
-		while (combinator.hasMore ()) {
+		while (combinator.hasMore()) {
 		  List<Node>  actualClusterCombination = new LinkedList<Node>();
 		  indices = combinator.getNext ();
 		  for (int i = 0; i < indices.length; i++) {
@@ -39,7 +40,6 @@ public class ClusterCombinator {
 		  }
 //		  CombinationGenerator.clusterPrint(actualClusterCombination);
 		  combinationList.add((LinkedList<Node>) actualClusterCombination);
-		  
 		}
 		
 		return combinationList;

@@ -101,11 +101,11 @@ public class Node {
 		this.setSimilarity(sim);
 		
 		/* devo settare gli ancestors 
-		 * da due nodi che HANNO la gerarchia, 
+		 * se ho passato due nodi che HANNO la gerarchia, 
 		 * restituisco una gerarchia del nodo padre */
 		
-		if (clustersToMerge.getFirst().hierarchy != null && 
-				clustersToMerge.getLast().hierarchy != null) {
+		if (clustersToMerge.getFirst().getHierarchy() != null && 
+				clustersToMerge.getLast().getHierarchy() != null) {
 			LinkedList<Node> mergedHierarchies = 
 				this.mergeHierarchies(clustersToMerge.getFirst(), clustersToMerge.getLast());
 			this.setHierarchy(mergedHierarchies);
@@ -149,18 +149,28 @@ public class Node {
 
 		/* parte dall'ultimo nodo della gerarchia del nodo 1 e cerca un nodo 
 		 * uguale nella gerarchia del nodo 2 
-		 * quando lo trova, mette quale similarity? */
+		 * quando lo trova, mette quale valore di similarity? 
+		 * quello del nodo nella gerarchia, dovrebbe essere lo stesso */
 		
-		while (firstIterator.hasNext()) {
+		boolean found = false;
+		
+		while (firstIterator.hasNext() && !found) {
 			Iterator<Node> secondIterator = couple.getLast().getHierarchy().descendingIterator();
+			Node a = firstIterator.next();
 			
+			while (secondIterator.hasNext() && !found) {
+				Node b = secondIterator.next();
+				if ((b.getLeft() == a.getLeft()) && 
+						(b.getRight() == a.getRight()) && 
+						(b.getIdNode() == a.getIdNode()) ) {
+					firstAncestor = b;
+					found = true;
+				} 
+				
+				
+			} // secondIterator
 			
-		}
-		
-		
-		
-		
-		
+		}// firstIterator
 		
 		return firstAncestor;
 	}
@@ -186,7 +196,7 @@ public class Node {
 			Node ancestorA = firstIterator.next();	
 			int toIndex = second.hierarchy.size() - 1;
 			Iterator<Node> secondIterator = second.hierarchy.descendingIterator();
-			while (secondIterator.hasNext()) {
+			while (secondIterator.hasNext() && found != true) {
 				Node ancestorB = secondIterator.next();
 				if ( (ancestorA.left == ancestorB.left) && 
 						(ancestorA.right == ancestorB.right) ) {
@@ -326,7 +336,10 @@ public class Node {
 	
 	public String toString() {
 		/* returns a string description of node */
-		String description = this.value + "-" + this.getSimilarity();
+		String sets = "{" + this.getLeft() + ", "+ this.getRight() + "}";
+		String id = String.valueOf(this.getIdNode());
+		String description = this.value + " (" + 
+							 this.getSimilarity() + ") " + id + " " + sets;
 		return description;
 	}
 	

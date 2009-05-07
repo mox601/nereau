@@ -106,18 +106,40 @@ public class ClusterBuilderTest {
 	public void retrieveClustersFromDatabase() {
 	/* estrai solo la gerarchia relativa ad alcuni RankedTag che ti passo */	
 		List<RankedTag> tags = new LinkedList();
+		System.out.println("INIZIO TEST retrieve clusters from database");
+
+		RankedTag wikipedia = new RankedTag("wikipedia");
+		RankedTag blog = new RankedTag("blog");
+		RankedTag sapere = new RankedTag("sapere");
 		
+		tags.add(wikipedia);
+		tags.add(blog);
+		tags.add(sapere);
+		
+		Tree extractedClusters = null;
 		
 		try {
-			Tree extractedClusters = this.treeHandler.retrieve(tags);
+			extractedClusters = this.treeHandler.retrieve(tags);
 		} catch (PersistenceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		System.out.println(extractedClusters.toString());
 		
 		
+		LinkedList<LinkedList<Node>> clustering = extractedClusters.cutTreeAtSimilarity(0.5);
 		
+		for (LinkedList<Node> cluster: clustering) {
+			System.out.print("<");
+			for (Node node: cluster) {
+				System.out.print(node.toString() + ", ");
+			}
+			System.out.println("> ");
+		}				
+		
+		
+		System.out.println("FINE TEST retrieve clusters from database");
 		
 		
 	}
