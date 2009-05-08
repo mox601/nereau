@@ -11,7 +11,6 @@ import model.RankedTag;
 
 public class TfidfExpansionTagsStrategy extends ExpansionTagsStrategy {
 
-	
 	/* trova tutti i tag dell'espansione, senza filtrarli */
 	@Override
 	public Set<RankedTag> findExpansionTags(Set<String> stemmedQueryTerms,
@@ -37,9 +36,9 @@ public class TfidfExpansionTagsStrategy extends ExpansionTagsStrategy {
 			logger.info("intersezione: " + commonTags);
 		}
 		
-		// non filtra i tags, li restituisce tutti
+		// non filtra i tags, li restituisce tutti tranne il null
 		
-//		commonTags = this.selectRelevantTags(commonTags);
+		commonTags = this.filterNullTags(commonTags);
 		
 		return commonTags;
 	}

@@ -2,6 +2,7 @@ package cluster.test;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -128,9 +129,9 @@ public class ClusterBuilderTest {
 		System.out.println(extractedClusters.toString());
 		
 		
-		LinkedList<LinkedList<Node>> clustering = extractedClusters.cutTreeAtSimilarity(0.5);
+		HashSet<HashSet<Node>> clustering = extractedClusters.cutTreeAtSimilarity(0.5);
 		
-		for (LinkedList<Node> cluster: clustering) {
+		for (HashSet<Node> cluster: clustering) {
 			System.out.print("<");
 			for (Node node: cluster) {
 				System.out.print(node.toString() + ", ");

@@ -2,14 +2,20 @@ package model.queryexpansion;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import cluster.ClusterBuilder;
+import cluster.Tree;
+
 import persistence.PersistenceException;
 import persistence.StemmerDAO;
 import persistence.postgres.StemmerDAOPostgres;
+import persistence.postgres.TreeDAOPostgres;
 import util.LogHandler;
 import util.ParameterHandler;
 
@@ -81,8 +87,8 @@ public class QueryExpander {
 			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
 		// altro insieme, con tutti i tags, anche quelli meno rilevanti
-		Set<RankedTag> allExpansionTags = 
-			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
+//		Set<RankedTag> allExpansionTags = 
+//			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
 		//logger.info("tags per espansione: " + expansionTags);
 		
@@ -301,10 +307,10 @@ public class QueryExpander {
 		double termWeight = 1.0 / (double)stemmedQueryTerms.size();
 		
 		
-		/* prendo tutti i tags ! */
-		
-//		Set<RankedTag> expansionTags = 
-//			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
+		/* devo prendere tutti i tags ! */
+//		vecchio metodo, da rimuovere
+		Set<RankedTag> expansionTags = 
+			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 //		
 		// altro insieme, con tutti i tags, anche quelli meno rilevanti
 		Set<RankedTag> allExpansionTags = 
@@ -319,11 +325,38 @@ public class QueryExpander {
 			new HashMap<ExpandedQuery, Set<RankedTag>> ();
 		
 		
-		/* ho trovato tutti i tag in relazione con i termini della query. 
-		 * ora li devo suddividere in clusters e fare un'espansione per
-		 * ogni cluster */
+		/* ho trovato tutti i tag in relazione con i termini della query. */		
+		/* avendo i rankedTags, posso estrarre le loro gerarchie dal database */
 		
-//		buildClusters(allExpansionTags); 
+		/* dopo che ho le gerarchie, costruisco l'albero ridotto e 
+		 * faccio il taglio del clustering gerarchico dove mi conviene 
+		 * */
+		
+		TreeDAOPostgres treeHandler = new TreeDAOPostgres();
+		
+		LinkedList<RankedTag> tagsList= new LinkedList<RankedTag>(allExpansionTags);
+		Tree tagsTree = null;
+		try {
+			tagsTree = treeHandler.retrieve(tagsList);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		if(tagsTree!= null) {
+			logger.info("clustering gerarchico dei tag: " + tagsTree.toString());
+		} 
+		
+		/* potrebbe essere che l'albero sia nullo perché non ho trovato tag 
+		 * di cui posso ricostruire la gerarchia.  */
+		
+
+		/* il clustering deve essere rappresentato con i Set invece delle LinkedList */
+		
+		
+		
+		
 		
 		
 		
@@ -344,13 +377,13 @@ public class QueryExpander {
 					}
 				}
 			}
-			
+	
 			
 			//logger.info("co-occurrence values for tag " + tag + ": " + coOccurrenceValues4tag);
 
 			Map<String,Map<String,Integer>> expansionTerms = 
 				this.selectRelevantTerms(stemmedQueryTerms,coOccurrenceValues4tag);
-			
+		
 			if(expansionTerms!=null) {
 				ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
 				Set<RankedTag> rankedTags = null;
@@ -381,6 +414,7 @@ public class QueryExpander {
 		}
 		*/
 		Set<ExpandedQuery> result = new HashSet<ExpandedQuery>();
+		
 		for(ExpandedQuery eq: expandedQueries.keySet()) {
 			eq.setExpansionTags(expandedQueries.get(eq));
 			result.add(eq);

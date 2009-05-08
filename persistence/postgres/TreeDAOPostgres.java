@@ -188,7 +188,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		//viene usato durante l'espansione
 		//FIXME: se gli passo solo un rankedTag??
 		Logger logger = LogHandler.getLogger(this.getClass().getName());		
-
+		
 		Tree extractedTree = null;
 		LinkedList<LinkedList<Node>> hierarchiesList = new LinkedList<LinkedList<Node>>();
 		
@@ -197,9 +197,17 @@ public class TreeDAOPostgres implements TreeDAO {
 			logger.info("estraggo gli ancestor del tag: " + currentTag.getTag());
 			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
 			/* l'ultimo nodo nella gerarchia Ž il nodo del rankedtag che si sta calcolando */
-			hierarchiesList.add(singleTagHierarchy);
+			if (singleTagHierarchy.size() != 0) {
+				hierarchiesList.add(singleTagHierarchy);
+			}
 		}
-		extractedTree = buildTreeFromHierarchies(hierarchiesList);	
+		
+		if (hierarchiesList.size() == 0) {
+			// l'albero sar‡ vuoto
+			extractedTree = new Tree();
+		} else {
+			extractedTree = buildTreeFromHierarchies(hierarchiesList);	
+		}
 		return extractedTree;
 	}
 	
@@ -344,7 +352,7 @@ public class TreeDAOPostgres implements TreeDAO {
 
 	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) throws PersistenceException {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("extracting ancestors of tag: " + tag.getTag());
+//		logger.info("extracting ancestors of tag: " + tag.getTag());
 		LinkedList<Node> ancestors = new LinkedList<Node>();
 		/* faccio una query ed estraggo tutti gli antenati del tag, 
 		 * prima estraendo l'id nella tabella tags */

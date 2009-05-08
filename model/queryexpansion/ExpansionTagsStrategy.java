@@ -15,13 +15,29 @@ public abstract class ExpansionTagsStrategy {
 	public abstract Set<RankedTag> findExpansionTags(Set<String> stemmedQueryTerms,
 			Map<String, Map<RankedTag, Map<String, Double>>> subMatrix);
 	
+	
+	protected TreeSet<RankedTag> filterNullTags(TreeSet<RankedTag> tags) {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("tags prima della selezione: " + tags);
+		// levo il NULL_TAG
+		tags.remove(ParameterHandler.NULL_TAG);
+		return tags;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	/* filtra i RankedTag per prendere solo quelli rilevanti. 
 	 * nella parte del clustering non si filtrano */
 	protected TreeSet<RankedTag> selectRelevantTags(TreeSet<RankedTag> tags) {
 		
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("tags prima della selezione: " + tags);
-		
 		
 		//NUOVO: tolgo il null_tag, sempre
 		tags.remove(ParameterHandler.NULL_TAG);

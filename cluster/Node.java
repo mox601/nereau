@@ -338,14 +338,10 @@ public class Node {
 		/* returns a string description of node */
 		String sets = "{" + this.getLeft() + ", "+ this.getRight() + "}";
 		String id = String.valueOf(this.getIdNode());
-		String description = this.value + " (" + 
+		String description = this.value + " (sim: " + 
 							 this.getSimilarity() + ") " + id + " " + sets;
 		return description;
 	}
-	
-	
-	
-	
 	
 	
 	
@@ -375,15 +371,6 @@ public class Node {
 	 * 	similarity = similarity - 0.15;
 	 * 	
 	 * }
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * */
 	
 	

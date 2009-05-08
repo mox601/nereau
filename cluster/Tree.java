@@ -1,4 +1,5 @@
 package cluster;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,10 @@ public class Tree {
 
 	public Tree(Node node) {
 		this.setRoot(node);
+	}
+
+	public Tree() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public void setRoot(Node root) {
@@ -124,12 +129,12 @@ public class Tree {
 	
 	/* da un albero, restituisce il clustering esatto ottenuto tagliando 
 	 * la gerarchia ad un certo valore di similarity */
-	public LinkedList<LinkedList<Node>> cutTreeAtSimilarity(double similarity) {
+	public HashSet<HashSet<Node>> cutTreeAtSimilarity(double similarity) {
 		// restituisce una linkedlist di linked list di node
-		LinkedList<LinkedList<Node>> clustering = new LinkedList<LinkedList<Node>>();
+		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
 		
 		/* 
-		 * TODO: clutering da un albero 
+		 * TODO: clustering da un albero 
 		 * avendo una gerarchia, devo decidere a che livello tagliare e
 		 * ottenere il clustering effettivo dal quale accorpare poi i tag
 		 * di ogni cluster. 
@@ -143,12 +148,19 @@ public class Tree {
 		
 		visitNodeAndGetClustering(this.getRoot(), similarity, clustering);
 		
-		return clustering;
+		HashSet clustersSet = new HashSet<HashSet<Node>>();
+		
+		for (HashSet<Node> cluster: clustering) {
+			HashSet setNode = new HashSet<Node>(cluster);
+			clustersSet.add(setNode);
+		}
+		
+		return clustersSet;
 		
 	}
 	
 	void visitNodeAndGetClustering(Node node, double similarity, 
-			LinkedList<LinkedList<Node>> clustering) {
+			HashSet<HashSet<Node>> clustering) {
 		/* visita in preordine */
 		
 		if (node.getSimilarity().doubleValue() < similarity) {
@@ -156,7 +168,7 @@ public class Tree {
 			/* se Ž una foglia, con similarity piœ bassa di quella 
 			 * specificata, comunque aggiungi la lista col nodo singolo */
 			if (node.isLeaf()) {
-				LinkedList<Node> leaf = new LinkedList<Node>();
+				HashSet<Node> leaf = new HashSet<Node>();
 				leaf.add(node);
 				clustering.add(leaf);
 			}
@@ -171,8 +183,9 @@ public class Tree {
 			 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
 			/* TODO: caso limite, se similarity Ž = a quella attuale. */
 			System.out.println("similarity corrente: " + node.getSimilarity());
-			LinkedList<Node> leaves = this.getLeaves(node);
-			clustering.add(leaves);
+			LinkedList<Node> leavesList = this.getLeaves(node);
+			HashSet<Node> leavesSet = new HashSet(leavesList);
+			clustering.add(leavesSet);
 		}
 		return;
 	}

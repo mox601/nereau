@@ -3,10 +3,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cluster.Node;
@@ -150,6 +152,7 @@ public class TreeTest {
 	}
 
 
+	@Ignore
 	@Test
 	public void testPrintTree() {
 		System.out.println(tree.toString());
@@ -172,9 +175,9 @@ public class TreeTest {
 		
 		System.out.println(tree.toString());
 		
-		LinkedList<LinkedList<Node>> clustering = tree.cutTreeAtSimilarity(0.8);
+		HashSet<HashSet<Node>> clustering = tree.cutTreeAtSimilarity(0.8);
 		
-		for (LinkedList<Node> cluster: clustering) {
+		for (HashSet<Node> cluster: clustering) {
 			System.out.print("<");
 			for (Node node: cluster) {
 				System.out.print(node.toString() + ", ");

@@ -3,7 +3,10 @@ package cluster;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import model.RankedTag;
 
 import persistence.PersistenceException;
 import persistence.postgres.TagtfidfDAOPostgres;
@@ -29,6 +32,8 @@ public class ClusterBuilder {
 	 * algoritmo gerarchico di shepitsen. 
 	 * TODO: Deve restituire un Tree, con una root. */
 	
+	
+
 	public void buildClusters() {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("START TAGTFIDF CLUSTERING");

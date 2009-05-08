@@ -34,16 +34,17 @@ public class ProvaEspansioni {
 		
 		/* posso fare una seconda prova di espansione, usando il metodo nuovo */
 		Set<ExpandedQuery> expQueriesTfidf = qef.expandQueryTfidf(queryString, user);
-		
-		
-		for(ExpandedQuery  eq: expQueries)
-			System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
-		
-		
-		for(ExpandedQuery eq: expQueriesTfidf) {
-			System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
+
+		if (expQueries != null) {
+			for(ExpandedQuery  eq: expQueries)
+				System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
 		}
-		
+
+		if (expQueriesTfidf != null) {
+			for(ExpandedQuery eq: expQueriesTfidf) {
+				System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
+			}
+		}
 		
 	}
 
