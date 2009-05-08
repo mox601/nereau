@@ -169,7 +169,6 @@ public class UserModelUpdater {
 			
 			logger.info("modello aggiornato con visitedUrls forniti...");
 			
-			
 			/* aggiungi i tags in un set di tags, che poi viene passato al GlobalModel*/
 			
 			Set<RankedTag> tagSet = new HashSet<RankedTag>();

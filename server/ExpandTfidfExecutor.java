@@ -33,7 +33,11 @@ public class ExpandTfidfExecutor extends CommandExecutor {
 		/* costruisce una risposta chiamando il metodo di nereau nuovo!! 
 		 * TODO: per ora usa il vecchio! */
 		
-		Set<ExpandedQuery> expQueries = nereau.expandQuery(queryString, user);
+//		Set<ExpandedQuery> expQueries = nereau.expandQuery(queryString, user);
+		
+		
+		/* nuovo metodo di espansione */
+		Set<ExpandedQuery> expQueries = nereau.expandQueryTfidf(queryString, user);
 
 
 		String JSONResponse = "";

@@ -15,6 +15,8 @@ public abstract class ExpansionTagsStrategy {
 	public abstract Set<RankedTag> findExpansionTags(Set<String> stemmedQueryTerms,
 			Map<String, Map<RankedTag, Map<String, Double>>> subMatrix);
 	
+	/* filtra i RankedTag per prendere solo quelli rilevanti. 
+	 * nella parte del clustering non si filtrano */
 	protected TreeSet<RankedTag> selectRelevantTags(TreeSet<RankedTag> tags) {
 		
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
@@ -30,6 +32,7 @@ public abstract class ExpansionTagsStrategy {
 		for(RankedTag rTag: tags) {
 			if(rTag.getRanking()>maxRanking) {
 				maxRanking = rTag.getRanking();
+				//non l'avevamo levato il null_tag?
 				if(rTag.getTag().equals(ParameterHandler.NULL_TAG.getTag()))
 					maxIsNullTag = true;
 			}
@@ -45,8 +48,6 @@ public abstract class ExpansionTagsStrategy {
 			
 			if(temp.getTag().equals(ParameterHandler.NULL_TAG.getTag()))
 				continue;
-			
-			
 			logger.info("ranked tag esaminato: " + temp);
 			double tempRanking = temp.getRanking();
 			if(tempRanking / maxRanking < ParameterHandler.MIN_EXPANSIONTAGS_RELATIVE_VALUE) {

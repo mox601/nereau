@@ -20,7 +20,7 @@ public class ProvaEspansioni {
 		
 		if(args.length!=2) {
 			user = new User("mox601");
-			queryString = "rdf";
+			queryString = "jimmy";
 		}
 		
 		else {
@@ -33,13 +33,17 @@ public class ProvaEspansioni {
 		Set<ExpandedQuery> expQueries = qef.expandQuery(queryString, user);
 		
 		/* posso fare una seconda prova di espansione, usando il metodo nuovo */
-		/* Set<ExpandedQuery> newExpQueries = qef.newExpandQuery(queryString, user) */
-		
-		
+		Set<ExpandedQuery> expQueriesTfidf = qef.expandQueryTfidf(queryString, user);
 		
 		
 		for(ExpandedQuery  eq: expQueries)
 			System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
+		
+		
+		for(ExpandedQuery eq: expQueriesTfidf) {
+			System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
+		}
+		
 		
 	}
 

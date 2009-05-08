@@ -26,12 +26,15 @@ public class QueryExpander {
 	 * devo aggiungere una strategy? */
 	
 	private ExpansionTagsStrategy expansionTagsStrategy;
+	private ExpansionTagsStrategy tfidfExpansionTagsStrategy;
 	private StemmerDAO stemmerHandler;
 	
 	public QueryExpander() {
 		this.stemmerHandler = new StemmerDAOPostgres();
 		this.expansionTagsStrategy = 
 			new CommonExpansionTagsStrategy();
+		this.tfidfExpansionTagsStrategy = 
+			new TfidfExpansionTagsStrategy(); 
 	}
 
 	public Set<ExpandedQuery> expandQuery(String queryString, User user) {
@@ -69,8 +72,17 @@ public class QueryExpander {
 		//weight to be assigned to every query term
 		double termWeight = 1.0 / (double)stemmedQueryTerms.size();
 		
+		
+		/* qui i tag arrivano gi‡ filtrati: ne otteniamo massimo 5, con 
+		 * rilevanza maggiore di  0,3 rispetto al tag con ranking piœ alto 
+		 * Io li voglio tutti! */
+		
 		Set<RankedTag> expansionTags = 
 			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
+		
+		// altro insieme, con tutti i tags, anche quelli meno rilevanti
+		Set<RankedTag> allExpansionTags = 
+			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
 		//logger.info("tags per espansione: " + expansionTags);
 		
@@ -248,9 +260,135 @@ public class QueryExpander {
 		/* si deve basare sui tag che hanno partecipato all'espansione 
 		 * vecchia, deve ricevere in qualche modo i vettori dei tag e
 		 * i valori dei termini per poi sommarli e formare espansioni diverse */
-
 		
-		return null;
+		/* comincia nello stesso modo dell'espansione vecchia */
+		
+		
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("query originale: " + queryString);
+		Query query = new Query(queryString);
+		Set<String> stemmedQueryTerms = query.getStemmedTerms();
+		
+		System.out.println("stemmed query terms: " + stemmedQueryTerms);
+				
+		UserModel userModel = user.getUserModel();
+		Map<String,Map<RankedTag,Map<String,Double>>> subMatrix = 
+			userModel.getSubMatrix(stemmedQueryTerms);
+		
+		System.out.println("user model for submitted query: " + subMatrix);
+		
+		//logger.info("modello utente relativo alla query: " + subMatrix);
+		Set<ExpandedQuery> expandedQueries = null;
+		if(subMatrix.isEmpty())
+			expandedQueries = new HashSet<ExpandedQuery>();
+		else
+			expandedQueries = this.expandTfidf(stemmedQueryTerms,subMatrix);
+		
+		//
+		//System.out.print("Expanded queries: " + expandedQueries);
+		
+		return expandedQueries;
+	}
+	
+	
+
+	private Set<ExpandedQuery> expandTfidf(Set<String> stemmedQueryTerms,
+			Map<String, Map<RankedTag, Map<String, Double>>> subMatrix) {
+
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		
+		//weight to be assigned to every query term
+		double termWeight = 1.0 / (double)stemmedQueryTerms.size();
+		
+		
+		/* prendo tutti i tags ! */
+		
+//		Set<RankedTag> expansionTags = 
+//			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
+//		
+		// altro insieme, con tutti i tags, anche quelli meno rilevanti
+		Set<RankedTag> allExpansionTags = 
+			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
+		
+		//logger.info("tags per espansione: " + expansionTags);
+		
+		//
+		//System.out.println("expansion tags: " + expansionTags);
+		
+		Map<ExpandedQuery, Set<RankedTag>> expandedQueries = 
+			new HashMap<ExpandedQuery, Set<RankedTag>> ();
+		
+		
+		/* ho trovato tutti i tag in relazione con i termini della query. 
+		 * ora li devo suddividere in clusters e fare un'espansione per
+		 * ogni cluster */
+		
+//		buildClusters(allExpansionTags); 
+		
+		
+		
+		
+		
+		for(RankedTag tag: expansionTags) {
+			Map<String,Double> coOccurrenceValues4tag =
+				this.initCoOccurrenceValues4tag(tag,subMatrix);
+			for(String term1: subMatrix.keySet()) {
+				Map<String,Double> coOccurrenceValues4term4tag = 
+					subMatrix.get(term1).get(tag);
+				if(coOccurrenceValues4term4tag!=null) {
+					for(String term2: coOccurrenceValues4term4tag.keySet()) {
+						double sumValue =
+							coOccurrenceValues4tag.remove(term2) 
+							+ (termWeight * coOccurrenceValues4term4tag.get(term2));
+						coOccurrenceValues4tag.put(term2, sumValue);
+					}
+				}
+			}
+			
+			
+			//logger.info("co-occurrence values for tag " + tag + ": " + coOccurrenceValues4tag);
+
+			Map<String,Map<String,Integer>> expansionTerms = 
+				this.selectRelevantTerms(stemmedQueryTerms,coOccurrenceValues4tag);
+			
+			if(expansionTerms!=null) {
+				ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
+				Set<RankedTag> rankedTags = null;
+				if(expandedQueries.containsKey(expandedQuery))
+					rankedTags = expandedQueries.get(expandedQuery);
+				else {
+					rankedTags = new HashSet<RankedTag>();
+					expandedQueries.put(expandedQuery, rankedTags);
+				}
+				rankedTags.add(tag);
+			}
+			
+		}
+		/*
+		if(expansionTags.isEmpty()) {
+			
+			Map<String,Map<String,Integer>> expansionTerms = 
+				this.selectRelevantTerms(stemmedQueryTerms, new HashMap<String,Double>());
+			
+			
+			//
+			//System.out.println("Expansion terms: " + expansionTerms);
+			
+			ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
+			Set<RankedTag> setWithNullTag = new HashSet<RankedTag>();
+			setWithNullTag.add(ParameterHandler.NULL_TAG);
+			expandedQueries.put(expandedQuery, setWithNullTag);
+		}
+		*/
+		Set<ExpandedQuery> result = new HashSet<ExpandedQuery>();
+		for(ExpandedQuery eq: expandedQueries.keySet()) {
+			eq.setExpansionTags(expandedQueries.get(eq));
+			result.add(eq);
+		}
+		
+		logger.info("query espanse: " + expandedQueries);
+		return result;
+		
 	}
 
 

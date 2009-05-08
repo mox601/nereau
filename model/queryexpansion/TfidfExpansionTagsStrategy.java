@@ -9,12 +9,14 @@ import util.LogHandler;
 
 import model.RankedTag;
 
-public class CommonExpansionTagsStrategy extends ExpansionTagsStrategy {
-	
-	//TODO c'è qualche problema!
+public class TfidfExpansionTagsStrategy extends ExpansionTagsStrategy {
 
-	public Set<RankedTag> findExpansionTags(Set<String> stemmedQueryTerms, Map<String, Map<RankedTag, Map<String, Double>>> subMatrix) {
-		
+	
+	/* trova tutti i tag dell'espansione, senza filtrarli */
+	@Override
+	public Set<RankedTag> findExpansionTags(Set<String> stemmedQueryTerms,
+			Map<String, Map<RankedTag, Map<String, Double>>> subMatrix) {
+
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		TreeSet<RankedTag> commonTags = new TreeSet<RankedTag>();
 		boolean tagsInitialized = false;
@@ -35,13 +37,9 @@ public class CommonExpansionTagsStrategy extends ExpansionTagsStrategy {
 			logger.info("intersezione: " + commonTags);
 		}
 		
-		/* salvo i tag non filtrati in un'altro set */
-		TreeSet<RankedTag> commonTagsNotFiltered = new TreeSet<RankedTag>();
-		commonTagsNotFiltered = commonTags;
+		// non filtra i tags, li restituisce tutti
 		
-		commonTags = this.selectRelevantTags(commonTags);
-		
-		logger.info("tags dopo la selezione: " + commonTags);
+//		commonTags = this.selectRelevantTags(commonTags);
 		
 		return commonTags;
 	}
