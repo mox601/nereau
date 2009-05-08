@@ -338,7 +338,7 @@ public class Node {
 		/* returns a string description of node */
 		String sets = "{" + this.getLeft() + ", "+ this.getRight() + "}";
 		String id = String.valueOf(this.getIdNode());
-		String description = this.value + " (sim: " + 
+		String description = this.getValue() + " (sim: " + 
 							 this.getSimilarity() + ") " + id + " " + sets;
 		return description;
 	}

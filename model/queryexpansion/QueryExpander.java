@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import cluster.ClusterBuilder;
+import cluster.Node;
 import cluster.Tree;
 
 import persistence.PersistenceException;
@@ -335,37 +336,56 @@ public class QueryExpander {
 		TreeDAOPostgres treeHandler = new TreeDAOPostgres();
 		
 		LinkedList<RankedTag> tagsList= new LinkedList<RankedTag>(allExpansionTags);
-		Tree tagsTree = null;
+		Tree hierarchicalClustering = null;
 		try {
-			tagsTree = treeHandler.retrieve(tagsList);
+			hierarchicalClustering = treeHandler.retrieve(tagsList);
 		} catch (PersistenceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		if(tagsTree!= null) {
-			logger.info("clustering gerarchico dei tag: " + tagsTree.toString());
+
+		/* potrebbe essere che l'albero sia nullo perché non ho trovato tag 
+		 * di cui posso ricostruire la gerarchia.  */		
+		if(hierarchicalClustering!= null) {
+			logger.info("clustering gerarchico dei tag: " + hierarchicalClustering.toString());
 		} 
 		
-		/* potrebbe essere che l'albero sia nullo perché non ho trovato tag 
-		 * di cui posso ricostruire la gerarchia.  */
-		
 
-		/* il clustering deve essere rappresentato con i Set invece delle LinkedList */
+		/* calcolo del taglio piú adatto del clustering gerarchico */
+		
+		/* si puó fare in due modi: 
+		 * con media e varianza delle dimensioni dei clusters
+		 * oppure osservando il profilo dell'utente nelle co-occorrenze dei tag
+		 *  */
+		
+		/* TODO: per ora il taglio della similarity la faccio a 0.5 */
+		HashSet<HashSet<Node>> clustering = hierarchicalClustering.cutTreeAtSimilarity(0.5);
+		
+		
+		for (HashSet<Node> cluster: clustering) {
+			/* per ogni tag del clustering devo sommare i vettori dei pesi 
+			 * dei termini associati ai tags */
+			
+		}
+		
+		
+		/* ottengo alla fine un 
+		 * Set<ExpandedQuery> result = new HashSet<ExpandedQuery>(); 
+		 * che contiene ExpandedQuery fatte cosí: 
+		 * una per ogni cluster. */
 		
 		
 		
-		
-		
-		
-		
-		
-		
+		/* TODO: OLD SCHOOL*/
+		/* OLD SCHOOL: per ogni ranked tag  ( faró quasi la stessa cosa per ogni cluster)*/
 		for(RankedTag tag: expansionTags) {
+			/* calcola i valori di cooccorrenza per il tag nella subMatrix */
 			Map<String,Double> coOccurrenceValues4tag =
 				this.initCoOccurrenceValues4tag(tag,subMatrix);
 			for(String term1: subMatrix.keySet()) {
+				/* per ogni termine contenuto nelle chiavi della submatrix, 
+				 * che sarebbero i termini della query stemmati,   
+				 * calcola i valori di co-occorrenza termine-tag */
 				Map<String,Double> coOccurrenceValues4term4tag = 
 					subMatrix.get(term1).get(tag);
 				if(coOccurrenceValues4term4tag!=null) {

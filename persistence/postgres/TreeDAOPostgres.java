@@ -224,16 +224,16 @@ public class TreeDAOPostgres implements TreeDAO {
 		for (LinkedList<Node> hierarchy: hierarchiesList) {
 			/* costruisco un nodo per ogni gerarchia, 
 			 * assegnandogli la gerarchia stessa come attributo */
-			Node currentNode = new Node(hierarchy.getLast().getValue());
+//			Node currentNode = new Node(hierarchy.getLast().getValue());
+			Node currentNode = hierarchy.getLast();
 			currentNode.setHierarchy(hierarchy);
 			/* aggiungo alla lista dei Node da fondere per 
 			 * la costruzione del cluster */
-			currentNode.setLeft(hierarchy.getLast().getLeft());
-			currentNode.setRight(hierarchy.getLast().getRight());
-			currentNode.setIdNode(hierarchy.getLast().getIdNode());
-			logger.info("from list to Node: " + currentNode.getIdNode() + 
-					"{" + currentNode.getLeft() + ", " + currentNode.getRight() + 
-					"}");
+//			currentNode.setLeft(hierarchy.getLast().getLeft());
+//			currentNode.setRight(hierarchy.getLast().getRight());
+//			currentNode.setIdNode(hierarchy.getLast().getIdNode());
+//			currentNode.setSimilarity(hierarchy.getLast().getSimilarity());
+			logger.info("from list to Node: " + currentNode.toString());
 			nodesList.add(currentNode);
 		}
 		
@@ -300,14 +300,8 @@ public class TreeDAOPostgres implements TreeDAO {
 			Node ancestor = Node.calculateFirstAncestor(couple);
 			actualSimilarity = ancestor.getSimilarity().doubleValue();
 			logger.info("cerco l'ancestor dei nodi: " + 
-					couple.getFirst().getIdNode() + 
-					" {"+ couple.getFirst().getLeft() + 
-					", " + couple.getFirst().getRight() + 
-					"} e " + 
-					couple.getLast().getIdNode() + 
-					" {"+ couple.getLast().getLeft() + 
-					", " + couple.getLast().getRight() + 
-					"}");
+					couple.getFirst().toString() + " e " + 
+					couple.getLast().toString());
 			
 			if (actualSimilarity > maxSimilarity) {
 				//aggiorno l'antenato, la sua similarity trovata
@@ -377,19 +371,22 @@ public class TreeDAOPostgres implements TreeDAO {
 				int right = result.getInt(9);
 				float similarity = result.getFloat(10);
 				String nodeValue = String.valueOf(nodeId);
-				
 				Node currentAncestor = new Node(nodeValue, similarity);
-				
 				//setta gli id del nodo
 				currentAncestor.setIdNode(nodeId);
 				currentAncestor.setLeft(left);
 				currentAncestor.setRight(right);
+				currentAncestor.setSimilarity(similarity);
+				logger.info("found ancestor with value: " + nodeValue + " sim: " + 
+						currentAncestor.getSimilarity() + 
+						" {" + currentAncestor.getLeft() + ", " + currentAncestor.getRight() + "}");
 				
-				logger.info("found ancestor with value: " + nodeValue + " left: " + 
-						currentAncestor.getLeft() + " right: " + currentAncestor.getRight());
-				
+				//ho trovato l'ultimo nodo, quello a cui appartiene questa gerarchia
+				if ((left + 1) == right) {
+//					System.out.println("reached leaf" + tag.getTag());
+					currentAncestor.setValue(tag.getTag());
+				}
 				ancestors.add(currentAncestor);
-				
 				
 			}
 		}

@@ -132,7 +132,7 @@ public class Tree {
 	public HashSet<HashSet<Node>> cutTreeAtSimilarity(double similarity) {
 		// restituisce una linkedlist di linked list di node
 		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
-		
+	
 		/* 
 		 * TODO: clustering da un albero 
 		 * avendo una gerarchia, devo decidere a che livello tagliare e
