@@ -87,10 +87,6 @@ public class QueryExpander {
 		Set<RankedTag> expansionTags = 
 			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
-		// altro insieme, con tutti i tags, anche quelli meno rilevanti
-//		Set<RankedTag> allExpansionTags = 
-//			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
-		
 		//logger.info("tags per espansione: " + expansionTags);
 		
 		//
@@ -270,7 +266,6 @@ public class QueryExpander {
 		
 		/* comincia nello stesso modo dell'espansione vecchia */
 		
-		
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("query originale: " + queryString);
 		Query query = new Query(queryString);
@@ -279,6 +274,8 @@ public class QueryExpander {
 		System.out.println("stemmed query terms: " + stemmedQueryTerms);
 				
 		UserModel userModel = user.getUserModel();
+		/* subMatrix contiene i valori di co-occorrenza, per ogni tag, 
+		 * tra RankedTag e stemmed Terms */
 		Map<String,Map<RankedTag,Map<String,Double>>> subMatrix = 
 			userModel.getSubMatrix(stemmedQueryTerms);
 		
@@ -310,32 +307,25 @@ public class QueryExpander {
 		
 		/* devo prendere tutti i tags ! */
 //		vecchio metodo, da rimuovere
-		Set<RankedTag> expansionTags = 
-			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
+//		Set<RankedTag> expansionTags = 
+//			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 //		
 		// altro insieme, con tutti i tags, anche quelli meno rilevanti
 		Set<RankedTag> allExpansionTags = 
 			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
-		//logger.info("tags per espansione: " + expansionTags);
+		logger.info("tags per espansione: " + allExpansionTags);
 		
-		//
-		//System.out.println("expansion tags: " + expansionTags);
 		
 		Map<ExpandedQuery, Set<RankedTag>> expandedQueries = 
 			new HashMap<ExpandedQuery, Set<RankedTag>> ();
 		
-		
 		/* ho trovato tutti i tag in relazione con i termini della query. */		
 		/* avendo i rankedTags, posso estrarre le loro gerarchie dal database */
 		
-		/* dopo che ho le gerarchie, costruisco l'albero ridotto e 
-		 * faccio il taglio del clustering gerarchico dove mi conviene 
-		 * */
-		
 		TreeDAOPostgres treeHandler = new TreeDAOPostgres();
 		
-		LinkedList<RankedTag> tagsList= new LinkedList<RankedTag>(allExpansionTags);
+		LinkedList<RankedTag> tagsList = new LinkedList<RankedTag>(allExpansionTags);
 		Tree hierarchicalClustering = null;
 		try {
 			hierarchicalClustering = treeHandler.retrieve(tagsList);
@@ -349,63 +339,75 @@ public class QueryExpander {
 		if(hierarchicalClustering!= null) {
 			logger.info("clustering gerarchico dei tag: " + hierarchicalClustering.toString());
 		} 
-		
+
+		/* dopo che ho le gerarchie, costruisco l'albero ridotto e 
+		 * faccio il taglio del clustering gerarchico dove mi conviene 
+		 * */
 
 		/* calcolo del taglio piœ adatto del clustering gerarchico */
 		
 		/* si pu— fare in due modi: 
-		 * con media e varianza delle dimensioni dei clusters
-		 * oppure osservando il profilo dell'utente nelle co-occorrenze dei tag
+		 * 1 con media e varianza delle dimensioni dei clusters
+		 * 2 oppure osservando il profilo dell'utente nelle co-occorrenze dei tag
 		 *  */
 		
 		/* TODO: per ora il taglio della similarity la faccio a 0.5 */
 		HashSet<HashSet<Node>> clustering = hierarchicalClustering.cutTreeAtSimilarity(0.5);
 		
+		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
+		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
+
+		
+		int number = 0;
 		
 		for (HashSet<Node> cluster: clustering) {
-			/* per ogni tag del clustering devo sommare i vettori dei pesi 
+			logger.info("< cluster " + number + " >");
+			/* per ogni tag del cluster devo sommare i vettori dei pesi 
 			 * dei termini associati ai tags */
-			
-		}
-		
-		
-		/* ottengo alla fine un 
-		 * Set<ExpandedQuery> result = new HashSet<ExpandedQuery>(); 
-		 * che contiene ExpandedQuery fatte cos’: 
-		 * una per ogni cluster. */
-		
-		
-		
-		/* TODO: OLD SCHOOL*/
-		/* OLD SCHOOL: per ogni ranked tag  ( far— quasi la stessa cosa per ogni cluster)*/
-		for(RankedTag tag: expansionTags) {
-			/* calcola i valori di cooccorrenza per il tag nella subMatrix */
-			Map<String,Double> coOccurrenceValues4tag =
-				this.initCoOccurrenceValues4tag(tag,subMatrix);
-			for(String term1: subMatrix.keySet()) {
-				/* per ogni termine contenuto nelle chiavi della submatrix, 
-				 * che sarebbero i termini della query stemmati,   
-				 * calcola i valori di co-occorrenza termine-tag */
-				Map<String,Double> coOccurrenceValues4term4tag = 
-					subMatrix.get(term1).get(tag);
-				if(coOccurrenceValues4term4tag!=null) {
-					for(String term2: coOccurrenceValues4term4tag.keySet()) {
-						double sumValue =
-							coOccurrenceValues4tag.remove(term2) 
-							+ (termWeight * coOccurrenceValues4term4tag.get(term2));
-						coOccurrenceValues4tag.put(term2, sumValue);
+			/* somma di tutti i tag appartenenti al cluster */
+			Map<String, Double> clusterValues = new HashMap<String, Double>(); 
+			for (Node tag: cluster) {
+				logger.info("calcolo le co-occorrenze per il tag: " 
+						+ tag.toString());
+				/* trasformo in rankedtag per poter usare le funzioni vecchie */
+				RankedTag rTag = new RankedTag(tag.getValue());
+				/* calcola i valori di cooccorrenza per il tag nella subMatrix */
+				Map<String,Double> coOccurrenceValues4tag =
+					this.initCoOccurrenceValues4tag(rTag,subMatrix);
+				for(String term1: subMatrix.keySet()) {
+					/* per ogni termine contenuto nelle chiavi della submatrix, 
+					 * che sarebbero i termini della query stemmati,   
+					 * calcola i valori di co-occorrenza termine-tag */
+					Map<String,Double> coOccurrenceValues4term4tag = 
+						subMatrix.get(term1).get(rTag);
+					if(coOccurrenceValues4term4tag!=null) {
+						for(String term2: coOccurrenceValues4term4tag.keySet()) {
+							double sumValue =
+								coOccurrenceValues4tag.remove(term2) 
+								+ (termWeight * coOccurrenceValues4term4tag.get(term2));
+							coOccurrenceValues4tag.put(term2, sumValue);
+						} //for term2
 					}
-				}
-			}
-	
-			
-			//logger.info("co-occurrence values for tag " + tag + ": " + coOccurrenceValues4tag);
 
-			Map<String,Map<String,Integer>> expansionTerms = 
-				this.selectRelevantTerms(stemmedQueryTerms,coOccurrenceValues4tag);
-		
-			if(expansionTerms!=null) {
-				ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
+				} //for term1
+				
+				
+				/* somma i valori di ogni rankedTag in una mappa clusterValues */
+				HashMap<String, Double> tempClusterValues = mergeMaps(clusterValues, coOccurrenceValues4tag); 
+				clusterValues = tempClusterValues;
+			}
+			
+			/* crea un'espansione a partire da clusterValues */
+			
+			/* seleziona solo alcuni termini rilevanti, i primi k? */
+			Map<String,Map<String,Integer>> clusterExpansionTerms = 
+				this.selectRelevantTerms(stemmedQueryTerms, clusterValues);
+			
+
+			/* se ho trovato dei termini con cui fare l'espansione, */
+
+			if(clusterExpansionTerms!=null) {
+				ExpandedQuery expandedQuery = new ExpandedQuery(clusterExpansionTerms);
 				Set<RankedTag> rankedTags = null;
 				if(expandedQueries.containsKey(expandedQuery))
 					rankedTags = expandedQueries.get(expandedQuery);
@@ -413,10 +415,86 @@ public class QueryExpander {
 					rankedTags = new HashSet<RankedTag>();
 					expandedQueries.put(expandedQuery, rankedTags);
 				}
-				rankedTags.add(tag);
+	
+				//dovrei aggiungere tutti i tag del cluster corrente
+				for (Node tag: cluster) {
+					RankedTag rTag = new RankedTag(tag.getValue());
+					rankedTags.add(rTag);
+				}
+	
 			}
 			
+			number++;
+		}// for cluster: clustering
+		
+		
+		/* ottengo alla fine un 
+		 * Set<ExpandedQuery> result = new HashSet<ExpandedQuery>(); 
+		 * che contiene ExpandedQuery fatte cos’: 
+		 * una per ogni cluster. */
+		
+		/* costruisco il risultato, un insieme di ExpandedQueries */
+		Set<ExpandedQuery> result = new HashSet<ExpandedQuery>();
+		
+		for(ExpandedQuery eq: expandedQueries.keySet()) {
+			eq.setExpansionTags(expandedQueries.get(eq));
+			result.add(eq);
 		}
+		
+		logger.info("query espanse: " + expandedQueries);
+		
+		
+		
+		
+		/* TODO: OLD SCHOOL */
+		/* OLD SCHOOL: per ogni ranked tag  (far— quasi la stessa cosa per ogni 
+		 * tag del cluster)*/
+//		for(RankedTag tag: expansionTags) {
+//			/* calcola i valori di cooccorrenza per il tag nella subMatrix */
+//			Map<String,Double> coOccurrenceValues4tag =
+//				this.initCoOccurrenceValues4tag(tag,subMatrix);
+//			for(String term1: subMatrix.keySet()) {
+//				/* per ogni termine contenuto nelle chiavi della submatrix, 
+//				 * che sarebbero i termini della query stemmati,   
+//				 * calcola i valori di co-occorrenza termine-tag */
+//				Map<String,Double> coOccurrenceValues4term4tag = 
+//					subMatrix.get(term1).get(tag);
+//				if(coOccurrenceValues4term4tag!=null) {
+//					for(String term2: coOccurrenceValues4term4tag.keySet()) {
+//						double sumValue =
+//							coOccurrenceValues4tag.remove(term2) 
+//							+ (termWeight * coOccurrenceValues4term4tag.get(term2));
+//						coOccurrenceValues4tag.put(term2, sumValue);
+//					}
+//				}
+//			}
+//	
+//			logger.info("co-occurrence values for tag " + tag + ": " + coOccurrenceValues4tag);
+//
+//			/* seleziona solo alcuni termini rilevanti, i primi k? */
+//			Map<String,Map<String,Integer>> expansionTerms = 
+//				this.selectRelevantTerms(stemmedQueryTerms,coOccurrenceValues4tag);
+//			
+//			/* se ho trovato dei termini con cui fare l'espansione, */
+//			
+//			if(expansionTerms!=null) {
+//				ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
+//				Set<RankedTag> rankedTags = null;
+//				if(expandedQueries.containsKey(expandedQuery))
+//					rankedTags = expandedQueries.get(expandedQuery);
+//				else {
+//					rankedTags = new HashSet<RankedTag>();
+//					expandedQueries.put(expandedQuery, rankedTags);
+//				}
+//				rankedTags.add(tag);
+//			}
+//			
+//		}
+//		
+		
+		
+		
+		
 		/*
 		if(expansionTags.isEmpty()) {
 			
@@ -433,16 +511,38 @@ public class QueryExpander {
 			expandedQueries.put(expandedQuery, setWithNullTag);
 		}
 		*/
-		Set<ExpandedQuery> result = new HashSet<ExpandedQuery>();
 		
-		for(ExpandedQuery eq: expandedQueries.keySet()) {
-			eq.setExpansionTags(expandedQueries.get(eq));
-			result.add(eq);
-		}
 		
-		logger.info("query espanse: " + expandedQueries);
 		return result;
 		
+	}
+	
+	
+
+	public HashMap<String, Double> mergeMaps(Map<String, Double> firstMap,
+			Map<String, Double> secondMap) {
+		// TODO Auto-generated method stub
+		
+		HashMap<String, Double> mergedMaps = new HashMap();
+		
+		for(String key: firstMap.keySet()) {
+			Double sumValue = new Double(0.0);
+			if (secondMap.containsKey(key)) {
+				sumValue = firstMap.get(key) + secondMap.get(key);
+				mergedMaps.put(key, sumValue);
+				secondMap.remove(key);
+			
+			} else {
+				sumValue = firstMap.get(key);
+				mergedMaps.put(key, sumValue);
+			}
+		}
+		
+		/* metto le chiavi rimanenti della seconda mappa */
+		for (String key: secondMap.keySet()) {
+			mergedMaps.put(key, secondMap.get(key));
+		}
+		return mergedMaps;
 	}
 
 

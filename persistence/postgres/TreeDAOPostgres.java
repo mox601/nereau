@@ -208,6 +208,8 @@ public class TreeDAOPostgres implements TreeDAO {
 		} else {
 			extractedTree = buildTreeFromHierarchies(hierarchiesList);	
 		}
+		
+		
 		return extractedTree;
 	}
 	

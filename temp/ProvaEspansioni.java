@@ -30,15 +30,15 @@ public class ProvaEspansioni {
 		
 		QueryExpansionFacade qef = QueryExpansionFacade.getInstance();
 		
-		Set<ExpandedQuery> expQueries = qef.expandQuery(queryString, user);
+//		Set<ExpandedQuery> expQueries = qef.expandQuery(queryString, user);
 		
 		/* posso fare una seconda prova di espansione, usando il metodo nuovo */
 		Set<ExpandedQuery> expQueriesTfidf = qef.expandQueryTfidf(queryString, user);
 
-		if (expQueries != null) {
-			for(ExpandedQuery  eq: expQueries)
-				System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
-		}
+//		if (expQueries != null) {
+//			for(ExpandedQuery  eq: expQueries)
+//				System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
+//		}
 
 		if (expQueriesTfidf != null) {
 			for(ExpandedQuery eq: expQueriesTfidf) {

@@ -182,7 +182,7 @@ public class Tree {
 			/* la similarity Ž = o > di quella scelta, 
 			 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
 			/* TODO: caso limite, se similarity Ž = a quella attuale. */
-			System.out.println("similarity corrente: " + node.getSimilarity());
+//			System.out.println("similarity corrente: " + node.getSimilarity());
 			LinkedList<Node> leavesList = this.getLeaves(node);
 			HashSet<Node> leavesSet = new HashSet(leavesList);
 			clustering.add(leavesSet);

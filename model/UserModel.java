@@ -29,7 +29,7 @@ public class UserModel {
 		this.userMatrix = new HashMap<String, Map<RankedTag, Map<String, Double>>>();
 	}
 
-/* ottengo una sottomatrice che contiene solo i termini in terms */
+/* ottengo una sottomatrice che contiene solo i termini stemmati contenuti in terms */
 	public Map<String, Map<RankedTag, Map<String, Double>>> getSubMatrix(Set<String> terms) {
 		Set<String> newTerms = new HashSet<String>();
 		newTerms.addAll(terms);		
