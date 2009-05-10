@@ -16,6 +16,8 @@ import util.LogHandler;
 
 public class ClusterBuilder {
 	
+	/* TODO: dovrebbe essere un singleton? */
+	
 	private List<Node> clustersToMerge;
 	private Tree actualClustering;
 	private TreeDAOPostgres treeHandler;

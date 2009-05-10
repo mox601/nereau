@@ -22,6 +22,16 @@ public class MainServer {
         catch (IOException e) {
            System.out.println(e);
         }   
+        
+        /* prima di lanciare il server in ascolto delle connessioni JSON, 
+         * ora posso lanciare un thread che si occupa di effettuare il clustering 
+         * di tutti i tag nel database */
+        
+        Runnable clustererThread = new ClustererThread();
+        
+        Thread clusterer = new Thread(clustererThread);
+        clusterer.start();
+        
 
     try {
     	while(true) {
@@ -37,6 +47,12 @@ public class MainServer {
     catch (IOException e) {
            System.out.println(e);
         }
+    
+  
+    
+    
+    
+    
     }
 }
 
