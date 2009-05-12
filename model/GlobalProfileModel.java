@@ -158,6 +158,18 @@ public class GlobalProfileModel {
 
 
 
+	public String tagTfidfToString() {
+		String tagstfidf = "";
+		StringBuffer buff = new StringBuffer();
+		
+		for (Tagtfidf tag: this.getTags()) {
+			buff.append(tag.toString() + "; ");
+		}
+		return tagstfidf;
+	}
+
+
+
 
 	
 	

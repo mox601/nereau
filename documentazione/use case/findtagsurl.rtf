@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 ricerca dei tag per un url: \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 ho un TagFInder che fa findTags(url)\
+appena creato il TagFinder, setta come strategia di ricerca dei tag this.subUrlTagFinder = new BadgesDeliciousSubUrlTagFinderStrategy();\
+		this.exactUrl = false;\
+che si occupa effettivamente si cercare i tag del subUrl nel modo che decide lui. \
+\
+findTags fa chiamata a funzione findTags ricorsiva, e prima ripulisce la stringa dell'url da ricercare su delicious\
+\
+il findTags(url, double) usa il subUrlTagFinderStrategy per trovare i tags per il subUrl. nel metodo findTagsForSubUrl(url, relevance) in questo caso gli ho messo come strategia la 
+\f1\fs22 BadgesDeliciousSubUrlTagFinderStrategy
+\f0\fs24 \
+che avr\'e1 anche il metodo della classe MD5SubUrlTagFinderStrategy, findTagsForSubUrl(string, double, boolean)\
+che prova a cercare con MD5 i tag dell'url, provando a metterlo in diverse forme: \
+per ogni url che cerco, fa 4 query che sono 4 MD5 diversi a delicious. \
+fa le richieste e vede la risposta in JSON che riceve, facendone il parsing testuale. \
+ottiene il risultato parziale aggiornato, cio\'e9? \
+\
+\
+\
+se non riesce a trovarne nemmeno uno, cambia l'url levandogli lo slash finale e riavvia la ricerca per quel nuovo url con la stringa diversa. \
+\
+la classe BadgesDelicious SubUrlTagFinderStrategy cosa fa? restituisce un set di RankedTags\
+\
+\
+\
+Quando cerco i tag di una pagina, i RankedTags che significato hanno? cosa significano? quale \'e9 il valore assegnato?\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}

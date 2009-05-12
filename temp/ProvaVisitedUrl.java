@@ -32,7 +32,7 @@ public class ProvaVisitedUrl {
 		rTags.add(new RankedTag("wordpress",1.1));
 		rTags.add(new RankedTag("sport",2.6));
 		ExpandedQuery expQuery = new ExpandedQuery("wordpress sports",rTags);
-		VisitedURL vUrl = new VisitedURL(urlString,query,expQuery);
+		VisitedURL vUrl = new VisitedURL(urlString,query,expQuery, System.currentTimeMillis());
 		User user = new User("mox601","ciaoclaudio");
 //		user.setUserID(-1);
 		
@@ -42,10 +42,9 @@ public class ProvaVisitedUrl {
 			e.printStackTrace();
 		}
 		
-//		UserModelUpdater userUpdater = new UserModelUpdater();
-//		userUpdater.update(user);
+		UserModelUpdater userUpdater = new UserModelUpdater();
+		userUpdater.update(user);
 
-			
 		try {
 			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("mox601"));
 			System.out.println("num of results: " + vUrls.size());
@@ -60,6 +59,7 @@ public class ProvaVisitedUrl {
 				
 			}
 			
+			udao.saveLastUpdate(user, vUrls.get(0).getDate());
 			//udao.saveLastUpdate("iddio", vUrls.get(0).getDate());
 			
 			

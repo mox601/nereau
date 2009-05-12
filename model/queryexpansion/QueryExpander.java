@@ -304,7 +304,6 @@ public class QueryExpander {
 		//weight to be assigned to every query term
 		double termWeight = 1.0 / (double)stemmedQueryTerms.size();
 		
-		
 		/* devo prendere tutti i tags ! */
 //		vecchio metodo, da rimuovere
 //		Set<RankedTag> expansionTags = 
@@ -315,7 +314,6 @@ public class QueryExpander {
 			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
 		logger.info("tags per espansione: " + allExpansionTags);
-		
 		
 		Map<ExpandedQuery, Set<RankedTag>> expandedQueries = 
 			new HashMap<ExpandedQuery, Set<RankedTag>> ();
@@ -357,7 +355,6 @@ public class QueryExpander {
 		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
 
-		
 		int number = 0;
 		
 		for (HashSet<Node> cluster: clustering) {

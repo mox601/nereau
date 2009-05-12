@@ -100,7 +100,7 @@ public class UserModelUpdater {
 			}
 		}
 		
-		/* contiene la lista di urltags da passare al GlobalModel */
+		/* contiene la lista di urltags da passare al GlobalModel e al PersonalModel */
 		LinkedList<URLTags> urls = new LinkedList<URLTags>();
 		
 		
@@ -173,6 +173,11 @@ public class UserModelUpdater {
 			
 			Set<RankedTag> tagSet = new HashSet<RankedTag>();
 			tagSet.addAll(tempMatrix.keySet());
+			
+			for(RankedTag tag: tempMatrix.keySet()) {
+				System.out.println("tag dell'url visitato: " + tag.toString());
+			}
+			
 			URLTags url = new URLTags(vu, tagSet);
 			
 			urls.add(url);
@@ -182,10 +187,12 @@ public class UserModelUpdater {
 		/* l'aggiornamento dell'utente con tutti i suoi nuovi url Ž terminato. */
 
 		/* passo gli url al GlobalProfileModel */
+		
 		GlobalProfileModel globalProfile = new GlobalProfileModel(urls);
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
+		System.out.println("tagtfidf da aggiornare " + globalProfile.tagTfidfToString());
 		globalProfile.updateGlobalProfile();
 		
 		
@@ -196,7 +203,7 @@ public class UserModelUpdater {
 		 * info da aggiornare per quanto riguarda il profilo personale delle
 		 * co-occorrenze tag-tag */
 		PersonalProfileModel personalProfile = new PersonalProfileModel(urls);
-		personalProfile.updateProfile();
+		personalProfile.updatePersonalProfile();
 		
 		
 		

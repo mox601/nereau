@@ -19,7 +19,7 @@ public class ProvaEspansioni {
 		String queryString;
 		
 		if(args.length!=2) {
-			user = new User("mox601");
+			user = new User("mox601", "ciaoclaudio");
 			queryString = "jimmy";
 		}
 		
@@ -40,7 +40,7 @@ public class ProvaEspansioni {
 //				System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
 //		}
 
-		if (expQueriesTfidf != null) {
+		if (expQueriesTfidf.size() > 0) {
 			for(ExpandedQuery eq: expQueriesTfidf) {
 				System.out.println(eq.toString() + " for tags: " + eq.getExpansionTags());
 			}

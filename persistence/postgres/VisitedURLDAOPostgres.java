@@ -24,6 +24,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 	
 	@Override
 	public List<VisitedURL> retrieveLastVisitedURLs(User user) throws PersistenceException {
+		/* estrai quelli visitati dopo l'ultimo update dell'utente */
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = null;
