@@ -32,9 +32,8 @@ public class ClusterBuilderTest {
 	
 	@Before
 	public void setUpNodesForClusteringFromDatabase() {
-		/* estrae tutti i tags dal database e ne costruisce una lista di
+		/* estrae TUTTI i tags dal database e ne costruisce una lista di
 		 *  clusters (Node) */
-		/* TODO: DEMO */
 		this.clustersToMerge = new LinkedList<Node>();
 		//copia per dopo
 		this.clustersBeforeClustering = new LinkedList<Node>();
@@ -56,14 +55,13 @@ public class ClusterBuilderTest {
 			this.clustersToMerge.add(currentNode);
 			//faccio una copia per dopo
 			this.clustersBeforeClustering.add(currentNode);
-//			System.out.println("tag: " + currentNode.getCentroid().toString());
+			System.out.println("from tagtfidf to Node tag: " + currentNode.toString());
 		}
 		
 		// i tag estratti vanno a formare una lista di Node lunga il giusto... 
 		assertEquals(extractedTags.size(), this.clustersToMerge.size());
 		
 	}
-	
 	
 	@Test
 	public void constructorTest() {
@@ -81,7 +79,20 @@ public class ClusterBuilderTest {
 		for (Node leaf: leaves) {
 			assertTrue(this.clustersBeforeClustering.contains(leaf));
 		}
+	
+	}
+	
+	@Test
+	public void constructorTestNull() {
+		/* quando ancora non ci sono tags nel database, non li trovo e non li posso
+		 * clusterizzare */
+		LinkedList<Node> clustersToMergeNull = new LinkedList<Node>(); 
+		/* costruisce dei Node e li passa al clusterBuilder */
+		ClusterBuilder clusterer = new ClusterBuilder(clustersToMergeNull);
+		clusterer.buildClusters();
 		
+		assertEquals(0, clusterer.getClustersToMerge().size());
+		assertNull(clusterer.getActualClustering().getRoot());
 		
 	}
 	
@@ -125,19 +136,25 @@ public class ClusterBuilderTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if (extractedClusters.getRoot() != null) {
+			System.out.println("Tags' hierarchy: " + extractedClusters.toString());	
 		
-		System.out.println(extractedClusters.toString());
+			HashSet<HashSet<Node>> clustering = extractedClusters.cutTreeAtSimilarity(0.5);
+
+			System.out.println("cutting hierarchy at 0.5: ");
+			
+			for (HashSet<Node> cluster: clustering) {
+				System.out.print("<");
+				for (Node node: cluster) {
+					System.out.print(node.toString() + ", ");
+				}
+				System.out.println("> ");
+			}					
+		} else {
+			System.out.println("tags not found");
+		}
 		
 		
-		HashSet<HashSet<Node>> clustering = extractedClusters.cutTreeAtSimilarity(0.5);
-		
-		for (HashSet<Node> cluster: clustering) {
-			System.out.print("<");
-			for (Node node: cluster) {
-				System.out.print(node.toString() + ", ");
-			}
-			System.out.println("> ");
-		}				
 		
 		
 		System.out.println("FINE TEST retrieve clusters from database");

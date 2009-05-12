@@ -28,7 +28,7 @@ public class GlobalProfileModelTest {
 		this.urlTagsToSave = new LinkedList<URLTags>();
 		
 		/* START primo url */
-		String firstUrlString = "www.libero.it";
+		String firstUrlString = "http://www.uniroma3.it/";
 		VisitedURL firstUrl = new VisitedURL(firstUrlString, null, null);
 		RankedTag tag1 = new RankedTag("video");
 		RankedTag tag2 = new RankedTag("news");
@@ -43,7 +43,7 @@ public class GlobalProfileModelTest {
 		/* END primo url */
 		
 		/* START secondo url */
-		String secondUrlString = "www.safari.it";
+		String secondUrlString = "http://www.amaroma.it/";
 		VisitedURL secondUrl = new VisitedURL(secondUrlString, null, null);
 		RankedTag tag4 = new RankedTag("news");
 		RankedTag tag5 = new RankedTag("design");
@@ -58,7 +58,7 @@ public class GlobalProfileModelTest {
 		/* END secondo url */
 		
 		/* START terzo url */
-		String thirdUrlString = "www.magari.it";
+		String thirdUrlString = "http://www.myspace.com/neilonimpression";
 		VisitedURL thirdUrl = new VisitedURL(thirdUrlString, null, null);
 		RankedTag tag7 = new RankedTag("news");
 		RankedTag tag8 = new RankedTag("design");

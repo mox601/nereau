@@ -9,6 +9,7 @@ import model.Query;
 import model.RankedTag;
 import model.User;
 import model.VisitedURL;
+import model.usermodel.UserModelUpdater;
 import persistence.PersistenceException;
 import persistence.UserDAO;
 import persistence.VisitedURLDAO;
@@ -28,11 +29,12 @@ public class ProvaVisitedUrl {
 		String urlString = "http://woork.blogspot.com/2009/02/free-ajax-components-for-advanced-web.html";
 		Query query = new Query("ajax");
 		Set<RankedTag> rTags = new HashSet<RankedTag>();
-		rTags.add(new RankedTag("ajax",1.1));
-		rTags.add(new RankedTag("components",2.6));
-		ExpandedQuery expQuery = new ExpandedQuery("ajax components",rTags);
-		VisitedURL vUrl = new VisitedURL(urlString,query,null);
-		User user = new User("mox","pwd");
+		rTags.add(new RankedTag("wordpress",1.1));
+		rTags.add(new RankedTag("sport",2.6));
+		ExpandedQuery expQuery = new ExpandedQuery("wordpress sports",rTags);
+		VisitedURL vUrl = new VisitedURL(urlString,query,expQuery);
+		User user = new User("mox601","ciaoclaudio");
+//		user.setUserID(-1);
 		
 		try {
 			vudao.saveVisitedURL(vUrl, user);
@@ -40,15 +42,15 @@ public class ProvaVisitedUrl {
 			e.printStackTrace();
 		}
 		
-		
-		
+//		UserModelUpdater userUpdater = new UserModelUpdater();
+//		userUpdater.update(user);
+
+			
 		try {
-			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("mox"));
-			
+			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("mox601"));
 			System.out.println("num of results: " + vUrls.size());
-			
-			for(VisitedURL vUrl2: vUrls) {
-				
+
+			for(VisitedURL vUrl2: vUrls) {				
 				System.out.println("url=" + vUrl2.getURL() + ", date=" + vUrl2.getDate() + 
 						", query=" + vUrl2.getQuery());
 				if(vUrl2.getExpandedQuery()!=null) {

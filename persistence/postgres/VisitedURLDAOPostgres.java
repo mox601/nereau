@@ -242,7 +242,9 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 			
 			// ho trovato l'id dell'url da salvare per l'utente corrente
 			
-			//save associated expansion tags
+			//save associated Expansion Tags, devono necessariamente gi‡ esistere
+			//nel database!
+			
 			for(RankedTag rTag: expansionTags) {
 				String tag = rTag.getTag();
 				double rank = rTag.getRanking();

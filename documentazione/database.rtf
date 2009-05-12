@@ -11,10 +11,10 @@ Per ottenere un clustering "verosimile" e vedere dei risultati, devo fare un dat
 Il database che contiene i dati utili alla costruzione degli oggetti Tagtfidf deve essere fatto cos\'ed: \
 \
 \
-Gi\'e1 esiste un saveVisitedUrl, metodo di VisitedURLDAOPostgres, che avendo un url visitato e un utente, aggiorna la tabella visitedurls con i dati di iduser, url, query, expandedquery, date. \
+Gi\'e1 esiste un saveVisitedUrl, metodo di VisitedURLDAOPostgres, che avendo un url visitato e un utente, aggiorna la tabella visitedurls con i dati di iduser, url, query, expandedquery, date. E anche i tag usati nell'espansione! \
 A me interessa che quando un utente visita un url, i tag dell'url visitato vengano salvati nella tabella Tagtfidf, che contiene per ogni tag gli url che ha annotato nella storia. L'estrazione dei tag da un url avviene solo quando il profilo utente \'e9 aggiornato, quindi il popolamento della tabella Tagtfidf avviene DOPO l'estrazione dei tag per ogni url. \
 1 - estraggo tag dall'url che ho visitato\
-2 - salvo i tag nella tabella Tagtfidf e in un'altra TagCooccurrencies, che rappresenta i tag come cooccorrenze. \
+2 - salvo i tag nella tabella Tagtfidf e in un'altra TagCooccurrences, che rappresenta i tag come cooccorrenze. \
 3 - successivamente, ogni tanto, faccio il clustering dei Tagtfidf che ho trovato e salvo i risultati in un'altra tabella che verr\'e1 usata per tutti i calcoli fino al nuovo aggiornamento del Profilo Globale, quello che contiene tutti i Tagtfidf di tutti gli utenti. Il clustering dei TagCooccurrencies come si pu\'f3 fare? con lo stesso algoritmo?\
 \
 Tabella Tagtfidf %%%%%%%\
@@ -66,7 +66,6 @@ poi nell'inserimento di un nuovo valore, uso questa tecnica tipo UPSERT scritta 
 \f0\fs24 \
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
 \cf0 \
-\
 \pard\pardeftab720\ql\qnatural
 
 \f1\fs26 \cf0 quindi, per ottenere tutti i Tagtfidf del sistema\
@@ -143,8 +142,12 @@ ALTER TABLE clusters_sets OWNER TO web81_nereau;\
 \cf0 devo salvare i cluster nella tabella clusters. la transazione deve essere isolata, deve impedire read di altre transazioni che coinvolgano la stessa tabella. TODO. \
 \
 \
-\
-\
+ho un problema: \
+la tabella visitedurltags \'e9 acceduta da due classi, contemporaneamente e per scopi DIVERSI: \
+1 - VisitedURLDAOPostgres la usa per salvarci i tag usati per l'espansione della query: sar\'e1 l'unico ad accederci. \
+TODO\
+2 - la classe URLTagsDAOPostgres che la usa per salvarci le relazioni tra url e tag di delicious estratti. \'e9 da modificare la stored procedure salvata sul database, facendola funzionare su un'altra tabella: tagvisitedurls\
+anche le query che estraggono i tagtfidf e creano oggetti per il clustering devono essere modificate\
 \
 \
 \

@@ -22,6 +22,15 @@ public class ClusterBuilder {
 	private Tree actualClustering;
 	private TreeDAOPostgres treeHandler;
 	
+	 private static final ClusterBuilder INSTANCE = new ClusterBuilder();
+	 
+	 
+	   public static ClusterBuilder getInstance() {
+	      return INSTANCE;
+	   }
+	
+
+   // should be a Private constructor prevents instantiation from other classes
 	public ClusterBuilder(List<Node> clusters) {
 		this.clustersToMerge = clusters;
 	}
@@ -40,7 +49,7 @@ public class ClusterBuilder {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("START TAGTFIDF CLUSTERING");
 		double similarity = 1.0;
-		while (similarity > 0.0) {
+		while (similarity > 0.0 && clustersToMerge.size() > 1) {
 			logger.info("current similarity: " + similarity);
 			/* calcola la somiglianza tra tutti i cluster attuali, 
 			 * e accorpa quelli con somiglianza uguale alla similarity */
@@ -56,14 +65,13 @@ public class ClusterBuilder {
 				LinkedList<Node> actualMergingCouple = couplesIterator.next();
 				/* crea un cluster merge */
 				Node newCluster = new Node(actualMergingCouple, similarity);
-				int a = actualMergingCouple.getFirst().getIdNode();
-				int b = actualMergingCouple.getLast().getIdNode();
-				/* TODO: trova modo di assegnare un id unico basandosi sugli id 
-				 * dei figli... */
-//				newCluster.setIdNode(a + b);
+
+//				int a = actualMergingCouple.getFirst().getIdNode();
+//				int b = actualMergingCouple.getLast().getIdNode();
+			
 				/* elimina i due cluster fusi dal clustersToMerge */
-				logger.info("merging clusters: " + actualMergingCouple.getFirst() 
-						 + " AND " + actualMergingCouple.getLast());
+				logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
+						 + " AND " + actualMergingCouple.getLast().toString());
 				clustersToMerge.remove(actualMergingCouple.getFirst());
 				clustersToMerge.remove(actualMergingCouple.getLast());
 				/* aggiungi il cluster merged nel clustersToMerge */
@@ -71,25 +79,26 @@ public class ClusterBuilder {
 			}			
 			similarity = similarity - 0.15;
 		}
-		/* esiste un solo nodo, che Ž la radice dell'albero. */
-		this.actualClustering = new Tree(clustersToMerge.get(0));
-		logger.info("END CLUSTERING TFIDF");
 
-		
-		/* devo assegnare un id ad ogni nodo dell'albero, altrimenti nel 
-		 * salvataggio sul database non saprei come modellare la relazione
-		 * figlio-padre: quale id metto nella colonna father del figlio? */
-		
-		
-		/* ora funziona con i nested sets */
-		actualClustering.assignIds();
-		
-		/* ora si pu— salvare il risultato del clustering gerarchico nel database */
-		logger.info("saving hierarchical clustering on database");
+		if (clustersToMerge.size() > 0) {
+			/* esiste un solo nodo, che Ž la radice dell'albero. */
+			this.actualClustering = new Tree(clustersToMerge.get(0));
+			logger.info("END CLUSTERING TFIDF");
+			/* devo assegnare un id ad ogni nodo dell'albero */
+			/* ora funziona con i nested sets */
+			actualClustering.assignIds();
 
-//		this.treeHandler.saveClusteringOnDatabase(actualClustering);
-		
+		} else {
+			logger.info("nessun tag trovato nel database, non si effettua il clustering");
+			this.actualClustering = new Tree();
+		}
+
+
 	}
+
+	
+	
+	
 	
 	
 	public void retrieveAllTagsFromDatabase() {
@@ -99,7 +108,7 @@ public class ClusterBuilder {
 		logger.info("extracting all tags from database");
 		this.clustersToMerge = new LinkedList<Node>();
 		TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres();
-		List<Tagtfidf> extractedTags = new LinkedList<Tagtfidf>();
+		List<Tagtfidf> extractedTags = null;
 		try {
 			extractedTags = tagTfidfHandler.retrieveAllTags();
 		} catch (PersistenceException e) {
@@ -107,16 +116,21 @@ public class ClusterBuilder {
 			e.printStackTrace();
 		}
 		
-		logger.info("creating singleton clusters to be clustered");
-		
-		/* poi costruisce un cluster a partire da ogni tag */
-		for (Tagtfidf tag: extractedTags) {
-			Node currentNode = new Node(tag.getTag(), tag);
-			this.clustersToMerge.add(currentNode); 
-			logger.info("tag: " + currentNode.getCentroid().toString() + "with id: " + currentNode.getIdNode());
+
+		if (extractedTags != null) {
+			logger.info("creating singleton clusters to be merged");
+
+			/* poi costruisce un cluster a partire da ogni tag */
+			for (Tagtfidf tag: extractedTags) {
+				Node currentNode = new Node(tag.getTag(), tag);
+				this.clustersToMerge.add(currentNode); 
+				logger.info("from Tagtfidf to Node tag: " + currentNode.toString());
+			}
+
 		}
 
-		
+
+
 	}	
 
 
@@ -216,6 +230,17 @@ public class ClusterBuilder {
 	 */
 	public void setActualClustering(Tree actualClustering) {
 		this.actualClustering = actualClustering;
+	}
+
+
+	public String actualClusteringToString() {
+		String clusterString = "";
+		if (this.getActualClustering().getRoot() != null) {
+			clusterString = this.getActualClustering().toString();
+		} else {
+			clusterString = "clustering non costruito: nessun tag trovato";
+		}
+	return clusterString;
 	}
 
 }

@@ -51,7 +51,8 @@ public class GlobalProfileModel {
 	public GlobalProfileModel(LinkedList<URLTags> urlTagsToSave) {
 		this.urlsToSave = urlTagsToSave;
 		this.tags = new LinkedList<Tagtfidf>();
-		this.convertUrlsToTagtfidf();
+		//
+		this.convertUrlsToTagtfidf(this.urlsToSave);
 		this.URLTagsHandler = new URLTagsDAOPostgres();
 		this.convertUrlsToTagCoOcc();
 	}
@@ -86,13 +87,13 @@ public class GlobalProfileModel {
 	
 	
 	
-	private void convertUrlsToTagtfidf() {
+	private void convertUrlsToTagtfidf(LinkedList<URLTags> urlsToSave) {
 
 		/* logger */
 //		Logger logger = LogHandler.getLogger(this.getClass().getName());
 //		logger.info("inizio la conversione da URLTags a Tagtfidf");
 		
-		Iterator <URLTags> urlIterator = this.urlsToSave.iterator();
+		Iterator <URLTags> urlIterator = urlsToSave.iterator();
 		/* itera sugli url */
 		while (urlIterator.hasNext()) {
 			URLTags currentUrl = urlIterator.next();	

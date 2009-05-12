@@ -16,10 +16,9 @@ import persistence.postgres.TagtfidfDAOPostgres;
 
 public class TagtfidfDAOPostgresTest {
 
-	@Ignore
 	@Test
 	public void testRetrieveTag() {
-		String tag = "entertainment";
+		String tag = "search";
 		TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres();
 		Tagtfidf tagObj = null;
 		try {
@@ -28,7 +27,7 @@ public class TagtfidfDAOPostgresTest {
 			e.printStackTrace();
 		}
 		
-		System.out.println("tag id = " + tagObj.getTag());
+		System.out.println("tag = " + tagObj.toString());
 		
 	}
 	

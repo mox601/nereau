@@ -121,8 +121,9 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			/* TODO: trova un modo di salvare la stored procedure pgpsql una volta
 			 * invece di riscriverla ogni volta. COME? */
 			
-			statement.setInt(1, idUrl);
-			statement.setInt(2, idTag);
+			
+			statement.setInt(1, idTag);
+			statement.setInt(2, idUrl);
 			/*TODO: in realt‡ sul db ho un real, problemi? pare di no */
 			statement.setInt(3, occurrence);
 			ResultSet result;
@@ -145,17 +146,18 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	/* UPSERT */
 	/* dalla documentazione: http://www.postgresql.org/docs/8.3/static/sql-update.html*/
 	
+	/* errore: deve accedere alla tabella tagvisitedurls, non visitedurltags!! */
 	/*
-	CREATE FUNCTION merge_visitedurltags(url INT, tag INT, val INT) RETURNS VOID AS
+	CREATE FUNCTION merge_tagvisitedurls(tag INT, url INT, val INT) RETURNS VOID AS
 	$$
 	BEGIN 
 	LOOP
-	UPDATE visitedurltags SET value = (value + val) WHERE idtag = tag AND idvisitedurl = url;
+	UPDATE tagvisitedurls SET value = (value + val) WHERE idtag = tag AND idurl = url;
 	IF found THEN 
 	RETURN;
 	END IF;
 	BEGIN
-	INSERT INTO visitedurltags(id, idvisitedurl, idtag, value) VALUES (DEFAULT, url, tag, val);
+	INSERT INTO tagvisitedurls(id, idtag, idurl, value) VALUES (DEFAULT, tag, url, val);
 	RETURN;
 	EXCEPTION WHEN unique_violation THEN
 	END;
@@ -166,11 +168,9 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	 * */
 	
 	
-	
-	
 	/* URL, TAG, VALUE */
 	private final String SQL_UPSERT_TAG_URL = 
-		"SELECT merge_visitedurltags(?, ?, ?);";
+		"SELECT merge_tagvisitedurls(?, ?, ?);";
 
 
 	private final String SQL_RETRIEVE_VISITEDURL_ID = 

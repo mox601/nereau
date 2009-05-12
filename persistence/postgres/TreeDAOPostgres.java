@@ -33,7 +33,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		/* salva il clustering (sotto forma di Tree) sul database, 
 		 * in una tabella che rappresenti la struttura gerarchica e
 		 * che permetta quando ho tipo 5 tag di estrarre una gerarchia
-		 * coerente con la gerarchia globale, ma limitata a quei 5 tags */
+		 * coerente con la gerarchia globale, ma limitata a quei soli 5 tags */
 		
 		/* deve essere una sola transazione atomica, altrimenti 
 		 * potrebbero esserci accessi alla tabella clusters 
@@ -130,6 +130,7 @@ public class TreeDAOPostgres implements TreeDAO {
 			}
 			// la somiglianza non ha senso se visito le foglie
 			similarity = new Float(1.0);
+//			System.out.println("assigned similarity 1.0 to a leaf");
 			
 		} else {
 			similarity = new Float(node.getSimilarity());
