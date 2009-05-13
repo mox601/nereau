@@ -130,9 +130,8 @@ public class Tree {
 	/* da un albero, restituisce il clustering esatto ottenuto tagliando 
 	 * la gerarchia ad un certo valore di similarity */
 	public HashSet<HashSet<Node>> cutTreeAtSimilarity(double similarity) {
-		// restituisce una linkedlist di linked list di node
+		
 		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
-	
 		/* 
 		 * TODO: clustering da un albero 
 		 * avendo una gerarchia, devo decidere a che livello tagliare e
@@ -251,6 +250,35 @@ public class Tree {
 		node.setRight(nestedSetsIdGenerator.getId());
 		System.out.println("nodo: " + node.getValue() + " left: " + node.getLeft() + " right: " + node.getRight());
 		
+	}
+
+	public HashSet<HashSet<Node>> calculateClusteringByMean() {
+		/* itera da similarity = 1 a similarity = 0.1, 
+		 * calcola per ogni clustering ottenuto un valore, 
+		 * combinazione lineare di dimensioni, media e varianza di tutti i clusters */
+		
+		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
+
+		double similarity = 1.0;
+		
+		HashSet<HashSet<HashSet<Node>>> clusteringsSet = new HashSet<HashSet<HashSet<Node>>>();
+		
+		while (similarity > 0.0) {
+			//calcola tutti i clustering possibili
+			HashSet<HashSet<Node>> actualClustering = this.cutTreeAtSimilarity(similarity);
+			if (!clusteringsSet.contains(actualClustering)) {
+				clusteringsSet.add(actualClustering);
+			}			
+			similarity = similarity - 0.15; 
+		}
+		
+		
+		
+			
+		
+		
+		
+		return clustering;
 	}
 	
 }

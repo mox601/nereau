@@ -189,7 +189,6 @@ public class UserModelUpdater {
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
-		System.out.println("tagtfidf da aggiornare " + globalProfile.tagTfidfToString());
 		globalProfile.updateGlobalProfile();
 		
 		

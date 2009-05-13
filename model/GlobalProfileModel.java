@@ -16,6 +16,7 @@ import persistence.UserDAO;
 import persistence.UserModelDAO;
 import persistence.postgres.URLTagsDAOPostgres;
 import util.LogHandler;
+import util.ParameterHandler;
 import persistence.URLTagsDAO;
 
 public class GlobalProfileModel {
@@ -57,14 +58,11 @@ public class GlobalProfileModel {
 		this.convertUrlsToTagCoOcc();
 	}
 	
-
 	
 	private void convertUrlsToTagCoOcc() {
 		// TODO trasformazione in rappresentazione dei tag in co-occorrenze. 
 		
 	}
-
-
 
 	/* cerca se Ž presente il tagtfidf con il tagValue per parametro */
 	private Tagtfidf findTagtfidf(String tagValue) {
@@ -83,51 +81,58 @@ public class GlobalProfileModel {
 		
 		return foundTag;
 	}
-	
-	
-	
+
 	
 	private void convertUrlsToTagtfidf(LinkedList<URLTags> urlsToSave) {
-
 		/* logger */
 //		Logger logger = LogHandler.getLogger(this.getClass().getName());
 //		logger.info("inizio la conversione da URLTags a Tagtfidf");
 		
 		Iterator <URLTags> urlIterator = urlsToSave.iterator();
 		/* itera sugli url */
-		while (urlIterator.hasNext()) {
-			URLTags currentUrl = urlIterator.next();	
-//			logger.info("URLTags da convertire: " + currentUrl.getUrlString() + " con tags: " + currentUrl.getTags());
-			Iterator<RankedTag> tagIterator = currentUrl.getTags().iterator();
+		for (URLTags currentUrl: urlsToSave) {
 			/* itera sui tags del currentUrl */
 			/* costruisci un tag tfidf per ogni tag associato all'url, ma se gi‡ esiste nei tags gi‡ incontrati 
 			 * un tag con quel valore, aggiungi il currentUrl a quel tag */
-			while(tagIterator.hasNext()) {
-				RankedTag currentTag = tagIterator.next();
-//				logger.info("url: " + currentUrl.getUrlString() + " tag: " + currentTag.getTag());
-				Tagtfidf presentTag = null;  
-				presentTag = findTagtfidf(currentTag.getTag());
-				if ( presentTag != null) {
-					/* se hai gi‡ incontrato questo tag, aggiungi un url al tag 
-					 * esistente
-					 */
-//					logger.info("il tag " + currentTag.getTag() + " era gi‡ presente nei tags incontrati");
-//					logger.info("aggiungo l'url " + currentUrl.getUrlString() +" al tag " + currentTag.getTag());
-					/* verifica! */
-//					System.out.println("tag trovato: " + presentTag.getTag());
-					presentTag.addUrlOccurrences(currentUrl.getUrlString(), 1.0);	
-				} else {
-					/* altrimenti, crea un nuovo tag Tfidf */
-					Map<String, Double> tagUrlsMap = new HashMap<String, Double>();
-					tagUrlsMap.put(currentUrl.getUrlString(), 1.0);
-					Tagtfidf newTagtfidf = new Tagtfidf(currentTag.getTag(), tagUrlsMap);
-					this.tags.add(newTagtfidf);
-//					logger.info("tag nuovo: " + newTagtfidf.getTag());
-				}
+			for (RankedTag currentTag: currentUrl.getTags()) {
+				
+					Tagtfidf presentTag = null;
+					presentTag = findTagtfidf(currentTag.getTag());
+					if ( presentTag != null) {
+						/* se hai gi‡ incontrato questo tag, aggiungi un url al tag 
+						 * esistente
+						 */
+						presentTag.addUrlOccurrences(currentUrl.getUrlString(), 1.0);	
+					} else {
+						/* altrimenti, crea un nuovo tag Tfidf */
+						Map<String, Double> tagUrlsMap = new HashMap<String, Double>();
+						tagUrlsMap.put(currentUrl.getUrlString(), 1.0);
+						Tagtfidf newTagtfidf = new Tagtfidf(currentTag.getTag(), tagUrlsMap);
+						this.tags.add(newTagtfidf);
+					}
+				
 			}
-			
+
 			/* ho terminato la conversione */
 		}
+		
+		
+		/* posso eliminare tutti i tag no_tag: lo devo saltare, non mi Ž utile */
+	
+		int index = -1;
+		for (Tagtfidf tag: tags) {
+			System.out.println(tag.toString());
+			if (tag.getTag().equals("no_tag")) {
+				index = tags.indexOf(tag);
+				System.out.println("levo il tag no_tag all'indice " + index);
+			}
+		}
+		
+		if (index > -1) {
+			tags.remove(index);	
+		}
+		
+		
 	}
 
 	

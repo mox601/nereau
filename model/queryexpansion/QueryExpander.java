@@ -349,8 +349,12 @@ public class QueryExpander {
 		 * 2 oppure osservando il profilo dell'utente nelle co-occorrenze dei tag
 		 *  */
 		
+		/* 1 - media e varianza delle dimensioni dei clusters */
+		HashSet<HashSet<Node>> clustering = hierarchicalClustering.calculateClusteringByMean();
+		
+		
 		/* TODO: per ora il taglio della similarity la faccio a 0.5 */
-		HashSet<HashSet<Node>> clustering = hierarchicalClustering.cutTreeAtSimilarity(0.5);
+		HashSet<HashSet<Node>> clusteringMean = hierarchicalClustering.cutTreeAtSimilarity(0.5);
 		
 		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
