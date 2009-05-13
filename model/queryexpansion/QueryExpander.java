@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import cluster.ClusterBuilder;
+import cluster.Clustering;
 import cluster.Node;
 import cluster.Tree;
 
@@ -350,18 +351,18 @@ public class QueryExpander {
 		 *  */
 		
 		/* 1 - media e varianza delle dimensioni dei clusters */
-		HashSet<HashSet<Node>> clustering = hierarchicalClustering.calculateClusteringByMean();
+		Clustering clusteringMean = hierarchicalClustering.calculateClusteringByMean();
 		
 		
 		/* TODO: per ora il taglio della similarity la faccio a 0.5 */
-		HashSet<HashSet<Node>> clusteringMean = hierarchicalClustering.cutTreeAtSimilarity(0.5);
+		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(0.5);
 		
 		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
 
 		int number = 0;
 		
-		for (HashSet<Node> cluster: clustering) {
+		for (HashSet<Node> cluster: clustering.getClustering()) {
 			logger.info("< cluster " + number + " >");
 			/* per ogni tag del cluster devo sommare i vettori dei pesi 
 			 * dei termini associati ai tags */

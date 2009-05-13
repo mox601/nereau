@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cluster.Clustering;
 import cluster.Node;
 import cluster.Tree;
 
@@ -24,6 +25,12 @@ public class TreeTest {
 	private Node c;
 	private Node d;
 	private Node e;
+	
+	private Node i;
+	private Node j;
+	private Node k;
+	private Node l;
+	private Node m;
 	
 	/*test del costruttore con valore stringa*/
 	@Test
@@ -43,6 +50,12 @@ public class TreeTest {
 		c = new Node("C");
 		d = new Node("D");
 		e = new Node("E");
+		
+		i = new Node("I");
+		j = new Node("J");
+		k = new Node("K");
+		l = new Node("L");
+		m = new Node("M");
 		
 		a.addChild(b);
 		a.addChild(c);
@@ -175,21 +188,126 @@ public class TreeTest {
 		
 		System.out.println(tree.toString());
 		
-		HashSet<HashSet<Node>> clustering = tree.cutTreeAtSimilarity(0.8);
+		Clustering clustering = tree.cutTreeAtSimilarity(0.8);
 		
-		for (HashSet<Node> cluster: clustering) {
+		for (HashSet<Node> cluster: clustering.getClustering()) {
 			System.out.print("<");
 			for (Node node: cluster) {
 				System.out.print(node.toString() + ", ");
 			}
 			System.out.println("> ");
-		}		
+		}
+		
+		i.setSimilarity(new Float(0.5));
+		a.addChild(i);
+		j.setSimilarity(new Float(0.6));
+		b.addChild(j);
+		k.setSimilarity(new Float(1.0));
+		a.addChild(k);
+		
+		l.setSimilarity(new Float(1.0));
+		m.setSimilarity(new Float(1.0));
+		i.addChild(l);
+		i.addChild(m);
+		
+		
+		System.out.println(tree.toString());
+
+		
+		clustering = tree.cutTreeAtSimilarity(0.2);
+		
+		for (HashSet<Node> cluster: clustering.getClustering()) {
+			System.out.print("<");
+			for (Node node: cluster) {
+				System.out.print(node.toString() + ", ");
+			}
+			System.out.println("> ");
+		}	
+		
+		
+		
+		
+		
 		
 	}
 	
 	
-	
-	
+	@Test
+	public void testCutWithMean() {
+		//nodi foglia
+		Node one = new Node("1", new Float(1.0));
+		Node two = new Node("2", new Float(1.0));
+		Node three = new Node("3", new Float(1.0));
+		Node four = new Node("4", new Float(1.0));
+		Node five = new Node("5", new Float(1.0));
+		Node six = new Node("6", new Float(1.0));
+		Node seven = new Node("7", new Float(1.0));
+		Node eight = new Node("8", new Float(1.0));
+		
+		//fusioni: 
+		//1-2
+		Node oneTwo = new Node("1-2", new Float(0.9));
+		oneTwo.addChild(one);
+		oneTwo.addChild(two);
+		//3-4
+		Node threeFour = new Node("3-4", new Float(0.8));
+		threeFour.addChild(three);
+		threeFour.addChild(four);
+		//3-4 - 5
+		Node threeFourFive = new Node("3-4-5", new Float(0.7));
+		threeFourFive.addChild(threeFour);
+		threeFourFive.addChild(five);
+		//7-8
+		Node sevenEight = new Node("7-8", new Float(0.6));
+		sevenEight.addChild(seven);
+		sevenEight.addChild(eight);
+		//6 - 7-8
+		Node sixSevenEight = new Node("6-7-8", new Float(0.5));
+		sixSevenEight.addChild(six);
+		sixSevenEight.addChild(sevenEight);
+		//3-4-5 - 6-7-8
+		Node threeToEight = new Node("3-4-5-6-7-8", new Float(0.4));
+		threeToEight.addChild(threeFourFive);
+		threeToEight.addChild(sixSevenEight);
+		//root
+		Node root = new Node("1-2-3-4-5-6-7-8", new Float(0.1));
+		root.addChild(oneTwo);
+		root.addChild(threeToEight);
+		
+		Tree tree = new Tree(root);
+		
+		System.out.println(tree.toString());
+		
+		
+		/* */
+		
+		Clustering clustering = tree.cutTreeAtSimilarity(0.5);
+		HashSet<Clustering> setOfClusterings = new HashSet<Clustering>();
+		
+		/**/
+		System.out.println("clustering tagliando a 0.5");
+		
+		for (HashSet<Node> cluster: clustering.getClustering()) {
+			System.out.print("<");
+			for (Node node: cluster) {
+				System.out.print(node.toString() + ", ");
+			}
+			System.out.println("> ");
+		}	
+		
+		Clustering clusteringMean = tree.calculateClusteringByMean();
+
+		System.out.println("clustering ottimo by mean");
+		for (HashSet<Node> cluster: clusteringMean.getClustering()) {
+			System.out.print("<");
+			for (Node node: cluster) {
+				System.out.print(node.toString() + ", ");
+			}
+			System.out.println("> ");
+		}	
+		
+	}
+
 	
 	
 	

@@ -129,7 +129,7 @@ public class Tree {
 	
 	/* da un albero, restituisce il clustering esatto ottenuto tagliando 
 	 * la gerarchia ad un certo valore di similarity */
-	public HashSet<HashSet<Node>> cutTreeAtSimilarity(double similarity) {
+	public Clustering cutTreeAtSimilarity(double similarity) {
 		
 		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
 		/* 
@@ -147,14 +147,17 @@ public class Tree {
 		
 		visitNodeAndGetClustering(this.getRoot(), similarity, clustering);
 		
-		HashSet clustersSet = new HashSet<HashSet<Node>>();
+		HashSet<HashSet<Node>> clustersSet = new HashSet<HashSet<Node>>();
 		
 		for (HashSet<Node> cluster: clustering) {
 			HashSet setNode = new HashSet<Node>(cluster);
 			clustersSet.add(setNode);
 		}
 		
-		return clustersSet;
+		Clustering clusteringObject = new Clustering(clustersSet);
+
+		
+		return clusteringObject;
 		
 	}
 	
@@ -252,33 +255,46 @@ public class Tree {
 		
 	}
 
-	public HashSet<HashSet<Node>> calculateClusteringByMean() {
+	public Clustering calculateClusteringByMean() {
 		/* itera da similarity = 1 a similarity = 0.1, 
 		 * calcola per ogni clustering ottenuto un valore, 
 		 * combinazione lineare di dimensioni, media e varianza di tutti i clusters */
 		
 		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
-
 		double similarity = 1.0;
+		HashSet<Clustering> clusteringsSet = new HashSet<Clustering>();
 		
-		HashSet<HashSet<HashSet<Node>>> clusteringsSet = new HashSet<HashSet<HashSet<Node>>>();
-		
-		while (similarity > 0.0) {
-			//calcola tutti i clustering possibili
-			HashSet<HashSet<Node>> actualClustering = this.cutTreeAtSimilarity(similarity);
+		//calcola tutti i clustering possibili
+		while (similarity > 0.0) {	
+			Clustering actualClustering = this.cutTreeAtSimilarity(similarity);
 			if (!clusteringsSet.contains(actualClustering)) {
 				clusteringsSet.add(actualClustering);
 			}			
 			similarity = similarity - 0.15; 
 		}
 		
+		double maxDevStandard = Double.MAX_VALUE;
 		
-		
+		Clustering optimalClustering = new Clustering();
+		/* ricerca il clustering ottimo, con minima deviazione standard */
+		for (Clustering actualClustering: clusteringsSet) {
+			System.out.print("esamino clustering: \n" + actualClustering.toString());
+			System.out.println("che ha devStandard = " + actualClustering.getDevStandard());
 			
+			if (actualClustering.getDevStandard() < maxDevStandard) {
+				maxDevStandard = actualClustering.getDevStandard();
+				optimalClustering = actualClustering;
+			}
+		
+		}
+		
+//		System.out.println("clustering ottimo by mean: ");
+//		System.out.println(optimalClustering.toString() + " " + optimalClustering.getDevStandard());
+		
+		Clustering clusteringObj = null;
 		
 		
-		
-		return clustering;
+		return optimalClustering;
 	}
 	
 }

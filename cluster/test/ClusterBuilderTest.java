@@ -18,6 +18,7 @@ import persistence.postgres.TagtfidfDAOPostgres;
 import persistence.postgres.TreeDAOPostgres;
 
 import cluster.ClusterBuilder;
+import cluster.Clustering;
 import cluster.Node;
 import cluster.Tagtfidf;
 import cluster.Tree;
@@ -139,11 +140,11 @@ public class ClusterBuilderTest {
 		if (extractedClusters.getRoot() != null) {
 			System.out.println("Tags' hierarchy: " + extractedClusters.toString());	
 		
-			HashSet<HashSet<Node>> clustering = extractedClusters.cutTreeAtSimilarity(0.5);
+			Clustering clustering = extractedClusters.cutTreeAtSimilarity(0.5);
 
 			System.out.println("cutting hierarchy at 0.5: ");
 			
-			for (HashSet<Node> cluster: clustering) {
+			for (HashSet<Node> cluster: clustering.getClustering()) {
 				System.out.print("<");
 				for (Node node: cluster) {
 					System.out.print(node.toString() + ", ");
