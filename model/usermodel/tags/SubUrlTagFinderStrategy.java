@@ -47,6 +47,7 @@ public abstract class SubUrlTagFinderStrategy {
 	
 	protected Set<RankedTag> normalizeRanking(Map<String, Integer> rankedTags, double relevance) {
 		int maxRanking = 0;
+		//trova il ranking massimo
 		for(String tag: rankedTags.keySet()) {
 			int ranking = rankedTags.get(tag);
 			if(ranking>maxRanking)
@@ -54,12 +55,19 @@ public abstract class SubUrlTagFinderStrategy {
 		}
 		Set<RankedTag> normalizedRankedTags = 
 			new TreeSet<RankedTag> ();
+		
 		for(String tag: rankedTags.keySet()) {
 			double oldRanking = (double)rankedTags.get(tag);
 			double newRanking = oldRanking * relevance / (double)maxRanking;
 			RankedTag rTag = new RankedTag(tag,newRanking);
+			//TODO: aggiungo il tag ai tag normalizzati solo se Ž maggiore di una soglia
+			//vorrei abbassarla solo nel caso in cui prendo i tag per 
+			//il tag tfidf: ne voglio di piœ, quindi il valore MIN_TAG... 
+			//deve essere piœ piccolo, 0.2~0.3
+		
 			if(newRanking>(ParameterHandler.MIN_TAGFINDER_RELATIVE_VALUE*relevance))
 				normalizedRankedTags.add(rTag);
+			
 		}
 		
 		//add NULL_TAG
@@ -67,5 +75,6 @@ public abstract class SubUrlTagFinderStrategy {
 		
 		return normalizedRankedTags;
 	}
+
 
 }

@@ -97,9 +97,9 @@ public abstract class MD5SubUrlTagFinderStrategy extends
 			}
 		}
 		
+		//normalizza i rankings ottenuti prima di salvarli
 		Set<RankedTag> normalizedRankedTags = 
 			this.normalizeRanking(rankedTags,relevance);
-		
 		try {
 			super.save(normalizedRankedTags);
 		} catch (PersistenceException e) {

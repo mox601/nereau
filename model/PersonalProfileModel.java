@@ -25,16 +25,18 @@ public class PersonalProfileModel {
 		/* per ogni url della lista, estrai i tag associati e aggiungi UNA 
 		 * Co-occorrenza per ognuno di loro in una struttura appropriata */
 		
-		new 
+		 
 		
 		for(URLTags url: urlsToSave) {
 			for(RankedTag tag: url.getTags()){
 				
 				
 				
+			if (true) {
+				/*crea una nuova chiave */
+			}	
 				
-				
-				TagCoOccurrence tag = new TagCoOccurrence();		
+//				TagCoOccurrence tag = new TagCoOccurrence();		
 			}
 		}
 		

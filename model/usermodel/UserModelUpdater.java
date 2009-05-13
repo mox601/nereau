@@ -15,6 +15,7 @@ import model.URLTags;
 import model.User;
 import model.UserModel;
 import model.VisitedURL;
+import model.usermodel.tags.TagFinder;
 
 import persistence.PersistenceException;
 import persistence.UserDAO;
@@ -103,7 +104,6 @@ public class UserModelUpdater {
 		/* contiene la lista di urltags da passare al GlobalModel e al PersonalModel */
 		LinkedList<URLTags> urls = new LinkedList<URLTags>();
 		
-		
 		/* AGGIORNAMENTO DEL MODELLO UTENTE */
 		/* itera su tutte le pagine visitate */
 		//MODIFICA: lavoro su una pagina per volta (altrimenti la memoria non basta!)
@@ -169,17 +169,14 @@ public class UserModelUpdater {
 			
 			logger.info("modello aggiornato con visitedUrls forniti...");
 			
-			/* aggiungi i tags in un set di tags, che poi viene passato al GlobalModel*/
+			/* ricerco un numero maggiore di tags per ogni url */
+			/* ri-cerca dei tags, che poi vengono passati al GlobalModel*/
 			
 			Set<RankedTag> tagSet = new HashSet<RankedTag>();
-			tagSet.addAll(tempMatrix.keySet());
-			
-			for(RankedTag tag: tempMatrix.keySet()) {
-				System.out.println("tag dell'url visitato: " + tag.toString());
-			}
-			
+			//devo usare una strategy che mi permetta l'estrazione di piœ tags
+			TagFinder tagFinder = new TagFinder();
+			tagSet = tagFinder.findTags(vu.getURL()); 
 			URLTags url = new URLTags(vu, tagSet);
-			
 			urls.add(url);
 				
 		}

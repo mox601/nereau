@@ -35,12 +35,14 @@ public class ParameterHandler {
 	public static final int MAX_KEYWORDS = 20;
 	public static final double SUBURL_RELEVANCE_COEFFICIENT = 0.9;
 	public static final double MIN_TAGFINDER_RELATIVE_VALUE = 0.4;
+	public static final double MIN_TAGFINDER_RELATIVE_VALUE_MORE_TAGS = 0.2;
 	public static final String STOPWORDS_FILE_PATH = "files/stopwords";
 	public static final int URL_TIMEOUT = 5000;
 
 	//old tests
 	public static final String TEST_QUERY_STRING = "amazon";
 	public static final String TEST2_PATH = "temp/test2.html";
+
 
 
 }

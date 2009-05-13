@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cluster.Tagtfidf;
@@ -17,6 +18,7 @@ import model.GlobalProfileModel;
 import model.RankedTag;
 import model.URLTags;
 import model.VisitedURL;
+import model.usermodel.tags.TagFinder;
 
 
 public class GlobalProfileModelTest {
@@ -73,6 +75,7 @@ public class GlobalProfileModelTest {
 		/* END terzo url */
 	}
 
+	@Ignore
 	@Test
 	public void costructorTest() {
 		GlobalProfileModel globalProfile = new GlobalProfileModel(urlTagsToSave);
@@ -82,6 +85,21 @@ public class GlobalProfileModelTest {
 		
 //		assertEquals(urlTagsToSave, globalProfile.getTags());
 		globalProfile.updateGlobalProfile();
+		
+	}
+	
+	
+	@Test
+	public void findTagsForUrlTest() {
+		String url = "http://dzineblog.com/2009/05/50-best-sites-to-get-design-inspiration.html";
+		TagFinder tagFinder = new TagFinder();
+		Set<RankedTag> tags = tagFinder.findTags(url);
+		for (RankedTag tag: tags) {
+			System.out.println(tag.toString());
+		}
+		
+		//TODO: fare una strategy che estragga piœ tag da ogni url
+		
 		
 	}
 

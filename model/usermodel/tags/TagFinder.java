@@ -56,6 +56,8 @@ public class TagFinder {
 		return this.findTags(urlString, 1.0);
 	}
 	
+
+
 	private Set<RankedTag> findTags(String urlString, double relevance) {
 		
 		Logger logger = LogHandler.getLogger(this.getClass().getName());

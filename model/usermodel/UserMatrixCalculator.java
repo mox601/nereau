@@ -45,8 +45,7 @@ public class UserMatrixCalculator {
 		
 		
 		/* lista di urltags da salvare: rappresentano il GlobalProfileModel */
-		LinkedList<URLTags> urlTagsToSave = new LinkedList<URLTags>();
-		
+//		LinkedList<URLTags> urlTagsToSave = new LinkedList<URLTags>();
 		
 		//examine every visited url (url + query)
 		for(VisitedURL visitedURL: visitedURLs) {
@@ -115,18 +114,14 @@ public class UserMatrixCalculator {
 			//find associated tags
 			Set<RankedTag> tags = tagFinder.findTags(urlString);
 			logger.info("tags associati: " + tags);
-			
-			
-			/* TODO: qui Ž dove si estraggono i tag dall'url visitato. 
-			 * Posso effettuare qui un aggiornamento del modello globale, 
-			 * avendo l'url e i tag associati */
-			System.out.println("url pagina visitata: " + urlString);
-			System.out.println("tags associati all'url: " + tags);
-			
+		
+//			System.out.println("url pagina visitata: " + urlString);
+//			System.out.println("tags associati all'url: " + tags);
+//			
 			/* costruisco un oggetto URLTags */
-			URLTags currentUrlWithTags = new URLTags(visitedURL, tags);
+//			URLTags currentUrlWithTags = new URLTags(visitedURL, tags);
 			
-			urlTagsToSave.add(currentUrlWithTags);
+//			urlTagsToSave.add(currentUrlWithTags);
 			
 			
 			//update temporary matrix with keywords and tags

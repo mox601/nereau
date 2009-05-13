@@ -59,7 +59,7 @@ public class ProvaVisitedUrl {
 				
 			}
 			
-			udao.saveLastUpdate(user, vUrls.get(0).getDate());
+			udao.saveLastUpdate(user, vUrl.getDate());
 			//udao.saveLastUpdate("iddio", vUrls.get(0).getDate());
 			
 			

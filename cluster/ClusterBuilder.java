@@ -24,13 +24,11 @@ public class ClusterBuilder {
 	
 	 private static final ClusterBuilder INSTANCE = new ClusterBuilder();
 	 
-	 
 	   public static ClusterBuilder getInstance() {
 	      return INSTANCE;
 	   }
 	
-
-   // should be a Private constructor prevents instantiation from other classes
+   // should be a Private constructor: prevents instantiation from other classes
 	public ClusterBuilder(List<Node> clusters) {
 		this.clustersToMerge = clusters;
 	}
@@ -115,11 +113,9 @@ public class ClusterBuilder {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
+	
 		if (extractedTags != null) {
 			logger.info("creating singleton clusters to be merged");
-
 			/* poi costruisce un cluster a partire da ogni tag */
 			for (Tagtfidf tag: extractedTags) {
 				Node currentNode = new Node(tag.getTag(), tag);
@@ -128,8 +124,6 @@ public class ClusterBuilder {
 			}
 
 		}
-
-
 
 	}	
 
