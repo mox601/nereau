@@ -280,7 +280,7 @@ public class Tree {
 		for (Clustering actualClustering: clusteringsSet) {
 			System.out.print("esamino clustering: \n" + actualClustering.toString());
 			System.out.println("che ha devStandard = " + actualClustering.getDevStandard());
-			
+			System.out.println("e media di nodi per clusters = " + actualClustering.getNodesPerClusters());
 			if (actualClustering.getDevStandard() < maxDevStandard) {
 				maxDevStandard = actualClustering.getDevStandard();
 				optimalClustering = actualClustering;
