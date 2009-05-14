@@ -310,7 +310,8 @@ public class QueryExpander {
 //		Set<RankedTag> expansionTags = 
 //			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 //		
-		// altro insieme, con tutti i tags, anche quelli meno rilevanti
+		// altro insieme, con TUTTI i tags, anche quelli meno rilevanti, senza fare intersezioni tra i tag 
+		// associati ai termini della query
 		Set<RankedTag> allExpansionTags = 
 			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		

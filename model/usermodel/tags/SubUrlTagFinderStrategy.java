@@ -65,7 +65,8 @@ public abstract class SubUrlTagFinderStrategy {
 			//il tag tfidf: ne voglio di piœ, quindi il valore MIN_TAG... 
 			//deve essere piœ piccolo, 0.2~0.3
 		
-			if(newRanking>(ParameterHandler.MIN_TAGFINDER_RELATIVE_VALUE*relevance))
+			//lo aggiungo comunque, senza if!
+//			if(newRanking>(ParameterHandler.MIN_TAGFINDER_RELATIVE_VALUE*relevance))
 				normalizedRankedTags.add(rTag);
 			
 		}

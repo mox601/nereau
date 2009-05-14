@@ -298,6 +298,7 @@ public class TreeTest {
 		Clustering clusteringMean = tree.calculateClusteringByMean();
 
 		System.out.println("clustering ottimo by mean");
+
 		for (HashSet<Node> cluster: clusteringMean.getClustering()) {
 			System.out.print("<");
 			for (Node node: cluster) {

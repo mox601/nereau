@@ -11,36 +11,33 @@ import model.RankedTag;
 
 public class TfidfExpansionTagsStrategy extends ExpansionTagsStrategy {
 
-	/* trova tutti i tag dell'espansione, senza filtrarli */
+	/* trova TUTTI i tag dell'espansione, senza filtrarli */
 	@Override
 	public Set<RankedTag> findExpansionTags(Set<String> stemmedQueryTerms,
 			Map<String, Map<RankedTag, Map<String, Double>>> subMatrix) {
 
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		TreeSet<RankedTag> commonTags = new TreeSet<RankedTag>();
-		boolean tagsInitialized = false;
-		for(String term: stemmedQueryTerms) {
+//		TreeSet<RankedTag> commonTags = new TreeSet<RankedTag>();
+		TreeSet<RankedTag> allTags = new TreeSet<RankedTag>();
+//		boolean tagsInitialized = false;
+		
+		for (String term: stemmedQueryTerms) {
 			if(!subMatrix.containsKey(term)) {
-				commonTags.clear();
+				//nella matrice non c'Ž il termine della query
 				break;
 			}
 			Set<RankedTag> tags4term = subMatrix.get(term).keySet();
-			logger.info("set parziale di tags per il termine " + term + ": " + tags4term);
-			if(!tagsInitialized) {
-				commonTags.addAll(tags4term);
-				tagsInitialized = true;
-			}
-			// fa l'intersezione
-			else
-				commonTags.retainAll(tags4term);
-			logger.info("intersezione: " + commonTags);
+			logger.info("set di tags trovati per il termine " + term + ": " + tags4term);
+			//aggiungo tutti i tag all'insieme
+			allTags.addAll(tags4term);
 		}
+		
 		
 		// non filtra i tags, li restituisce tutti tranne il null
 		
-		commonTags = this.filterNullTags(commonTags);
+		allTags = this.filterNullTags(allTags);
 		
-		return commonTags;
+		return allTags;
 	}
 
 }
