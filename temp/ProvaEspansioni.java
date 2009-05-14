@@ -20,7 +20,7 @@ public class ProvaEspansioni {
 		
 		if(args.length!=2) {
 			user = new User("mox601", "ciaoclaudio");
-			queryString = "jimmy";
+			queryString = "jimmy eat";
 		}
 		
 		else {
