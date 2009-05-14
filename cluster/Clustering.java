@@ -11,6 +11,18 @@ public class Clustering {
 	private double devStandard;	
 	
 	
+	public boolean equals(Clustering clusteringTwo) {
+		boolean equals = false;
+		
+		if (clustering.equals(clusteringTwo)) {
+			equals = true;
+		}
+		
+		
+		return equals;
+		
+	}
+	
 	/**
 	 * @return the devStandard
 	 */
