@@ -11,17 +11,25 @@ public class Clustering {
 	private double devStandard;	
 	
 	
-	public boolean equals(Clustering clusteringTwo) {
-		boolean equals = false;
-		
-		if (clustering.equals(clusteringTwo)) {
-			equals = true;
-		}
-		
-		
-		return equals;
-		
-	}
+	
+	/* TODO: due cluster sono uguali se: 
+	 * hanno stesso numero di clusters
+	 */
+	
+//	public boolean equals(Clustering clusteringTwo) {
+//		boolean equals = true;
+//		
+//		for (HashSet<Node> cluster: clustering) {
+//			if (!clusteringTwo.getClustering().contains(cluster)) {
+//				equals = false;
+//			}
+//			
+//		}
+//		
+//		
+//		return equals;
+//		
+//	}
 	
 	/**
 	 * @return the devStandard

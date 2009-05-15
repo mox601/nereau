@@ -11,6 +11,8 @@ import model.RankedTag;
 
 public class TxtSubUrlTagFinderStrategy extends SubUrlTagFinderStrategy {
 
+	/* usato quando si lavora sui file salvati su disco invece delle pagine */
+	
 	@Override
 	protected Map<String, Integer> extractTags(String pageContent) {
 		//NEVER USED!

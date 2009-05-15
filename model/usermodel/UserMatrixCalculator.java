@@ -114,16 +114,12 @@ public class UserMatrixCalculator {
 			//find associated tags
 			Set<RankedTag> tags = tagFinder.findTags(urlString);
 			logger.info("tags associati: " + tags);
-		
-//			System.out.println("url pagina visitata: " + urlString);
-//			System.out.println("tags associati all'url: " + tags);
-//			
+				
 			/* costruisco un oggetto URLTags */
 //			URLTags currentUrlWithTags = new URLTags(visitedURL, tags);
 			
 //			urlTagsToSave.add(currentUrlWithTags);
-			
-			
+					
 			//update temporary matrix with keywords and tags
 			this.updateTempMatrix(tempMatrix,tags,coOccurrenceMatrix);
 			//logger.info("matrice temporanea dopo studio " + visitedURL + ": " + tempMatrix);
