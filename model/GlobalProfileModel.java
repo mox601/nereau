@@ -85,10 +85,10 @@ public class GlobalProfileModel {
 	
 	private void convertUrlsToTagtfidf(LinkedList<URLTags> urlsToSave) {
 		/* logger */
-//		Logger logger = LogHandler.getLogger(this.getClass().getName());
-//		logger.info("inizio la conversione da URLTags a Tagtfidf");
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+		logger.info("inizio la conversione da URLTags a Tagtfidf");
 		
-		Iterator <URLTags> urlIterator = urlsToSave.iterator();
+//		Iterator <URLTags> urlIterator = urlsToSave.iterator();
 		/* itera sugli url */
 		for (URLTags currentUrl: urlsToSave) {
 			/* itera sui tags del currentUrl */
@@ -121,18 +121,17 @@ public class GlobalProfileModel {
 	
 		int index = -1;
 		for (Tagtfidf tag: tags) {
-			System.out.println(tag.toString());
+			logger.info(tag.toString());
 			if (tag.getTag().equals("no_tag")) {
 				index = tags.indexOf(tag);
-				System.out.println("levo il tag no_tag all'indice " + index);
+				logger.info("levo il tag no_tag all'indice " + index);
 			}
 		}
 		
 		if (index > -1) {
 			tags.remove(index);	
 		}
-		
-		
+
 	}
 
 	

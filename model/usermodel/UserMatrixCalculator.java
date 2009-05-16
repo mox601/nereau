@@ -31,8 +31,7 @@ public class UserMatrixCalculator {
 
 	/* si occupa di creare una matrice temporanea a partire dagli ultimi 
 	 * url visitati. 
-	 * Quando lo eseguo, costruisco un'istanza di GlobalProfileModel
-	 * che si occupa di salvare gli url e i tag a loro associati */
+	 */
 	
 	public Map<RankedTag, Map<String, Map<String, Double>>> 
 		createTemporaryMatrix(List<VisitedURL> visitedURLs, boolean alreadyRetrieved) {

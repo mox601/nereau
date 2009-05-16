@@ -122,6 +122,7 @@ public class UserModelUpdater {
 			}
 
 			tempMatrixForLog.append("}");
+			//qui salvo nel log i tag estratti dalle pagine seguiti dai termini associati
 			//logger.info("matrice temporanea (solo keyset): " + tempMatrixForLog);
 			logger.info("matrice temporanea: " + tempMatrix);
 			
@@ -157,6 +158,7 @@ public class UserModelUpdater {
 			}
 			newInsertMatrixForLog.append("}");
 			logger.info("dati nuovi da inserire: " + newInsertMatrixForLog);
+			
 			StringBuffer newUpdateMatrixForLog = new StringBuffer("{");
 			for(String term: newUpdateMatrix.keySet()) {
 				newUpdateMatrixForLog.append(term + "=" + newUpdateMatrix.get(term).keySet() + ",");
@@ -175,7 +177,7 @@ public class UserModelUpdater {
 			Set<RankedTag> tagSet = new HashSet<RankedTag>();
 			//devo usare una strategy che mi permetta l'estrazione di piœ tags
 			TagFinder tagFinder = new TagFinder();
-			tagSet = tagFinder.findTags(vu.getURL()); 
+			tagSet = tagFinder.findTags(vu.getURL());
 			URLTags url = new URLTags(vu, tagSet);
 			urls.add(url);
 				

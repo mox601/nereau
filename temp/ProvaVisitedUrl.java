@@ -26,7 +26,7 @@ public class ProvaVisitedUrl {
 		UserDAO udao = new UserDAOPostgres();
 		
 		
-		String urlString = "http://woork.blogspot.com/2009/02/free-ajax-components-for-advanced-web.html";
+		String urlString = "http://www.netvibes.com";
 		Query query = new Query("ajax");
 		Set<RankedTag> rTags = new HashSet<RankedTag>();
 		rTags.add(new RankedTag("wordpress",1.1));

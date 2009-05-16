@@ -71,8 +71,8 @@ public abstract class SubUrlTagFinderStrategy {
 			
 		}
 		
-		//add NULL_TAG
-		normalizedRankedTags.add(ParameterHandler.NULL_TAG);
+		//TODO: add NULL_TAG - perché?? io lo levo! 
+//		normalizedRankedTags.add(ParameterHandler.NULL_TAG);
 		
 		return normalizedRankedTags;
 	}

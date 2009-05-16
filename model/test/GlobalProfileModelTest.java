@@ -92,11 +92,14 @@ public class GlobalProfileModelTest {
 	@Test
 	public void findTagsForUrlTest() {
 		String url = "http://dzineblog.com/2009/05/50-best-sites-to-get-design-inspiration.html";
-		TagFinder tagFinder = new TagFinder();
-		Set<RankedTag> tags = tagFinder.findTags(url);
+		TagFinder tagFinderMoreTags = new TagFinder();
+		Set<RankedTag> tags = tagFinderMoreTags.findTags(url);
 		for (RankedTag tag: tags) {
 			System.out.println(tag.toString());
 		}
+		
+		TagFinder tagFinder = new TagFinder();
+		
 		
 		//TODO: fare una strategy che estragga piœ tag da ogni url
 		
