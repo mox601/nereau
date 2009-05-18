@@ -243,7 +243,7 @@ public class Tree {
 	private void visitAndAssignIds(Node node, int rowId, int nestedSetId) {
 		//vecchio id
 		node.setIdNode(rowId);
-		System.out.println("id " + rowId + " assegnato al nodo: " + node.getValue());
+//		System.out.println("id " + rowId + " assegnato al nodo: " + node.getValue());
 		// left 
 		node.setLeft(nestedSetId);
 		for (Node child: node.getChildren()) {
@@ -251,7 +251,7 @@ public class Tree {
 		}
 		//right dopo aver assegnato id a tutto il sotto albero 
 		node.setRight(nestedSetsIdGenerator.getId());
-		System.out.println("nodo: " + node.getValue() + " left: " + node.getLeft() + " right: " + node.getRight());
+//		System.out.println("nodo: " + node.getValue() + " left: " + node.getLeft() + " right: " + node.getRight());
 		
 	}
 

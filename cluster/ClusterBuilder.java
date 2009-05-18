@@ -39,7 +39,7 @@ public class ClusterBuilder {
 	
 	/* metodo che costruisce i clusters iterativamente 
 	 * algoritmo gerarchico di shepitsen. 
-	 * TODO: Deve restituire un Tree, con una root. */
+	 */
 	
 	
 
@@ -54,7 +54,7 @@ public class ClusterBuilder {
 			
 			/* prende tutti i cluster attuali */
 			/* li passa a un metodo insieme alla somiglianza, e ottiene 
-			 * una lista di coppie con somiglianza = similarity */
+			 * una lista di coppie con somiglianza >= similarity !! */
 			LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, similarity);
 
 			/* itera su queste coppie e crea un cluster fusione per ogni coppia */			
@@ -143,6 +143,7 @@ public class ClusterBuilder {
 		/* TODO: da queste coppie vanno levati questi casi limite. 
 		 * NON devono esistere coppie con un elemento almeno in un'altra coppia */
 			
+		/* genero tutte le combinazioni possibili */
 		LinkedList<LinkedList<Node>> listOfAllCouples = new LinkedList<LinkedList<Node>>();
 		ClusterCombinator clusterCombinator = new ClusterCombinator(clustersToMerge);
 		listOfAllCouples = clusterCombinator.getClusterCombinations();
@@ -161,7 +162,7 @@ public class ClusterBuilder {
 			if (interClusterSimilarity >= similarity) {
 				/* se hanno somiglianza giusta per essere combinati, li aggiungo 
 				 * alla listOfCouples 
-				 * solo se nessuno dei due tag Ž gi‡ presente in una delle coppie 
+				 * solo se NESSUNO dei due tag Ž gi‡ presente in una delle coppie 
 				 * fatte precedentemente */
 
 				boolean safeToAdd = false;
@@ -188,10 +189,10 @@ public class ClusterBuilder {
 			String firstTagInCouple = couple.getFirst().getValue();
 			String secondTagInCouple = couple.getLast().getValue();
 			
-			if ( (firstTagInCouple == couple.getFirst().getValue()) || 
-					(firstTagInCouple == couple.getLast().getValue()) || 
-					(secondTagInCouple == couple.getFirst().getValue()) || 
-					(secondTagInCouple == couple.getLast().getValue()) ) {
+			if ( (firstTagInCouple.equals(couple.getFirst().getValue())) || 
+					(firstTagInCouple.equals(couple.getLast().getValue())) || 
+					(secondTagInCouple.equals(couple.getFirst().getValue())) || 
+					(secondTagInCouple.equals(couple.getLast().getValue())) ) {
 				isSafe = false;
 			}
 		}

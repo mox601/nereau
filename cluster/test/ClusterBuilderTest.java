@@ -105,6 +105,8 @@ public class ClusterBuilderTest {
 		clusterer.retrieveAllTagsFromDatabase();
 		clusterer.buildClusters();
 		Tree actualClustering = clusterer.getActualClustering();
+		System.out.println("clustering globale ottenuto");
+		System.out.println(actualClustering.toString());
 		
 		try {
 			this.treeHandler.save(actualClustering);
@@ -139,11 +141,8 @@ public class ClusterBuilderTest {
 		}
 		if (extractedClusters.getRoot() != null) {
 			System.out.println("Tags' hierarchy: " + extractedClusters.toString());	
-		
 			Clustering clustering = extractedClusters.cutTreeAtSimilarity(0.5);
-
 			System.out.println("cutting hierarchy at 0.5: ");
-			
 			for (HashSet<Node> cluster: clustering.getClustering()) {
 				System.out.print("<");
 				for (Node node: cluster) {

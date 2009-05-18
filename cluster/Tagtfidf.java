@@ -144,7 +144,7 @@ public class Tagtfidf extends Tag {
 		
 		/* Modulo (sqrt della somma di tutti i valori tf) 
 		 * dei due vettori Tagtfidf 
-		 * TODO: se uso tfidf cambia il risultato? */
+		 * se uso tfidf cambia il risultato? no */
 		/* Modulo tag 1 */
 		Double moduloTag1 = this.getModule();
 		/* Modulo tag 2 */
