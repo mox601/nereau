@@ -80,11 +80,6 @@ public class QueryExpander {
 		//weight to be assigned to every query term
 		double termWeight = 1.0 / (double)stemmedQueryTerms.size();
 		
-		
-		/* qui i tag arrivano gi‡ filtrati: ne otteniamo massimo 5, con 
-		 * rilevanza maggiore di  0,3 rispetto al tag con ranking piœ alto 
-		 * Io li voglio tutti! */
-		
 		Set<RankedTag> expansionTags = 
 			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		

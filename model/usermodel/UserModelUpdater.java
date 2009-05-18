@@ -175,7 +175,7 @@ public class UserModelUpdater {
 			/* ri-cerca dei tags, che poi vengono passati al GlobalModel*/
 			
 			Set<RankedTag> tagSet = new HashSet<RankedTag>();
-			//devo usare una strategy che mi permetta l'estrazione di piœ tags
+			//uso una strategy che mi permetta l'estrazione di piœ tags
 			TagFinder tagFinder = new TagFinder();
 			tagSet = tagFinder.findTags(vu.getURL());
 			URLTags url = new URLTags(vu, tagSet);
@@ -193,6 +193,10 @@ public class UserModelUpdater {
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
 		globalProfile.updateGlobalProfile();
 		
+		/* potrei anticipare il passaggio degli url da usermodelupdater al 
+		 * globalProfilemodel, passandoglieli senza tag. 
+		 * se ne occuperebbe lui di estrarli, indipendentemente dai 
+		 * calcoli massici di matrici che fa lo usermodelupdater */
 		
 		
 		

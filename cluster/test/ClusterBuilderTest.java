@@ -97,7 +97,7 @@ public class ClusterBuilderTest {
 		
 	}
 	
-	
+	@Ignore
 	@Test
 	public void buildClustersAndSaveOnDatabase() {
 		ClusterBuilder clusterer = new ClusterBuilder();
@@ -117,9 +117,24 @@ public class ClusterBuilderTest {
 		
 	}
 	
+	
+	
+	@Test
+	public void retrieveAllClustersFromDatabase() {
+		
+		ClusterBuilder clusterer = new ClusterBuilder();
+		clusterer.retrieveAllTagsFromDatabase();
+		clusterer.buildClusters();
+		Tree actualClustering = clusterer.getActualClustering();
+		System.out.println("clustering globale ottenuto:");
+		System.out.println(actualClustering.toString());
+	}
+	
+	
+	
 	@Test
 	public void retrieveClustersFromDatabase() {
-	/* estrai solo la gerarchia relativa ad alcuni RankedTag che ti passo */	
+	/* estrai solo la gerarchia relativa ad ALCUNI RankedTag che ti passo */	
 		List<RankedTag> tags = new LinkedList();
 		System.out.println("INIZIO TEST retrieve clusters from database");
 
