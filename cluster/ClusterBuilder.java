@@ -63,6 +63,7 @@ public class ClusterBuilder {
 				LinkedList<Node> actualMergingCouple = couplesIterator.next();
 				/* crea un cluster merge */
 				Node newCluster = new Node(actualMergingCouple, similarity);
+				
 
 //				int a = actualMergingCouple.getFirst().getIdNode();
 //				int b = actualMergingCouple.getLast().getIdNode();
@@ -74,11 +75,15 @@ public class ClusterBuilder {
 				clustersToMerge.remove(actualMergingCouple.getLast());
 				/* aggiungi il cluster merged nel clustersToMerge */
 				clustersToMerge.add(newCluster);
+				logger.info("ADDED cluster: " + newCluster.getValue());
 			}			
 			similarity = similarity - 0.15;
 		}
 
 		if (clustersToMerge.size() > 0) {
+			if (clustersToMerge.size() == 1) {
+				System.out.println("c'é solo un albero, non una foresta");
+			}
 			/* esiste un solo nodo, che é la radice dell'albero. */
 			this.actualClustering = new Tree(clustersToMerge.get(0));
 			logger.info("END CLUSTERING TFIDF");
@@ -90,8 +95,7 @@ public class ClusterBuilder {
 			logger.info("nessun tag trovato nel database, non si effettua il clustering");
 			this.actualClustering = new Tree();
 		}
-
-
+		
 	}
 
 	
@@ -140,7 +144,7 @@ public class ClusterBuilder {
 		 * perché entrambi hanno somiglianza = 1.0. 
 		 * */
 		
-		/* TODO: da queste coppie vanno levati questi casi limite. 
+		/* da queste coppie vanno levati questi casi limite. 
 		 * NON devono esistere coppie con un elemento almeno in un'altra coppia */
 			
 		/* genero tutte le combinazioni possibili */
@@ -151,6 +155,7 @@ public class ClusterBuilder {
 		Iterator<LinkedList<Node>> couplesIterator = listOfAllCouples.iterator();
 		/* elenco di coppie cluster da restituire */
 		LinkedList<LinkedList<Node>> listOfCouples = new LinkedList<LinkedList<Node>>();
+		
 		while (couplesIterator.hasNext()) {
 			LinkedList<Node> actualCouple = couplesIterator.next();
 			Tagtfidf secondCentroidTag = actualCouple.getLast().getCentroid();
@@ -161,8 +166,8 @@ public class ClusterBuilder {
 			
 			if (interClusterSimilarity >= similarity) {
 				/* se hanno somiglianza giusta per essere combinati, li aggiungo 
-				 * alla listOfCouples 
-				 * solo se NESSUNO dei due tag é giá presente in una delle coppie 
+				 * alla listOfCouples, 
+				 * ma solo se NESSUNO dei due clusters é giá presente in una delle coppie 
 				 * fatte precedentemente */
 
 				boolean safeToAdd = false;
@@ -185,17 +190,30 @@ public class ClusterBuilder {
 
 		boolean isSafe = true;
 		
-		for (LinkedList<Node> couple: listOfCouples) {
-			String firstTagInCouple = couple.getFirst().getValue();
-			String secondTagInCouple = couple.getLast().getValue();
+		System.out.println("la coppia " + coupleToTest); 
+		System.out.println(" puó essere aggiunta in " + 
+				" " + listOfCouples + "?");
+		
+		String firstTagInCouple = coupleToTest.getFirst().getValue();
+		String secondTagInCouple = coupleToTest.getLast().getValue();
+		
+		for (LinkedList<Node> actualTestingCouple: listOfCouples) {
 			
-			if ( (firstTagInCouple.equals(couple.getFirst().getValue())) || 
-					(firstTagInCouple.equals(couple.getLast().getValue())) || 
-					(secondTagInCouple.equals(couple.getFirst().getValue())) || 
-					(secondTagInCouple.equals(couple.getLast().getValue())) ) {
+			String firstTagInActualTestingCouple = actualTestingCouple.getFirst().getValue();
+			String secondTagInActualTestingCouple = actualTestingCouple.getLast().getValue();
+			
+
+			if ( (firstTagInCouple.equals(firstTagInActualTestingCouple)) || 
+					(firstTagInCouple.equals(secondTagInActualTestingCouple)) || 
+					(secondTagInCouple.equals(firstTagInActualTestingCouple)) ||
+					(secondTagInCouple.equals(secondTagInActualTestingCouple)) ) {
 				isSafe = false;
 			}
+	
 		}
+
+		System.out.println(isSafe);		
+		
 		return isSafe;
 	}
 

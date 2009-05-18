@@ -105,7 +105,7 @@ public class ClusterBuilderTest {
 		clusterer.retrieveAllTagsFromDatabase();
 		clusterer.buildClusters();
 		Tree actualClustering = clusterer.getActualClustering();
-		System.out.println("clustering globale ottenuto");
+		System.out.println("clustering globale ottenuto:");
 		System.out.println(actualClustering.toString());
 		
 		try {
