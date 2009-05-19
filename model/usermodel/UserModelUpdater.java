@@ -104,6 +104,20 @@ public class UserModelUpdater {
 		/* contiene la lista di urltags da passare al GlobalModel e al PersonalModel */
 		LinkedList<URLTags> urls = new LinkedList<URLTags>();
 		
+		
+		
+		/* posso costruire un globalModel direttamente con i visitedURL 
+		 * ed estrarre per conto mio i tag di delicious, senza aspettare 
+		 * il processamento di tutte le matrici */
+		
+		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
+		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
+		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
+		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
+		fasterGlobalProfile.updateGlobalProfile();
+		
+		
+		
 		/* AGGIORNAMENTO DEL MODELLO UTENTE */
 		/* itera su tutte le pagine visitate */
 		//MODIFICA: lavoro su una pagina per volta (altrimenti la memoria non basta!)

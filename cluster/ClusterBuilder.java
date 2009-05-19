@@ -59,10 +59,11 @@ public class ClusterBuilder {
 			/* prende tutti i cluster attuali */
 			/* li passa a un metodo insieme alla somiglianza, e ottiene 
 			 * una lista di coppie con somiglianza >= similarity !! */
+			/* il problema Ž qui, dovrei poter fondere non coppie, ma liste di nodi */
 			LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, similarityValue);
 
 			/* itera su queste coppie e crea un cluster fusione per ogni coppia */			
-			Iterator<LinkedList<Node>> couplesIterator = mergingClusters.iterator();
+//			Iterator<LinkedList<Node>> couplesIterator = mergingClusters.iterator();
 			
 			for (LinkedList<Node> actualMergingCouple: mergingClusters) {
 				/* crea un cluster merge */
@@ -79,11 +80,33 @@ public class ClusterBuilder {
 			similarity = similarity - 1;
 		}
 
+		
+		
 		if (clustersToMerge.size() > 0) {
-			if (clustersToMerge.size() >= 1) {
-				System.out.println("c'Ž una foresta, e la similarity Ž a 0! ");
-				System.out.println(clustersToMerge.toString());
+			if (clustersToMerge.size() > 1) {
+				logger.info("c'Ž una foresta, e la similarity Ž a 0: " + 
+						clustersToMerge.toString());
+				/* fondo tutti i nodi rimanenti */
+				LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, 0.0);				
+
+				for (LinkedList<Node> actualMergingCouple: mergingClusters) {
+					Node newCluster = new Node(actualMergingCouple, 0.0);			
+					/* elimina i due cluster fusi dal clustersToMerge */
+					logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
+							+ " AND " + actualMergingCouple.getLast().toString());
+					clustersToMerge.remove(actualMergingCouple.getFirst());
+					clustersToMerge.remove(actualMergingCouple.getLast());
+					/* aggiungi il cluster merged nel clustersToMerge */
+					clustersToMerge.add(newCluster);
+					logger.info("ADDED cluster: " + newCluster.getValue());
+				}
 			}
+			
+			
+			
+			
+			
+			
 			/* esiste un solo nodo, che Ž la radice dell'albero. */
 			this.actualClustering = new Tree(clustersToMerge.get(0));
 			logger.info("END CLUSTERING TFIDF");

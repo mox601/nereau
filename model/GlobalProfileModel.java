@@ -58,7 +58,30 @@ public class GlobalProfileModel {
 		this.convertUrlsToTagCoOcc();
 	}
 	
-	
+	/* prendo direttamente i visitedURLs ed estraggo i tag per conto mio */
+	public GlobalProfileModel(List<VisitedURL> visitedURLs) {
+		/* devo passare da visitedURL a URLTags */
+		LinkedList<URLTags> urlTagsToSave = null;
+		
+		for(VisitedURL urlVisitato: visitedURLs) {
+			urlVisitato.toString();
+			
+		}
+		
+		
+		
+		
+		this.urlsToSave = urlTagsToSave;
+		this.tags = new LinkedList<Tagtfidf>();
+		//
+		this.convertUrlsToTagtfidf(this.urlsToSave);
+		this.URLTagsHandler = new URLTagsDAOPostgres();
+		
+		
+		
+	}
+
+
 	private void convertUrlsToTagCoOcc() {
 		// TODO trasformazione in rappresentazione dei tag in co-occorrenze. 
 		

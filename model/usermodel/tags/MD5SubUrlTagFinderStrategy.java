@@ -89,8 +89,9 @@ public abstract class MD5SubUrlTagFinderStrategy extends
 			this.updateResult(rankedTags,pageContent.toString());
 			logger.info("risultato parziale aggiornato: " + rankedTags);
 			try {
-				//to avoid floodind (ip banning! damn!)
+				//to avoid flooding (ip banning! damn!)
 				Thread.sleep(3000);
+				logger.info("fermo 3 sec");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

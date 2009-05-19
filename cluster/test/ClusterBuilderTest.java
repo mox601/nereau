@@ -16,6 +16,7 @@ import org.junit.Test;
 import persistence.PersistenceException;
 import persistence.postgres.TagtfidfDAOPostgres;
 import persistence.postgres.TreeDAOPostgres;
+import util.visual.TreeVisualizer;
 
 import cluster.ClusterBuilder;
 import cluster.Clustering;
@@ -128,6 +129,13 @@ public class ClusterBuilderTest {
 		Tree actualClustering = clusterer.getActualClustering();
 		System.out.println("clustering globale ottenuto:");
 		System.out.println(actualClustering.toString());
+		
+		
+		TreeVisualizer treeViz = new TreeVisualizer(actualClustering);
+		treeViz.start();
+		
+		
+		
 	}
 	
 	

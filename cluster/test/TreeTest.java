@@ -284,7 +284,6 @@ public class TreeTest {
 		Clustering clustering = tree.cutTreeAtSimilarity(0.5);
 		HashSet<Clustering> setOfClusterings = new HashSet<Clustering>();
 		
-		/**/
 		System.out.println("clustering tagliando a 0.5");
 		
 		for (HashSet<Node> cluster: clustering.getClustering()) {
@@ -295,9 +294,13 @@ public class TreeTest {
 			System.out.println("> ");
 		}	
 		
+		
+		
+		
+		
 		Clustering clusteringMean = tree.calculateClusteringByMean();
 
-		System.out.println("clustering ottimo by mean");
+		System.out.println("Clustering ottimo by mean");
 
 		for (HashSet<Node> cluster: clusteringMean.getClustering()) {
 			System.out.print("<");
