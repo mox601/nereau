@@ -26,8 +26,8 @@ public class ProvaVisitedUrl {
 		UserDAO udao = new UserDAOPostgres();
 		
 		
-		String urlString = "http://www.netvibes.com";
-		Query query = new Query("ajax");
+		String urlString = "http://www.readwriteweb.com";
+		Query query = new Query("design");
 		Set<RankedTag> rTags = new HashSet<RankedTag>();
 		rTags.add(new RankedTag("wordpress",1.1));
 		rTags.add(new RankedTag("sport",2.6));
@@ -43,13 +43,16 @@ public class ProvaVisitedUrl {
 		}
 		
 		UserModelUpdater userUpdater = new UserModelUpdater();
-		userUpdater.update(user);
+		//per evitare l'aggiornamento secolare
+//		userUpdater.update(user);
 
 		try {
 			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("mox601"));
 			System.out.println("num of results: " + vUrls.size());
 
 			for(VisitedURL vUrl2: vUrls) {				
+//				System.out.println(vUrl2.toString());
+				
 				System.out.println("url=" + vUrl2.getURL() + ", date=" + vUrl2.getDate() + 
 						", query=" + vUrl2.getQuery());
 				if(vUrl2.getExpandedQuery()!=null) {
@@ -59,7 +62,7 @@ public class ProvaVisitedUrl {
 				
 			}
 			
-			udao.saveLastUpdate(user, vUrl.getDate());
+//			udao.saveLastUpdate(user, vUrl.getDate());
 			//udao.saveLastUpdate("iddio", vUrls.get(0).getDate());
 			
 			

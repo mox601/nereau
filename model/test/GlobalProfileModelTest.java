@@ -12,11 +12,16 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import persistence.PersistenceException;
+import persistence.VisitedURLDAO;
+import persistence.postgres.VisitedURLDAOPostgres;
+
 import cluster.Tagtfidf;
 
 import model.GlobalProfileModel;
 import model.RankedTag;
 import model.URLTags;
+import model.User;
 import model.VisitedURL;
 import model.usermodel.tags.TagFinder;
 
@@ -24,6 +29,7 @@ import model.usermodel.tags.TagFinder;
 public class GlobalProfileModelTest {
 
 	private LinkedList<URLTags> urlTagsToSave;
+	private VisitedURLDAO visitedURLHandler;
 	
 	@Before
 	public void setup(){
@@ -89,6 +95,30 @@ public class GlobalProfileModelTest {
 	}
 	
 	
+	
+	@Test
+	public void constructorVisitedURLTest() {
+		this.visitedURLHandler = new VisitedURLDAOPostgres();
+		User user = new User("mox601","ciaoclaudio");
+		
+		List<VisitedURL> visitedURLs = null;
+		try {
+			visitedURLs = this.visitedURLHandler.retrieveLastVisitedURLs(user);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
+	
+		
+		
+	}
+	
+	
+	
+	
+	@Ignore
 	@Test
 	public void findTagsForUrlTest() {
 		String url = "http://dzineblog.com/2009/05/50-best-sites-to-get-design-inspiration.html";

@@ -110,11 +110,11 @@ public class UserModelUpdater {
 		 * ed estrarre per conto mio i tag di delicious, senza aspettare 
 		 * il processamento di tutte le matrici */
 		
-		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
+//		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
-		fasterGlobalProfile.updateGlobalProfile();
+//		fasterGlobalProfile.updateGlobalProfile();
 		
 		
 		

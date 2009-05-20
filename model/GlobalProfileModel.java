@@ -5,7 +5,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import model.usermodel.tags.TagFinder;
 
 
 import cluster.Tagtfidf;
@@ -63,24 +66,37 @@ public class GlobalProfileModel {
 		/* devo passare da visitedURL a URLTags */
 		LinkedList<URLTags> urlTagsToSave = null;
 		
-		for(VisitedURL urlVisitato: visitedURLs) {
-			urlVisitato.toString();
-			
-		}
-		
-		
-		
+		this.convertVisitedUrlsToURLTags(visitedURLs);
+		/* ho ottenuto i tag per gli url che ho visitato, 
+		 * posso convertirli in Tagtfidf e salvarli su db */
 		
 		this.urlsToSave = urlTagsToSave;
 		this.tags = new LinkedList<Tagtfidf>();
 		//
-		this.convertUrlsToTagtfidf(this.urlsToSave);
+		if(urlsToSave != null) {
+			this.convertUrlsToTagtfidf(this.urlsToSave);	
+		}
+		
 		this.URLTagsHandler = new URLTagsDAOPostgres();
 		
 		
 		
 	}
 
+
+	private void convertVisitedUrlsToURLTags(List<VisitedURL> visitedURLs) {
+		/* deve estrarre i tag da ogni url e costruire una lista di URLTags */
+		
+		TagFinder tagFinder = new TagFinder();
+		this.urlsToSave = new LinkedList<URLTags>();
+		
+		for (VisitedURL visitedURL: visitedURLs) {
+			System.out.println("estraggo i tag dell'url: " + visitedURL.toString());
+			Set<RankedTag> tags = tagFinder.findTags(visitedURL.getURL());
+			URLTags currentUrlTag = new URLTags(visitedURL.getURL(), tags);
+			this.urlsToSave.add(currentUrlTag);
+		}
+	}
 
 	private void convertUrlsToTagCoOcc() {
 		// TODO trasformazione in rappresentazione dei tag in co-occorrenze. 

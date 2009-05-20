@@ -41,6 +41,9 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				statement = connection.prepareStatement(SQL_RETRIEVE_LAST_BY_USERID);
 				statement.setInt(1, user.getUserID());
 			}
+
+//			System.out.println("query eseguita: " + statement.toString());
+
 			ResultSet result = statement.executeQuery();
 			visitedURLs = extractVisitedUrlList(result);
 		}
@@ -111,7 +114,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				statement = connection.prepareStatement(SQL_RETRIEVE_FROM_DATE_BY_USERID);
 				statement.setInt(1, user.getUserID());
 				statement.setLong(2, fromDate);
-			}
+			}			
 			ResultSet result = statement.executeQuery();
 			visitedURLs = extractVisitedUrlList(result);
 			
@@ -137,7 +140,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		List<VisitedURL> visitedURLs = new LinkedList<VisitedURL>();
-		logger.info("creazione lista url visitati");
+		logger.info("creazione lista url visitati in un lasso di tempo");
 		try {
 			connection = dataSource.getConnection();
 			if(user.getUserID()<=0) {
@@ -249,6 +252,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 			for(RankedTag rTag: expansionTags) {
 				String tag = rTag.getTag();
 				double rank = rTag.getRanking();
+//				System.out.println("expansion tags: " + tag + " " + rank);
 				statement = connection.prepareStatement(SQL_INSERT_VISITEDURLTAG);
 				statement.setInt(1, visitedUrlId);
 				statement.setString(2, tag);
