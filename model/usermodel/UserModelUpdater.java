@@ -108,13 +108,14 @@ public class UserModelUpdater {
 		
 		/* posso costruire un globalModel direttamente con i visitedURL 
 		 * ed estrarre per conto mio i tag di delicious, senza aspettare 
-		 * il processamento di tutte le matrici */
+		 * il processamento di tutte le matrici. 
+		 * purtroppo poi dovr— ri-estrarli? */
 		
-//		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
+		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
-//		fasterGlobalProfile.updateGlobalProfile();
+		fasterGlobalProfile.updateGlobalProfile();
 		
 		
 		
@@ -201,17 +202,19 @@ public class UserModelUpdater {
 
 		/* passo gli url al GlobalProfileModel */
 		
-		GlobalProfileModel globalProfile = new GlobalProfileModel(urls);
+//		GlobalProfileModel globalProfile = new GlobalProfileModel(urls);
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
-		globalProfile.updateGlobalProfile();
+//		globalProfile.updateGlobalProfile();
 		
-		/* (potrei anticipare il passaggio degli url da usermodelupdater al 
+		/* DONE: (potrei anticipare il passaggio degli url da usermodelupdater al 
 		 * globalProfilemodel, passandoglieli senza tag. 
 		 * se ne occuperebbe lui di estrarli, indipendentemente dai 
 		 * calcoli massici di matrici che fa lo usermodelupdater.) 
 		 * l'ho messo prima di tutti i calcoli*/
+		
+		
 		
 		
 		
@@ -221,8 +224,6 @@ public class UserModelUpdater {
 		 * co-occorrenze tag-tag */
 		PersonalProfileModel personalProfile = new PersonalProfileModel(urls);
 		personalProfile.updatePersonalProfile();
-		
-		
 		
 		/*
 		//delete visited urls from db

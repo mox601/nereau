@@ -115,9 +115,6 @@ public class UserMatrixCalculator {
 			logger.info("tags associati: " + tags);
 				
 			/* costruisco un oggetto URLTags */
-//			URLTags currentUrlWithTags = new URLTags(visitedURL, tags);
-			
-//			urlTagsToSave.add(currentUrlWithTags);
 					
 			//update temporary matrix with keywords and tags
 			this.updateTempMatrix(tempMatrix,tags,coOccurrenceMatrix);

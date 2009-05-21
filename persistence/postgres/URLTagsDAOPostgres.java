@@ -105,7 +105,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			if (result.next()) {
 				idTag = result.getInt("id");
 			}
-			System.out.println("valore id del tag: " + idTag);
+//			System.out.println("valore id del tag: " + idTag);
 			
 			/* il tag Ž gi‡ presente nel database? */
 			if (idTag > 0) {
@@ -148,10 +148,13 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("saving " + this.urlString + " " + this.tagString + 
-				" idurl: " + idUrl + " idtag: " + idTag);
+//		logger.info("saving " + this.urlString + " " + this.tagString + 
+//				" idurl: " + idUrl + " idtag: " + idTag);
 		
 		try {
+			
+			/* TODO: sostituire la stored procedure di postgres con delle query 
+			 * semplici per aumentare la portabilit‡ */
 			statement = connection.prepareStatement(SQL_UPSERT_TAG_URL);
 			int occurrence = 1;
 			/* TODO: trova un modo di salvare la stored procedure pgpsql una volta
@@ -160,7 +163,6 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			
 			statement.setInt(1, idTag);
 			statement.setInt(2, idUrl);
-			/*TODO: in realt‡ sul db ho un real, problemi? pare di no */
 			statement.setInt(3, occurrence);
 			ResultSet result;
 			result = statement.executeQuery();

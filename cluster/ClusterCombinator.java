@@ -2,6 +2,9 @@ package cluster;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import util.LogHandler;
 
 import combinator.CombinationGenerator;
 
@@ -14,9 +17,11 @@ public class ClusterCombinator {
 	private List<Node> clustersToCombine;
 	
 	public ClusterCombinator(List<Node> clusters) {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+
 		this.clustersToCombine = clusters;
 		int clusterNumber = clusters.size();
-		System.out.println("calling combinator with clusterNumber = " + clusterNumber);
+		logger.info("calling combinator with clusterNumber = " + clusterNumber);
 		this.combinator = new CombinationGenerator(clusterNumber, 2);
 	}
 	

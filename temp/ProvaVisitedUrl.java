@@ -44,7 +44,7 @@ public class ProvaVisitedUrl {
 		
 		UserModelUpdater userUpdater = new UserModelUpdater();
 		//per evitare l'aggiornamento secolare
-//		userUpdater.update(user);
+		userUpdater.update(user);
 
 		try {
 			List<VisitedURL> vUrls = vudao.retrieveLastVisitedURLs(new User("mox601"));

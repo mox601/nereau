@@ -332,7 +332,8 @@ public class QueryExpander {
 		/* potrebbe essere che l'albero sia nullo perché non ho trovato tag 
 		 * di cui posso ricostruire la gerarchia.  */		
 		if(hierarchicalClustering!= null) {
-			logger.info("clustering gerarchico dei tag: " + hierarchicalClustering.toString());
+			logger.info("clustering gerarchico dei tag");
+			logger.info(hierarchicalClustering.toString());
 		} 
 
 		/* dopo che ho le gerarchie, costruisco l'albero ridotto e 
@@ -346,11 +347,11 @@ public class QueryExpander {
 		 * 2 oppure osservando il profilo dell'utente nelle co-occorrenze dei tag
 		 *  */
 		
-		/* 1 - media e varianza delle dimensioni dei clusters */
+		/* 1 - TODO: media e varianza delle dimensioni dei clusters */
 		Clustering clusteringMean = hierarchicalClustering.calculateClusteringByMean();
 		
 		
-		/* TODO: per ora il taglio della similarity la faccio a 0.5 */
+		/* per ora il taglio della similarity la faccio a 0.5 */
 		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(0.5);
 		
 		/* ogni cluster avrá la sua espansione, calcolata su diversi tag */
