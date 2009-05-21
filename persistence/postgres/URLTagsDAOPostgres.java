@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -53,8 +54,11 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		
 		try {
 			/* mi restituisce il primo id con cui Ž apparso quell'url 
-			 * TODO: Ž un problema avere due visitedurls diversi !!!
-			 * con la stessa stringa url? SI 
+			 * l'url sar‡ sicuramente in quella tabella? 
+			 * Ž gi‡ stato salvato? si, perchŽ sono visitedurls!
+			 * Ž un problema avere due visitedurls diversi
+			 * con la stessa stringa url? no, se ottengo sempre il primo
+			 * id allora funziona
 			 * Potrei fare una nuova tabella con solo gli url visitati, 
 			 * senza distinguere due url quando sono visitati da due utenti
 			 * diversi!!!
@@ -88,6 +92,10 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		this.tagString = tag;
 		
 		/* estrai l'id di ogni tag prima di eseguire l'inserimento */
+		
+		/* se il tag Ž gi‡ stato incontrato ed Ž 
+		 * presente nel database, allora prendi l'id da l’ */
+		
 		try {
 			statement = connection.prepareStatement(SQL_RETRIEVE_TAG_ID);
 			statement.setString(1, tag);
@@ -97,7 +105,35 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			if (result.next()) {
 				idTag = result.getInt("id");
 			}
-			save(idUrl, idTag);		
+			System.out.println("valore id del tag: " + idTag);
+			
+			/* il tag Ž gi‡ presente nel database? */
+			if (idTag > 0) {
+				save(idUrl, idTag);	
+			} else {
+				/* SALVO il nuovo tag */
+				TagDAOPostgres tagHandler = new TagDAOPostgres();
+				RankedTag newTagToSave = new RankedTag(tag);
+				Set<RankedTag> tags = new HashSet<RankedTag>();
+				tags.add(newTagToSave);
+				tagHandler.save(tags);
+				
+				/* CERCO di nuovo il tag nel database per ottenere l'id: 
+				 * stavolta devo trovarlo */
+				PreparedStatement statementID = connection.prepareStatement(SQL_RETRIEVE_TAG_ID);
+				statementID.setString(1, tag);
+				ResultSet resultID;
+				resultID = statement.executeQuery();
+				idTag = -1;
+				if (resultID.next()) {
+					idTag = result.getInt("id");
+				}
+				/* salvo url-tag sul db */
+				save(idUrl, idTag);
+				
+			}
+			
+			
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
