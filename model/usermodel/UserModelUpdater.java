@@ -207,10 +207,11 @@ public class UserModelUpdater {
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
 		globalProfile.updateGlobalProfile();
 		
-		/* potrei anticipare il passaggio degli url da usermodelupdater al 
+		/* (potrei anticipare il passaggio degli url da usermodelupdater al 
 		 * globalProfilemodel, passandoglieli senza tag. 
 		 * se ne occuperebbe lui di estrarli, indipendentemente dai 
-		 * calcoli massici di matrici che fa lo usermodelupdater */
+		 * calcoli massici di matrici che fa lo usermodelupdater.) 
+		 * l'ho messo prima di tutti i calcoli*/
 		
 		
 		

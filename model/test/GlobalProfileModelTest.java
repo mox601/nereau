@@ -110,7 +110,7 @@ public class GlobalProfileModelTest {
 		}
 		
 		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
-	
+		fasterGlobalProfile.updateGlobalProfile();
 		
 		
 	}
