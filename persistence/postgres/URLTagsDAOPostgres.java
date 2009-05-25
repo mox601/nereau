@@ -174,20 +174,44 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			ResultSet firstResult;
 			//ottengo id e value
 			firstResult = statement.executeQuery();
-			int idTagUrl = -1;
+			int rowIdTagUrl = -1;
 			Float value = new Float(-1.0);
 			//vedi se Ž presente la coppia tag-url
 			if (firstResult.next()) {
-				idTagUrl = firstResult.getInt("id");
-				value = firstResult.getFloat("value");
+				rowIdTagUrl = firstResult.getInt("id");
+				value = firstResult.getFloat("value");				
 			}
 			
 			//non Ž presente la riga tag-url che voglio inserire
 			//quindi la AGGIUNGO
-			if (idTagUrl == -1) {
+			if (rowIdTagUrl == -1) {
+				
+				try {
+					PreparedStatement insertStatement = connection.prepareStatement(SQL_INSERT_TAG_URL);
+					insertStatement.setInt(1, idTag);
+					insertStatement.setInt(2, idUrl);
+					insertStatement.setFloat(3, new Float(1.0));
+					int insertResult;
+					insertResult = insertStatement.executeUpdate();
+				} catch(SQLException e) {
+					throw new PersistenceException(e.getMessage());
+				}
+
+				
 				
 			} else {
 				//se Ž presente, la AGGIORNO
+				try {
+					PreparedStatement updateStatement = connection.prepareStatement(SQL_UPDATE_TAG_URL);
+					updateStatement.setInt(1, rowIdTagUrl);
+					updateStatement.setInt(2, idTag);
+					updateStatement.setInt(3, idUrl);
+					int updateResultRows;
+					updateResultRows = updateStatement.executeUpdate();
+					
+				} catch(SQLException e) {
+						throw new PersistenceException(e.getMessage());
+				}
 			}
 			
 			
@@ -246,6 +270,15 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 	$$
 	LANGUAGE plpgsql; 
 	 * */
+	
+	private static final String SQL_UPDATE_TAG_URL = 
+		"UPDATE tagvisitedurls " +
+		"SET value = value + 1 " +
+		"WHERE id = ? AND idtag = ? AND idurl = ?;";
+	
+	private static final String SQL_INSERT_TAG_URL = 
+		"INSERT INTO tagvisitedurls " +
+		"VALUES (default, ?, ?, ?);";
 	
 	
 	/* URL, TAG, VALUE */

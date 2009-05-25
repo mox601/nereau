@@ -67,7 +67,8 @@ public class URLTagsDAOPostgresTest {
 		String urlString = "http://www.amaroma.it/";
 		String tagString1 = "madonna";
 		String tagString2 = "blog";
-		String tagString3 = "GWamfgaj49494";
+		String tagString3 = "GWamfgaj49495";
+		
 		Set<RankedTag> tags = new HashSet<RankedTag>();
 		RankedTag tag1 = new RankedTag(tagString1);
 		RankedTag tag2 = new RankedTag(tagString2);
