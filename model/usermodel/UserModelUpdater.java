@@ -188,15 +188,17 @@ public class UserModelUpdater {
 			
 			/* ricerco un numero maggiore di tags per ogni url */
 			/* ri-cerca dei tags, che poi vengono passati al GlobalModel*/
-			
-			Set<RankedTag> tagSet = new HashSet<RankedTag>();
-			//uso una strategy che mi permetta l'estrazione di piœ tags
-			TagFinder tagFinder = new TagFinder();
-			tagSet = tagFinder.findTags(vu.getURL());
-			URLTags url = new URLTags(vu, tagSet);
-			urls.add(url);
+			/* inutile, lo faccio prima */
+//			Set<RankedTag> tagSet = new HashSet<RankedTag>();
+//			TagFinder tagFinder = new TagFinder();
+//			tagSet = tagFinder.findTags(vu.getURL());
+//			URLTags url = new URLTags(vu, tagSet);
+//			urls.add(url);
 				
 		}
+		
+		
+		
 		
 		/* l'aggiornamento dell'utente con tutti i suoi nuovi url Ž terminato. */
 
@@ -222,8 +224,8 @@ public class UserModelUpdater {
 		 * ora passo gli stessi urls ad un'altra classe che rappresenta le
 		 * info da aggiornare per quanto riguarda il profilo personale delle
 		 * co-occorrenze tag-tag */
-		PersonalProfileModel personalProfile = new PersonalProfileModel(urls);
-		personalProfile.updatePersonalProfile();
+//		PersonalProfileModel personalProfile = new PersonalProfileModel(urls);
+//		personalProfile.updatePersonalProfile();
 		
 		/*
 		//delete visited urls from db

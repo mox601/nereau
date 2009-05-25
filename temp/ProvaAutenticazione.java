@@ -11,7 +11,7 @@ public class ProvaAutenticazione {
 		
 		UserDAO uDao = new UserDAOPostgres();
 		
-		User user = uDao.authenticateUser("mox", "pwd");
+		User user = uDao.authenticateUser("test", "test");
 		
 		if(user==null)
 			System.out.println("non autenticato");
@@ -26,7 +26,7 @@ public class ProvaAutenticazione {
 			System.out.println("ruolo utente: " + user.getRole());
 
 			/* ora visita qualche url, per aggiornare il modello utente */
-			visitUrls(user);
+//			visitUrls(user);
 			
 			
 		}

@@ -230,6 +230,7 @@ public class UserDAOPostgres implements UserDAO {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(SQL_AUTHENTICATE);
+			//devo fare l'hash della password?
 			statement.setString(1, password);
 			statement.setString(2, username);
 			ResultSet result = statement.executeQuery();

@@ -35,8 +35,6 @@ public class TfidfExpansionTagsStrategy extends ExpansionTagsStrategy {
 					allTags.add(tagToAdd);
 				}
 			}
-			
-			
 //			allTags.addAll(tags4term);
 		}
 		

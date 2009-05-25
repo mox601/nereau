@@ -111,7 +111,8 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			if (idTag > 0) {
 				save(idUrl, idTag);	
 			} else {
-				/* SALVO il nuovo tag */
+				/* SALVO il nuovo tag nei tags */
+//				System.out.println("il tag Ž nuovo nella tabella tags");
 				TagDAOPostgres tagHandler = new TagDAOPostgres();
 				RankedTag newTagToSave = new RankedTag(tag);
 				Set<RankedTag> tags = new HashSet<RankedTag>();
@@ -119,25 +120,32 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 				tagHandler.save(tags);
 				
 				/* CERCO di nuovo il tag nel database per ottenere l'id: 
-				 * stavolta devo trovarlo */
-				PreparedStatement statementID = connection.prepareStatement(SQL_RETRIEVE_TAG_ID);
-				statementID.setString(1, tag);
-				ResultSet resultID;
-				resultID = statement.executeQuery();
-				idTag = -1;
-				if (resultID.next()) {
-					idTag = result.getInt("id");
+				 * stavolta DEVO trovarlo */
+//				System.out.println("ho salvato il tag, ora cerco l'id");
+				
+				try {
+					PreparedStatement statementID = connection.prepareStatement(SQL_RETRIEVE_TAG_ID);
+					statementID.setString(1, tag);
+					ResultSet resultID;
+					resultID = statementID.executeQuery();
+					idTag = -1;
+					if (resultID.next()) {
+						idTag = resultID.getInt("id");
+					}
+					/* salvo url-tag sul db */
+					save(idUrl, idTag);
+//					System.out.println("tag nuovo salvato");
 				}
-				/* salvo url-tag sul db */
-				save(idUrl, idTag);
+				catch (SQLException e) {
+					throw new PersistenceException(e.getMessage());
+				} // per la ricerca dell'id
+				
 				
 			}
-			
-			
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
-		}
+		}// per il salvataggio dell' URLTags
 	}
 	
 
@@ -151,34 +159,68 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 //		logger.info("saving " + this.urlString + " " + this.tagString + 
 //				" idurl: " + idUrl + " idtag: " + idTag);
 		
+		/* ho l'id url e l'id tag:
+		 * 1 - faccio una query e vedo se ottengo dei risultati 
+		 * 2a - se ottengo un risultato (id), aggiorno il valore sul database con
+		 * value += 1 
+		 * 2b - altrimenti, faccio un inserimento con  valore 1 */
+		
 		try {
-			
-			/* TODO: sostituire la stored procedure di postgres con delle query 
-			 * semplici per aumentare la portabilit‡ */
-			statement = connection.prepareStatement(SQL_UPSERT_TAG_URL);
-			int occurrence = 1;
-			/* TODO: trova un modo di salvare la stored procedure pgpsql una volta
-			 * invece di riscriverla ogni volta. COME? */
-			
+			statement = connection.prepareStatement(SQL_SEARCH_TAG_URL);
 			
 			statement.setInt(1, idTag);
 			statement.setInt(2, idUrl);
-			statement.setInt(3, occurrence);
-			ResultSet result;
-			result = statement.executeQuery();
 			
-			/*
-			if (result.next()) {
-				System.out.println("idurl: " + result.getInt("idvisitedurl") + 
-						" idtag:  " + result.getInt("idtag") + 
-						" value: " + result.getInt("value"));
+			ResultSet firstResult;
+			//ottengo id e value
+			firstResult = statement.executeQuery();
+			int idTagUrl = -1;
+			Float value = new Float(-1.0);
+			//vedi se Ž presente la coppia tag-url
+			if (firstResult.next()) {
+				idTagUrl = firstResult.getInt("id");
+				value = firstResult.getFloat("value");
 			}
-			*/
+			
+			//non Ž presente la riga tag-url che voglio inserire
+			//quindi la AGGIUNGO
+			if (idTagUrl == -1) {
+				
+			} else {
+				//se Ž presente, la AGGIORNO
+			}
+			
+			
+			
+			
+			
+			
 			
 		}
 		catch (SQLException e) {
 			throw new PersistenceException(e.getMessage());
 		}
+		
+		
+	
+	/* old style, stored procedure !!! */	
+//		try {
+//			
+//			statement = connection.prepareStatement(SQL_UPSERT_TAG_URL);
+//			int occurrence = 1;			
+//			statement.setInt(1, idTag);
+//			statement.setInt(2, idUrl);
+//			statement.setInt(3, occurrence);
+//			ResultSet result;
+//			result = statement.executeQuery();
+//	
+//			
+//		}
+//		catch (SQLException e) {
+//			throw new PersistenceException(e.getMessage());
+//		}
+		
+		
 	}
 
 	/* UPSERT */
@@ -211,6 +253,15 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		"SELECT merge_tagvisitedurls(?, ?, ?);";
 
 
+	private static final String SQL_SEARCH_TAG_URL = 
+		"SELECT id, value " + 
+		"FROM tagvisitedurls " +
+		"WHERE idtag = ? " +
+		"AND idurl = ?;";
+	
+	
+	
+	
 	private final String SQL_RETRIEVE_VISITEDURL_ID = 
 		"SELECT id " +
 		"FROM visitedurls " +

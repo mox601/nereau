@@ -61,21 +61,25 @@ public class Clustering {
 			this.totalNodes += cluster.size();
 		}
 		
-		this.nodesPerClusters  = this.totalNodes / this.clusters;
-		
-		double distance = 0.0;
-		
-		for (HashSet<Node> cluster: clustering) {
-			//calcolo la distanza dalla media, poi al quadrato
-			//e sommo in un accumulatore
-			distance += Math.pow(cluster.size() - this.nodesPerClusters, 2);
+		//se non Ž un clustering "vuoto"
+		if (this.totalNodes > 0) {
+			this.nodesPerClusters  = this.totalNodes / this.clusters;
+
+
+			double distance = 0.0;
+
+			for (HashSet<Node> cluster: clustering) {
+				//calcolo la distanza dalla media, poi al quadrato
+				//e sommo in un accumulatore
+				distance += Math.pow(cluster.size() - this.nodesPerClusters, 2);
+			}
+			//divido per il numero di clusters e ottengo la varianza
+			this.varianza = distance / this.nodesPerClusters;
+			//radice quadrata ed ho la deviazione standard
+			this.devStandard = Math.sqrt(varianza);
+			//		System.out.println("var calcolata: " + this.varianza);
+			//		System.out.println("var calcolata: " + this.devStandard);
 		}
-		//divido per il numero di clusters e ottengo la varianza
-		this.varianza = distance / this.nodesPerClusters;
-		//radice quadrata ed ho la deviazione standard
-		this.devStandard = Math.sqrt(varianza);
-//		System.out.println("var calcolata: " + this.varianza);
-//		System.out.println("var calcolata: " + this.devStandard);
 
 		
 	}

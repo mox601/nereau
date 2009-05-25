@@ -111,6 +111,8 @@ public class QueryExpander {
 			Map<String,Map<String,Integer>> expansionTerms = 
 				this.selectRelevantTerms(stemmedQueryTerms,coOccurrenceValues4tag);
 			
+			
+			
 			if(expansionTerms!=null) {
 				ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
 				Set<RankedTag> rankedTags = null;
@@ -122,6 +124,10 @@ public class QueryExpander {
 				}
 				rankedTags.add(tag);
 			}
+			
+			
+			
+			
 			
 		}
 		/*
@@ -310,7 +316,7 @@ public class QueryExpander {
 		Set<RankedTag> allExpansionTags = 
 			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
-		logger.info("tags per espansione: " + allExpansionTags);
+		logger.info("tags (associati a qualche termine della query) per espansione: " + allExpansionTags);
 		
 		Map<ExpandedQuery, Set<RankedTag>> expandedQueries = 
 			new HashMap<ExpandedQuery, Set<RankedTag>> ();
@@ -326,12 +332,13 @@ public class QueryExpander {
 			hierarchicalClustering = treeHandler.retrieve(tagsList);
 		} catch (PersistenceException e) {
 			// TODO Auto-generated catch block
+			hierarchicalClustering = new Tree();
 			e.printStackTrace();
 		}
 
 		/* potrebbe essere che l'albero sia nullo perché non ho trovato tag 
 		 * di cui posso ricostruire la gerarchia.  */		
-		if(hierarchicalClustering!= null) {
+		if(hierarchicalClustering.getRoot() != null) {
 			logger.info("clustering gerarchico dei tag");
 			logger.info(hierarchicalClustering.toString());
 		} 
@@ -348,7 +355,7 @@ public class QueryExpander {
 		 *  */
 		
 		/* 1 - TODO: media e varianza delle dimensioni dei clusters */
-		Clustering clusteringMean = hierarchicalClustering.calculateClusteringByMean();
+//		Clustering clusteringMean = hierarchicalClustering.calculateClusteringByMean();
 		
 		
 		/* per ora il taglio della similarity la faccio a 0.5 */
@@ -390,15 +397,14 @@ public class QueryExpander {
 
 				} //for term1
 				
-				
 				/* somma i valori di ogni rankedTag in una mappa clusterValues */
 				HashMap<String, Double> tempClusterValues = mergeMaps(clusterValues, coOccurrenceValues4tag); 
-				clusterValues = tempClusterValues;
-			}
+				clusterValues = tempClusterValues;//TODO???
+			}//for node in cluster
 			
 			/* crea un'espansione a partire da clusterValues */
 			
-			/* seleziona solo alcuni termini rilevanti, i primi k? */
+			/* TODO: seleziona solo alcuni termini rilevanti, i primi k? */
 			Map<String,Map<String,Integer>> clusterExpansionTerms = 
 				this.selectRelevantTerms(stemmedQueryTerms, clusterValues);
 			
@@ -411,7 +417,7 @@ public class QueryExpander {
 				if(expandedQueries.containsKey(expandedQuery))
 					rankedTags = expandedQueries.get(expandedQuery);
 				else {
-					rankedTags = new HashSet<RankedTag>();
+					rankedTags = new HashSet<RankedTag>();//?
 					expandedQueries.put(expandedQuery, rankedTags);
 				}
 	
@@ -520,7 +526,6 @@ public class QueryExpander {
 
 	public HashMap<String, Double> mergeMaps(Map<String, Double> firstMap,
 			Map<String, Double> secondMap) {
-		// TODO Auto-generated method stub
 		
 		HashMap<String, Double> mergedMaps = new HashMap();
 		

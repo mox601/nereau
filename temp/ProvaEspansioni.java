@@ -19,8 +19,8 @@ public class ProvaEspansioni {
 		String queryString;
 		
 		if(args.length!=2) {
-			user = new User("mox601", "ciaoclaudio");
-			queryString = "jimmy eat";
+			user = new User("test", "test");
+			queryString = "jimmy";
 		}
 		
 		else {

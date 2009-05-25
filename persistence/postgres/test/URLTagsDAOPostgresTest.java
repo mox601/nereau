@@ -54,9 +54,11 @@ public class URLTagsDAOPostgresTest {
 		}
 	}
 	
+
 	
 	
-	@Ignore
+	
+	
 	@Test
 	public void testSaveNewTag() {
 		/* test per salvataggio di un URLTags con uno dei tag che non 

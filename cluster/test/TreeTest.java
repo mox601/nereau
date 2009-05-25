@@ -210,9 +210,7 @@ public class TreeTest {
 		i.addChild(l);
 		i.addChild(m);
 		
-		
 		System.out.println(tree.toString());
-
 		
 		clustering = tree.cutTreeAtSimilarity(0.2);
 		
@@ -223,11 +221,6 @@ public class TreeTest {
 			}
 			System.out.println("> ");
 		}	
-		
-		
-		
-		
-		
 		
 	}
 	
@@ -294,10 +287,6 @@ public class TreeTest {
 			System.out.println("> ");
 		}	
 		
-		
-		
-		
-		
 		Clustering clusteringMean = tree.calculateClusteringByMean();
 
 		System.out.println("Clustering ottimo by mean");
@@ -312,7 +301,14 @@ public class TreeTest {
 		
 	}
 
-	
+	@Test
+	public void testCutNullTree() {
+		Tree tree = new Tree();
+		tree.cutTreeAtSimilarity(0.8);
+		
+		
+		
+	}
 	
 	
 	

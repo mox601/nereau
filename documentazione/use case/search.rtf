@@ -13,18 +13,33 @@ espande la query nel modo nuovo\
 \
 \
 TODO\
-separazione dell'espansione nuova rispetto al calcolo delle matrici\
-per la valutazione le stelline funzionano? si e no\
-problema: non prende i tag giusti forse: nella post dove sono memorizzati? quando li prende? quando sono inseriti nella post? \
-$tags = $_POST['tags'];\
+separazione dell'espansione nuova rispetto al calcolo delle matrici DONE\
 \
-valuta la correttezza dell'algoritmo principale con claudio\
-salvataggio dei tag indipendente dal nereau vecchio\
-testing approfondito dell'espansione/salvataggio degli url visitati\
-voglio pi\'fa tag che collaborino all'espansione: \'e9 possibile?\
+per la valutazione le stelline funzionano? si per tutti: DONE\
+\
+modificare la query che usa la stored procedure in una query semplice\
+\
+problema: non prende i tag usati nell'espansione se cambio la pagina, scorrendo da 1 a 2. poi non funziona pi\'fa per nessuna etichetta FIXME. \
+\
+dimensione dei caratteri dei tag nelle etichette\
+\
+come distinguere le espansioni? nel database se ho cliccato su un'espansione tfidf ho i valori dei pesi dei tag tutti uguali a 0.0: o cambio la cosa oppure la sfrutto per fare statistiche su db. \
+\
+valuta la correttezza dell'algoritmo principale con claudio DONE\
+\
+scrittura sulla tabella cluster_sets deve essere fatta atomicamente, evitare che siano visibili stati intermedi della tabella. \
+SET TRANSACTION\
+\
+salvataggio dei tag indipendente dal nereau vecchio DONE\
+\
+testing approfondito dell'espansione e del salvataggio degli url visitati\
+\
+voglio numero maggiore di tag che collaborino all'espansione: \'e9 possibile?\
+nel file QueryExpander.java, vedi funzione selectRelevantTerms(). \
+\
 integrazione della sperimentazione di claudio\
-indice della tesi con le direttive di claudio\
-molta bibliografia\
+\
+indice della tesi con le direttive di claudio (molta bibliografia)\
 \
 \
 }

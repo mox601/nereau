@@ -131,13 +131,13 @@ public class Tree {
 	 * la gerarchia ad un certo valore di similarity */
 	public Clustering cutTreeAtSimilarity(double similarity) {
 		
-		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
 		/* 
 		 * TODO: clustering da un albero 
 		 * avendo una gerarchia, devo decidere a che livello tagliare e
 		 * ottenere il clustering effettivo dal quale accorpare poi i tag
 		 * di ogni cluster. 
-		 * Questa funzione deve restituire una lista di clusters (LinkedList<Node>). 
+		 * Questa funzione deve restituire un clustering, cioé una 
+		 * lista di clusters (LinkedList<Node>). 
 		 * In base alla similarity scelta, l'algoritmo scende nella gerarchia: 
 		 * incontrerá  dei nodi, ognuno con un valore di similarity. 
 		 * Se il valore del nodo é < di quello scelto, prosegue
@@ -145,6 +145,7 @@ public class Tree {
 		 * che sta visitando. 
 		 * */
 		
+		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
 		visitNodeAndGetClustering(this.getRoot(), similarity, clustering);
 		
 		HashSet<HashSet<Node>> clustersSet = new HashSet<HashSet<Node>>();
@@ -153,43 +154,50 @@ public class Tree {
 			HashSet setNode = new HashSet<Node>(cluster);
 			clustersSet.add(setNode);
 		}
-		
-		Clustering clusteringObject = new Clustering(clustersSet);
-
-		
+		Clustering clusteringObject = new Clustering(clustersSet);		
 		return clusteringObject;
 		
 	}
 	
 	void visitNodeAndGetClustering(Node node, double similarity, 
 			HashSet<HashSet<Node>> clustering) {
-		/* visita in preordine */
-		
-		if (node.getSimilarity().doubleValue() < similarity) {
-			
-			/* se é una foglia, con similarity piú bassa di quella 
-			 * specificata, comunque aggiungi la lista col nodo singolo */
-			if (node.isLeaf()) {
-				HashSet<Node> leaf = new HashSet<Node>();
-				leaf.add(node);
-				clustering.add(leaf);
-			}
-			
-			/* passa a visitare i figli, 
-			 * questo nodo é troppo generale per la similarity scelta.  */
-			for (Node child: node.getChildren()) {
-				visitNodeAndGetClustering(child, similarity, clustering);
-			}
+
+		if (node == null) {
+			return;
 		} else {
-			/* la similarity é = o > di quella scelta, 
-			 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
-			/* TODO: caso limite, se similarity é = a quella attuale. */
-//			System.out.println("similarity corrente: " + node.getSimilarity());
-			LinkedList<Node> leavesList = this.getLeaves(node);
-			HashSet<Node> leavesSet = new HashSet(leavesList);
-			clustering.add(leavesSet);
+
+
+			/* visita in preordine */
+
+			if (node.getSimilarity().doubleValue() < similarity) {
+
+				/* se é una foglia, con similarity piú bassa di quella 
+				 * specificata, comunque aggiungi la lista col nodo singolo */
+				if (node.isLeaf()) {
+					HashSet<Node> leaf = new HashSet<Node>();
+					leaf.add(node);
+					clustering.add(leaf);
+				}
+
+				/* passa a visitare i figli, 
+				 * questo nodo é troppo generale per la similarity scelta.  */
+				for (Node child: node.getChildren()) {
+					visitNodeAndGetClustering(child, similarity, clustering);
+				}
+			} else {
+				/* la similarity é = o > di quella scelta, 
+				 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
+				/* TODO: caso limite, se similarity é = a quella attuale. */
+				//			System.out.println("similarity corrente: " + node.getSimilarity());
+				LinkedList<Node> leavesList = this.getLeaves(node);
+				HashSet<Node> leavesSet = new HashSet(leavesList);
+				clustering.add(leavesSet);
+			}
+
+
+
+			return;
 		}
-		return;
 	}
 	
 		

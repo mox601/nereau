@@ -33,7 +33,6 @@ public class TagtfidfDAOPostgresTest {
 	
 	@Test
 	public void testRetrieveAllTags() {
-		/* TODO: demo claudio */
 		TagtfidfDAOPostgres tagsHandler = new TagtfidfDAOPostgres();
 		List<Tagtfidf> tagsList = new LinkedList<Tagtfidf>();
 		
