@@ -52,7 +52,7 @@ public class ClusterBuilder {
 		while (similarity >= 0 && clustersToMerge.size() > 1) {
 			logger.info("Similarity: " + similarity);
 			double similarityValue = (double) similarity / scala;
-			System.out.println("Similarity: " + similarity + " diviso 10 = " + similarityValue);
+			logger.info("Similarity: " + similarity + " diviso 10 = " + similarityValue);
 			/* calcola la somiglianza tra tutti i cluster attuali, 
 			 * e accorpa quelli con somiglianza uguale alla similarity */
 			
@@ -101,10 +101,6 @@ public class ClusterBuilder {
 					logger.info("ADDED cluster: " + newCluster.getValue());
 				}
 			}
-			
-			
-			
-			
 			
 			
 			/* esiste un solo nodo, che Ž la radice dell'albero. */
@@ -198,8 +194,8 @@ public class ClusterBuilder {
 				if (safeToAdd) {
 					listOfCouples.add(actualCouple);
 //					System.out.println("la coppia da fondere Ž: " + actualCouple);
-					logger.info("somiglianza tra " + firstCentroidTag.getTag() + 
-							" e " + secondCentroidTag.getTag() +": " + interClusterSimilarity);
+//					logger.info("somiglianza tra " + firstCentroidTag.getTag() + 
+//							" e " + secondCentroidTag.getTag() +": " + interClusterSimilarity);
 				}
 
 			}
@@ -214,9 +210,9 @@ public class ClusterBuilder {
 
 		boolean isSafe = true;
 		
-		System.out.println("la coppia " + coupleToTest); 
-		System.out.println(" pu— essere aggiunta in " + 
-				" " + listOfCouples + "?");
+//		System.out.println("la coppia " + coupleToTest); 
+//		System.out.println(" pu— essere aggiunta in " + 
+//				" " + listOfCouples + "?");
 		
 		String firstTagInCouple = coupleToTest.getFirst().getValue();
 		String secondTagInCouple = coupleToTest.getLast().getValue();
