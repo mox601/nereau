@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.Query;
 import model.RankedTag;
 import model.User;
 import model.VisitedURL;
@@ -126,7 +127,7 @@ public class SingleTest {
 	public Map<model.Query,Set<RankedTag>> performSecondTest() {
 
 		QueryExpander qef = new MultipleUserQueryExpander();
-		Map<model.Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, testUser);
+		Map<Query, Set<RankedTag>> expQueries = qef.expandQuery(testName, testUser);
 		//for(model.Query q: expQueries.keySet())
 		//	System.out.println(q + " ---> " + expQueries.get(q));
 		//System.out.println();

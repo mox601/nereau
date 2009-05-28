@@ -2,6 +2,10 @@ package test;
 
 public abstract class TestParams {
 	
+	
+	// root dei test: /Users/mox/Dati/Progetti/testingNereau
+	
+	
 	public final static String test_specs = "/home/olbion/delicious2";
 	public final static String dir = "/home/olbion/nereau_corpus";
 	public final static String data_dir = "/home/olbion/nereau_corpus/data";
