@@ -122,7 +122,7 @@ public class Tagtfidf extends Tag {
 	 * confronto tra due tag usando la coseno somiglianza */
 	public Double compareToTag(Tagtfidf tagToCompare) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("comparing tag: " + this.getTag() + " to tag: " + tagToCompare.getTag());
+//		logger.info("comparing tag: " + this.getTag() + " to tag: " + tagToCompare.getTag());
 		Double cosineSimilarity = 0.0;
 		Double numeratore = 0.0;
 		Iterator<Entry<String, Double>> iterator1 = this.getTagUrlsMap().entrySet().iterator();
@@ -138,7 +138,7 @@ public class Tagtfidf extends Tag {
 				numeratore = numeratore + (keyValue1.getValue() * value2);			
 			}
 				/* se nel secondo tag l'url cercato non Ž presente: 
-				 * avrebbe come occorrenza 0 e quindi si moltiplicherebbe il 
+				 * avrebbe come valore 0 e quindi si moltiplicherebbe il 
 				 * primo valore per 0: non Ž necessario aggiungere un caso else */	
 		}
 		
@@ -155,7 +155,7 @@ public class Tagtfidf extends Tag {
 		
 		cosineSimilarity = numeratore / denominatore;
 		
-		logger.info("calculated similarity: " + cosineSimilarity);
+//		logger.info("calculated similarity: " + cosineSimilarity);
 		
 		return cosineSimilarity;
 	}

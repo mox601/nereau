@@ -232,7 +232,7 @@ public class ClusterBuilder {
 	
 		}
 
-		System.out.println(isSafe);		
+//		System.out.println(isSafe);		
 		
 		return isSafe;
 	}

@@ -43,7 +43,10 @@ public class ClustererThread implements Runnable {
 
 			
 			try {
-				Thread.sleep(40000);
+				int pause = 40000;
+				logger.info("waiting " + pause + "msec");
+				Thread.sleep(pause);
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

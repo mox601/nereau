@@ -51,13 +51,13 @@ public class QueryExpander {
 		Query query = new Query(queryString);
 		Set<String> stemmedQueryTerms = query.getStemmedTerms();
 		
-		System.out.println("stemmed query terms: " + stemmedQueryTerms);
+		logger.info("stemmed query terms: " + stemmedQueryTerms);
 				
 		UserModel userModel = user.getUserModel();
 		Map<String,Map<RankedTag,Map<String,Double>>> subMatrix = 
 			userModel.getSubMatrix(stemmedQueryTerms);
 		
-		System.out.println("user model for submitted query: " + subMatrix);
+		logger.info("user model for submitted query: " + subMatrix);
 		
 		//logger.info("modello utente relativo alla query: " + subMatrix);
 		Set<ExpandedQuery> expandedQueries = null;

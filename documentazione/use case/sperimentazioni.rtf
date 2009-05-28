@@ -1,0 +1,172 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf460
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 sperimentazioni fatte da claudio: \
+sfrutta il tagging per generare il modello utente. \
+misura le prestazioni con le formule: \
+Precision = RN / N\
+Recall = RT / ALL\
+\
+dove \
+RN = numero di documenti corretti tra i primi N\
+N = parametro variabile tra 5 e 50\
+RT = numero di risultati corretti tra tutti quelli restituiti \
+ALL = numero di risultati restituiti\
+\
+crea inizialmente 12 triple (T, X, Y)\
+dove T \'e9 un termine polisemico, con significato diverso a seconda del contesto\
+X e Y sono due insiemi, di 5 tags ciascuno che descrivono sinteticamente il contesto semantico\
+T assume un significato distinto in ciascuno dei due contesti semantici. \
+\
+T nomi propri\
+usa wordnet per prendere termini molto polisemici, con synsets molto indipendenti gli uni dagli altri. \
+\
+per ogni tripla, reperisce dal web 400 documenti: \
+100 del contesto X, 50 training set + 50 test set\
+200 documenti di rumore\
+\
+sono estratti da delicious, cos\'ec siamo sicuri che esistano i tags visto che dobbiamo costruire il modello utente. \
+query a delicious con esclusione o congiunzione dei termini per separare i contesti semantici\
+ma delicious non indicizza i documenti corrispondenti ai bookmarks degli utenti: la ricerca testuale avviene su (titolo, url, annotazioni utente) quindi c'\'e9 pi\'fa rumore. \
+\
+poi si usa Lucene per indicizzare il contenuto testuale dei doc di rumore + test set usando le misure di tf * idf. \
+\
+poi per ogni tripla si creano due modelli utente, ognuno basato sui 50 documenti di training presenti per ogni contesto\
+per ogni modello utente si procede quindi ad un test isolato, utilizzando il termine T come query di prova e valutando le differenze di prestazioni tra ricerche normali e ricerche con espansione multipla. nel caso dell'espansione multipla, per ogni espansione si determina un valore di rilevanza sulla base del tag con rank pi\'fa elevato, e gli N risultati da mostrare sono ripartiti proporzionalmente ai valori calcolati. \
+\
+\
+\
+Risultati: \
+\
+\
+\
+sviluppi futuri: \
+testing in presenza di contesti diversi nello stesso modello utente: \
+vedere come si comporta nereau e nereau con clustering\
+\
+\
+\
+Progettazione del Testing: \
+ora nereau permette di sfruttare un profilo globale che cerca di far emergere relazioni tra tag, condivise dalla comunit\'e0 di utenti di nereau, per sfruttarle nelle espansioni di ogni utente ed ottenere espansioni su cluster di tags (combinati tra loro) molto correlati. \
+\
+I miglioramenti potrebbero essere: \
+1 - sfrutto il profilo globale per ottenere vantaggi nelle espansioni, individuando contesti semantici diversi e facendo espansioni diverse per ogni contesto. espansioni di qualit\'e0 pi\'f9 alta\
+2 - il punto due di claudio \'e9 vero? MAIL!\
+la seguente affermazione: \
+2)testare ulteriormente il sistema in caso di coesistenza di contesti all'interno dello stesso modello utente (dovrebbe essere la vera novit\uc0\u8730 \'86 del sistema!)\
+\'e9 vera? \
+cio\'e8 se ho capito bene, il tuo nereau, nel caso in cui un utente visiti tipo 50 documenti relativi ad amazon il negozio e dopo altri 50 relativi al fiume, dovrebbe \
+\
+\
+io voglio testare: \
+1 - quanto le espansioni nuove sono "diverse" da quelle vecchie, a\
+parit\'e0 di profilo utente? e le pagine dei risultati? migliori o\
+peggiori?\
+La prima si pu\'f3 misurare confrontando le espansioni e l'ordine delle\
+pagine a parit\'e0 di query (precision/recall).\
+\
+2 - i contesti semantici dei diversi insiemi di risultati (di due\
+espansioni nuove) sono realmente diversi, come dovrebbe suggerire il\
+fatto che i tag che hanno prodotto le espansioni si trovavano in due\
+clusters diversi?\
+si potrebbe calcolare quanto sono diverse le pagine ottenute con\
+un'espansioneNEW e quelle ottenute con un'altraNEW, per vedere se le\
+pagine dei risultati sono in diversi contesti semantici. forse si pu\'f3\
+verificare vedendo se appartengono alla directory 1 o alla directory 2\
+per come hai organizzato il test.\
+\
+3 - vedere in che modo l'aspetto sociale della folksonomia influisce\
+positivamente nelle espansioni dell'utente: l'utente A cerca un\
+termine in due contesti semantici diversi, mettendo le basi per il\
+profilo globale; l'utente B cerca un termine riferito ad uno dei due\
+contesti e dovrebbe ottenere due espansioni diverse (se i tag\
+associati nel suo profilo utente sono abbastanza).\
+\
+4 - interessante sarebbe verificare la query multi-termine, invece che\
+mono-termine: in nereau adesso si prendono i tag associati a tutti i\
+termini della query, non solo quelli comuni, e poi se ne fa il\
+clustering.\
+qui devo pensare come testare il miglioramento.\
+\
+\
+fabbrichiamo immondizia\
+\
+passi per la sperimentazione\
+\
+Progettazione dei test lucene VS nereauOLD VS nereauNEW %%%\
+La forza del nuovo nereau sta nel separare in clusters i tag e poi produrre espansioni con un insieme di tag, sommando le co-occorrenze tag-termini per ognuno di loro e alla fine scegliere solo i primi k termini rilevanti per l'espansione. \
+\
+separa i tag e li combina, invece di fare subito l'espansione per ogni tag. \
+Auspichiamo quindi che produca espansioni\
+- in diversi contesti semantici\
+- pi\'f9 utili all'utente, visto che individuando prima i due contesti semantici si permettono espansioni pi\'fa "diverse"\
+- che sfruttano la conoscenza globale e le associazioni tra tag derivate dall'uso del sistema degli altri utenti\
+- espansione con diverse parole invece che con una sola\
+\
+\
+testing su precision/recall classico, come \'e8 gi\'e0 fatto su nereau\
+scelgo dei termini ambigui che abbiano diversi contesti semantici\
+\
+\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\
+\
+Scelta del dataset\
+scaricamento del dataset e organizzazione\
+installazione lucene\
+TESTING: \
+\
+indicizzazione dei documenti con tf*idf\
+esecuzione di una ricerca, semplice\
+calcolo di misure sui risultati\
+esecuzione di due ricerche, semplice e nereau\
+confronto dei risultati\
+esecuzione di tre ricerche, semplice, nereau e nereau nuovo\
+confronto dei risultati, in base alle specifiche del testing\
+\
+\
+funzionamento di lucene: \
+http://www.lucidimagination.com/Community/Hear-from-the-Experts/Articles/Getting-Started-Lucene\
+un Document \'e9 il raggruppamento logico del contenuto = record nel db\
+Document \{Field0, Field1, ...\}\
+Ogni Field contiene contenuto effettivo + metadati che dicono come lucene deve trattarlo (filename, contenuto, etc). \
+se il Field \'e9 di tipo Index, indica se indicizzare per la ricerca e tokenizzarlo oppure no. \
+Si pu\'f3 fare anche il boosting di certe zone di html per esempio. \
+dopo che creo un documento, lo posso indicizzare. \
+\
+Indexing\
+serve a trasformare i Document in rappresentazione interna di Lucene. \
+L'indice \'e9 una collezione di Document ed \'e9 rappresentato dalla classe Directory\
+Indice = Directory (su file sono FSDirectory)\
+\
+IndexWriter serve a interagire con l'indicizzazione e aggiungere i Document all'indice. \
+L'IndexWriter scrive creando o accodando su una Directory, ma solo uno alla volta! \
+\
+\
+Searching\
+si usa la classe astratta Searcher e le sue implementazioni. \
+Il Searcher prende una Query (TermQuery, BooleanQuery, PhraseQuery) e restituisce dei risultati, rappresentati spesso da TopDoc. \
+\
+QueryParser si occupa di tradurre l'input utente in Query con una sintassi specifica. \
+\
+Il Searcher vede solo una fotografia dell'indice nell'istante in cui si crea. \
+\'c8 oneroso aprire un Searcher, quindi si usa tenerlo in cache\
+\
+Numero di hit \'e9 diverso dal numero di risultati restituiti\
+\
+Luke serve ad aprire l'index, i documenti e a fare ricerche di prova\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}
