@@ -145,7 +145,8 @@ public class SingleTest {
 	public Map<String,Double[]> performFirstTest() throws IOException, ParseException {
 		return this.performFirstTest(TestParams.docs_per_evaluation);
 	}
-	
+	// il parametro è il numero di documenti da considerare per la valutazione (?)
+	// evaluationResults è il numero di risultati iniziali che devo considerare
 	public Map<String,Double[]> performFirstTest(int evaluationResults) throws IOException, ParseException {
 		
 		
@@ -195,7 +196,7 @@ public class SingleTest {
 			//results senza espansione
 			for(int i=0; i<noExp.length(); i++) {
 				Document doc = noExp.doc(i);
-				//evaluationResults √© il numero di risultati iniziali che devo considerare
+				//evaluationResults è il numero di risultati iniziali che devo considerare
 				//se i √© minore, allora verifica se 
 				if(i<evaluationResults) {
 					System.out.println(doc.get("taggroup") + " " + doc.get("filename"));
@@ -225,6 +226,10 @@ public class SingleTest {
 			
 			
 			
+			
+			
+			/* RISULTATI DI NEREAU 0.7 OLD */
+			
 			//risultati suddivisi in base al numero e al peso delle espansioni che ottengo 
 			//da nereau. 
 			//search results with expansions (not so trivial...)
@@ -233,13 +238,16 @@ public class SingleTest {
 			bw.flush();
 			QueryExpander qef = new QueryExpander();
 			
+			//é necessario usare Map<Query, Set<RTags>> ????
 //			Map<Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, user);
 			Set<ExpandedQuery> expQueries = qef.expandQuery(testName, user);
 			
 			Set<Document> allDocs;
 			List<Document> selectedDocs = new LinkedList<Document>();
-			//TODO: change arrangeResult to work with Set<ExpandedQuery>
+			//TODO: change arrangeResult to work with Set<ExpandedQuery>? oppure è utile?
+			
 			allDocs = this.arrangeResults(expQueries,selectedDocs,evaluationResults);
+			//ho raccolto tutti i documenti che si ottengono facendo la query
 			
 			System.out.println(allDocs.size() + " distinct docs retrieved (" + selectedDocs.size() + " shown):");
 			bw.write(allDocs.size() + " distinct docs retrieved (" + selectedDocs.size() + " shown):\n");
@@ -280,6 +288,7 @@ public class SingleTest {
 
 	
 	//TODO: change arrangeResult to work with Set<ExpandedQuery>
+	// quale è lo scopo? 
 	private Set<Document> arrangeResults(Map<model.Query, Set<RankedTag>> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException, ParseException {
 
 		//risultati ottenuti a fronte di ogni expQuery
