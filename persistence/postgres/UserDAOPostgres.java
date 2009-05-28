@@ -52,6 +52,49 @@ public class UserDAOPostgres implements UserDAO {
 		
 		return result;
 	}
+	//utile SOLO per i test
+	public void saveUser(User user) throws PersistenceException {
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		try {
+			String username = user.getUsername();
+			String password = user.getPassword();
+			
+			statement = connection.prepareStatement(SQL_INSERT);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			
+			//set remaining attributes firstname,lastname,email,role,lastupdate
+			//è usato dai test, quindi non hanno senso questi valori
+			String firstname = "a";
+			String lastname = "a";
+			String email = "a@a";
+
+			statement.setString(3, firstname);
+			statement.setString(4, lastname);
+			statement.setString(5, email);
+			statement.setInt(6, 0);
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new PersistenceException(e.getMessage());
+		}
+		finally {
+			dataSource.close(statement);
+			dataSource.close(connection);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public Set<User> retrieveUsers() throws PersistenceException {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());

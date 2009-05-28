@@ -7,6 +7,8 @@ import model.User;
 public interface UserDAO {
 	
 	public boolean saveUser(String username, String password, String firstName, String lastName, String email) throws PersistenceException;
+	//utile per i test
+	public void saveUser(User user) throws PersistenceException;
 
 	public Set<User> retrieveUsers() throws PersistenceException;
 	

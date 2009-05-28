@@ -126,9 +126,6 @@ public class QueryExpander {
 			}
 			
 			
-			
-			
-			
 		}
 		/*
 		if(expansionTags.isEmpty()) {
@@ -146,6 +143,7 @@ public class QueryExpander {
 			expandedQueries.put(expandedQuery, setWithNullTag);
 		}
 		*/
+		
 		Set<ExpandedQuery> result = new HashSet<ExpandedQuery>();
 		for(ExpandedQuery eq: expandedQueries.keySet()) {
 			eq.setExpansionTags(expandedQueries.get(eq));

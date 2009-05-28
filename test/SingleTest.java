@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.ExpandedQuery;
 import model.Query;
 import model.RankedTag;
 import model.User;
@@ -49,7 +50,7 @@ public class SingleTest {
 	
 	
 	/*
-	√© un test che si fa per un termine in un contesto semantico, determinato dai tag che trovo come nome della
+	è un test che si fa per un termine in un contesto semantico, determinato dai tag che trovo come nome della
 	directory associata. 
 	dentro ogni directory (victoria, amazon... )
 	tagGroupDirs sono due cartelle che rappresentano i due significati della parola testName
@@ -124,10 +125,15 @@ public class SingleTest {
 	}
 	
 	@SuppressWarnings("unused")
-	public Map<model.Query,Set<RankedTag>> performSecondTest() {
+	public Set<ExpandedQuery> performSecondTest() {
 
 		QueryExpander qef = new MultipleUserQueryExpander();
-		Map<Query, Set<RankedTag>> expQueries = qef.expandQuery(testName, testUser);
+		//OLD
+//		Map<Query, Set<RankedTag>> expQueries = null;
+		//cambiato il metodo expandQuery di QueryExpander
+		Set<ExpandedQuery> expQueries = qef.expandQuery(testName, testUser);
+		
+		
 		//for(model.Query q: expQueries.keySet())
 		//	System.out.println(q + " ---> " + expQueries.get(q));
 		//System.out.println();
@@ -226,9 +232,13 @@ public class SingleTest {
 			bw.write("Results with Query Expansion:\n\n");
 			bw.flush();
 			QueryExpander qef = new QueryExpander();
-			Map<model.Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, user);
+			
+//			Map<Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, user);
+			Set<ExpandedQuery> expQueries = qef.expandQuery(testName, user);
+			
 			Set<Document> allDocs;
 			List<Document> selectedDocs = new LinkedList<Document>();
+			//TODO: change arrangeResult to work with Set<ExpandedQuery>
 			allDocs = this.arrangeResults(expQueries,selectedDocs,evaluationResults);
 			
 			System.out.println(allDocs.size() + " distinct docs retrieved (" + selectedDocs.size() + " shown):");
@@ -268,6 +278,8 @@ public class SingleTest {
 		
 	}
 
+	
+	//TODO: change arrangeResult to work with Set<ExpandedQuery>
 	private Set<Document> arrangeResults(Map<model.Query, Set<RankedTag>> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException, ParseException {
 
 		//risultati ottenuti a fronte di ogni expQuery
@@ -489,8 +501,8 @@ public class SingleTest {
 				if(!doc.getName().startsWith("tags_")) {
 					List<VisitedURL> vUrls = new LinkedList<VisitedURL>();
 					VisitedURL vUrl;
-					model.Query q = new model.Query(this.testName);
-					vUrl = new VisitedURL(doc.getAbsolutePath(),null,null,q);
+					model.Query query = new model.Query(this.testName);
+					vUrl = new VisitedURL(doc.getAbsolutePath(),null,null,query);
 					vUrls.add(vUrl);
 					System.out.print("extracting data from '" + doc.getName() + "'... ");
 					bw.write("extracting data from '" + doc.getName() + "'... ");
