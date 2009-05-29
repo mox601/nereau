@@ -63,10 +63,13 @@ public abstract class SubUrlTagFinderStrategy {
 			//TODO: aggiungo il tag ai tag normalizzati solo se Ž maggiore di una soglia
 			//vorrei abbassarla solo nel caso in cui prendo i tag per 
 			//il tag tfidf: ne voglio di piœ, quindi il valore MIN_TAG... 
-			//deve essere piœ piccolo, 0.2~0.3
+			//ne prendo la stessa quantitˆ. 
 		
 			//lo aggiungo comunque, senza if!
-//			if(newRanking>(ParameterHandler.MIN_TAGFINDER_RELATIVE_VALUE*relevance))
+			//ritorno a come era prima, per limitare i calcoli del nereau vecchio
+			//TODO: separare la quantitˆ di tag da estrarre nei casi old e new, 
+			//altrimenti l'old fa troppi calcoli con cos“ tanti tags
+			if(newRanking>(ParameterHandler.MIN_TAGFINDER_RELATIVE_VALUE*relevance))
 				normalizedRankedTags.add(rTag);
 			
 		}
