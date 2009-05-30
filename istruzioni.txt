@@ -63,6 +63,9 @@ pg_dump --file=<nome_file>.sql --format=p --no-owner --column-inserts --encoding
 //se il format Ž plain, non puoi usare il pg_restore
 //sul server c'Ž uno script che lo fa nella directory dumps/<data>
 
+dump in locale del db
+pg_dump --file=<filename> --format=p --no-owner --column-inserts --encoding=LATIN9 --no-privileges -U postgresuser -d nereau_dump
+
 Riga di comando per scaricare file da remoto: 
 scp -P 4422 web81_nereau@nereau.eunetwork.net:web/<file_remoto> <file_locale>
 

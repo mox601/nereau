@@ -276,6 +276,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		// restituisce i due nodi con l'antenato 
 		// che ha il valore piœ alto di similarity
 		LinkedList<Node> twoNodes = new LinkedList<Node>();
+		
 		//modifica anche un attributo dell'oggetto, che contiene l'antenato 
 		//comune che deve diventare il padre della coppia di nodi
 		this.ancestorFound = null;
@@ -296,14 +297,15 @@ public class TreeDAOPostgres implements TreeDAO {
 			logger.info("cerco l'ancestor dei nodi: " + 
 					couple.getFirst().toString() + " e " + 
 					couple.getLast().toString());
+			logger.info("found ancestor: " + ancestor.toString());
 			
-			if (actualSimilarity > maxSimilarity) {
+			if (actualSimilarity >= maxSimilarity) {
 				//aggiorno l'antenato, la sua similarity trovata
 				//e la coppia di nodi a cui corrisponde l'antenato con 
 				//similarity piœ alta
 				logger.info("found ancestor with similarity " + actualSimilarity +
 						", HIGHER than = " + maxSimilarity);
-				logger.info("ancestor: " + ancestor.getIdNode() +
+				logger.info("ancestor with highest sim: " + ancestor.getIdNode() +
 						"{ "+ ancestor.getLeft() + ", " + ancestor.getRight() + "}" + 
 						" similarity: " + actualSimilarity);
 				maxSimilarity = actualSimilarity;

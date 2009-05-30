@@ -314,7 +314,7 @@ public class QueryExpander {
 		Set<RankedTag> allExpansionTags = 
 			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
-		logger.info("tags (associati a qualche termine della query) per espansione: " + allExpansionTags);
+		logger.info("tags (associati a termini della query) per espansione: " + allExpansionTags);
 		
 		Map<ExpandedQuery, Set<RankedTag>> expandedQueries = 
 			new HashMap<ExpandedQuery, Set<RankedTag>> ();
@@ -357,13 +357,17 @@ public class QueryExpander {
 		
 		
 		/* per ora il taglio della similarity la faccio a 0.5 */
-		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(0.5);
+		double cutSimilarity = 0.3;
+		logger.info("cutting tree at: " + cutSimilarity);
+		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);
 		
 		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
 
 		int number = 0;
 		
+		
+		//TODO: da capire quali termini escono da ogni cluster
 		for (HashSet<Node> cluster: clustering.getClustering()) {
 			logger.info("< cluster " + number + " >");
 			/* per ogni tag del cluster devo sommare i vettori dei pesi 
