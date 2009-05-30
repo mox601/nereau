@@ -32,13 +32,13 @@ public class ClustererThread implements Runnable {
 			
 			//stampo il clustering ottenuto
 			logger.info("clustering ottenuto: " + clusterer.actualClusteringToString());
-			
-//			try {
-//				this.treeHandler.save(actualClustering);
-//			} catch (PersistenceException e) {
-//				e.printStackTrace();
-//			}		
-			
+
+
+			if (clusterer.getActualClustering() != null) {
+				logger.info("SAVING CLUSTERING ON DATABASE");
+				clusterer.saveActualClustering();
+			}
+
 			logger.info("FINE DEL CLUSTERING DEI TAG E SALVATAGGIO SUL DATABASE");
 
 			

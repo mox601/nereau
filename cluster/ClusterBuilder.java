@@ -16,7 +16,7 @@ import util.LogHandler;
 
 public class ClusterBuilder {
 	
-	/* TODO: dovrebbe essere un singleton? */
+	/* singleton */
 	
 	private List<Node> clustersToMerge;
 	private Tree actualClustering;
@@ -35,6 +35,7 @@ public class ClusterBuilder {
 	
 	public ClusterBuilder() {
 		this.clustersToMerge = new LinkedList<Node>();
+		this.treeHandler = new TreeDAOPostgres();
 	}
 	
 	/* metodo che costruisce i clusters iterativamente 
@@ -117,6 +118,11 @@ public class ClusterBuilder {
 		
 	}
 
+	
+	
+	
+	
+	
 	
 	
 	
@@ -274,6 +280,21 @@ public class ClusterBuilder {
 			clusterString = "clustering non costruito: nessun tag trovato";
 		}
 	return clusterString;
+	}
+	
+	
+	
+	
+
+	public void saveActualClustering() {
+		try {
+			this.treeHandler.save(actualClustering);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 
 }

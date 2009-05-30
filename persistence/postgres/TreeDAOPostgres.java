@@ -31,13 +31,13 @@ public class TreeDAOPostgres implements TreeDAO {
 	@Override
 	public void save(Tree clustering) throws PersistenceException {
 		/* salva il clustering (sotto forma di Tree) sul database, 
-		 * in una tabella che rappresenti la struttura gerarchica e
-		 * che permetta quando ho tipo 5 tag di estrarre una gerarchia
-		 * coerente con la gerarchia globale, ma limitata a quei soli 5 tags */
+		 * in una tabella che rappresenti la struttura gerarchica
+		 */
 		
 		/* deve essere una sola transazione atomica, altrimenti 
 		 * potrebbero esserci accessi alla tabella clusters 
-		 * quando si trova in uno stato inconsistente */
+		 * quando si trova in uno stato inconsistente 
+		 * SET TRANSACTION */
 		
 		Node root = clustering.getRoot();
 		
@@ -56,17 +56,10 @@ public class TreeDAOPostgres implements TreeDAO {
 			String deleteQuery = this.prepareStatementForDelete();
 			statement = connection.prepareStatement(deleteQuery);
 			statement.executeUpdate();
-			logger.info("deleting all clusters_sets rows: " + deleteQuery);
+			logger.info("DELETED all clusters_sets rows: " + deleteQuery);
 			
-			/* visita l'albero, e per ogni nodo che incontri inserisci una tupla 
-			 * nella tabella, costruita cos’: 
-			 * 
-			 * (id_cluster, 
-			 * id_tag (pu— essere null per i cluster),
-			 * similarity_value,  
-			 * id_cluster_father (pu— essere null per la radice))
-			 * 
-			 * Ž cambiata la tabella: ora uso i nested sets, la tabella Ž fatta cos’: 
+			/* visita l'albero, e per ogni nodo che incontri inserisci una tupla.  
+			 * la tabella Ž fatta cos’: 
 			 * (id, idtag, left, right, similarity)
 			 * 
 			 * */
@@ -129,9 +122,7 @@ public class TreeDAOPostgres implements TreeDAO {
 				e.printStackTrace();
 			}
 			// la somiglianza non ha senso se visito le foglie
-			similarity = new Float(1.0);
-//			System.out.println("assigned similarity 1.0 to a leaf");
-			
+			similarity = new Float(1.0);			
 		} else {
 			similarity = new Float(node.getSimilarity());
 		} 
