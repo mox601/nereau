@@ -228,6 +228,9 @@ public class SingleTest {
 			
 			
 			
+			
+			
+			
 			/* RISULTATI DI NEREAU 0.7 OLD */
 			
 			//risultati suddivisi in base al numero e al peso delle espansioni che ottengo 
@@ -239,13 +242,14 @@ public class SingleTest {
 			QueryExpander qef = new QueryExpander();
 			
 			//é necessario usare Map<Query, Set<RTags>> ????
+			//proviamo a cambiare questo codice, lasciando le espansioni invariate
 //			Map<Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, user);
 			Set<ExpandedQuery> expQueries = qef.expandQuery(testName, user);
 			
 			Set<Document> allDocs;
 			List<Document> selectedDocs = new LinkedList<Document>();
-			//TODO: change arrangeResult to work with Set<ExpandedQuery>? oppure è utile?
 			
+			//TODO: change arrangeResult to work with Set<ExpandedQuery>? oppure è utile?
 			allDocs = this.arrangeResults(expQueries,selectedDocs,evaluationResults);
 			//ho raccolto tutti i documenti che si ottengono facendo la query
 			
@@ -288,8 +292,7 @@ public class SingleTest {
 
 	
 	//TODO: change arrangeResult to work with Set<ExpandedQuery>
-	// quale è lo scopo? 
-	private Set<Document> arrangeResults(Map<model.Query, Set<RankedTag>> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException, ParseException {
+	private Set<Document> arrangeResults(Set<ExpandedQuery> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException, ParseException {
 
 		//risultati ottenuti a fronte di ogni expQuery
 		Map<model.Query,Hits> expHits = new HashMap<model.Query,Hits>();
@@ -304,25 +307,40 @@ public class SingleTest {
 		System.out.println("List of expanded queries:");
 		bw.write("List of expanded queries:\n");
 		bw.flush();
-		for(model.Query expQuery: expQueries.keySet()) {
+		
+		
+		//per ogni query tra le query espanse
+		for(model.Query expQuery: expQueries) {
 			QueryParser qp = new QueryParser("contents",new StemmingAnalyzer());
 			Hits expHit = this.is.search(qp.parse(expQuery.toString()));
 			expHits.put(expQuery, expHit);
 			double expQueryRank = 0.0;
-			for(RankedTag rt: expQueries.get(expQuery))
+			
+			//per ogni RankedTag presente nella query espansa corrente
+			for(RankedTag rt: expQuery.getExpansionTags())
 				if(rt.getRanking()>expQueryRank)
 					expQueryRank = rt.getRanking();
 			
 			expQueryRanks.put(expQuery, expQueryRank);
 			queryRankSum += expQueryRank;
 		}
+		//ho calcolato la queryRankSum, utile per pesare il valore dell'espansione?
+		
+		
 		double normalize = (double)evaluationResults/(queryRankSum);
+		
+		//aggiorna i ranks delle query espanse in base al valore normalize
 		for(model.Query expQuery: expQueryRanks.keySet()) {
 			double rank = expQueryRanks.get(expQuery);
 			rank *= normalize;
 			System.out.println(expQuery + "(rank=" + rank + ") for tags: " + expQueries.get(expQuery));
+			
+			
+			
 			bw.write(expQuery + "(rank=" + rank + ") for tags: " + expQueries.get(expQuery)+ "\n");
 			bw.flush();
+			
+			
 			expQueryRanks.put(expQuery, rank);
 		}
 		//ordino le query per rilevanza (scritto malissimo. pessimo.)

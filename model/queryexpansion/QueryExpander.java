@@ -392,8 +392,7 @@ public class QueryExpander {
 
 		int number = 0;
 		
-		
-		//TODO: da capire quali termini escono da ogni cluster
+	
 		for (HashSet<Node> cluster: clustering.getClustering()) {
 			logger.info("< cluster " + number + " >");
 			/* per ogni tag del cluster devo sommare i vettori dei pesi 

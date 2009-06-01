@@ -41,12 +41,9 @@ per ogni modello utente si procede quindi ad un test isolato, utilizzando il ter
 \
 Risultati: \
 \
-\
-\
 sviluppi futuri: \
 testing in presenza di contesti diversi nello stesso modello utente: \
 vedere come si comporta nereau e nereau con clustering\
-\
 \
 \
 Progettazione del Testing: \
@@ -92,7 +89,7 @@ clustering.\
 qui devo pensare come testare il miglioramento.\
 \
 \
-fabbrichiamo immondizia\
+"fabbrichiamo immondizia"\
 \
 passi per la sperimentazione\
 \
@@ -106,7 +103,6 @@ Auspichiamo quindi che produca espansioni\
 - che sfruttano la conoscenza globale e le associazioni tra tag derivate dall'uso del sistema degli altri utenti\
 - espansione usando diverse parole invece che con una sola: quante parole si usano nella query dei test attuali? si usa solo il termine T polisemico. come lo cambio?\
 - quanto cambia il clustering gerarchico durante l'utilizzo del sistema? evolve rapidamente o no? si stabilizza?\
-\
 \
 testing su precision/recall classico, come \'e8 gi\'e0 fatto su nereau\
 scelgo dei termini ambigui che abbiano diversi contesti semantici e valuto i risultati con lucene normale, nereau, nereauNEW. \
@@ -130,7 +126,51 @@ esecuzione di tre ricerche, semplice, nereau e nereau nuovo\
 confronto dei risultati, in base alle specifiche del testing\
 \
 \
-funzionamento di lucene: \
+\
+%%%%%%%%%%%%%%%\
+metodi da modificare per integrare i test 0.6 con la versione 0.7: \
+\
+expandQuery(testName, user);\
+arrangeResults(expQueries, selectedDocs, evaluationResults);\
+\
+\
+risultati vecchi, 0.6: \
+Map <Query, Set<RankedTag>>\
+e cio\'e9:\
+\
+classe Query: \
+Set<string> terms;\
+String queryString\
+Stemmer stemmer\
++\
+Set<RankedTag>\
+\
+\
+risultati nuovi, 0.7: \
+Set<ExpandedQuery> e cio\'e9: \
+\
+classe ExpandedQuery extends Query: \
+Map<String, Map<String, Integer>> expansionTerms\
+String expandedQueryString\
+Set<RankedTag> expansionTags\
+\
+\
+hanno le stesse informazioni, una estende l'altra, rendendo inutile che le venga associato l'insieme di RankedTag!!! gi\'e1 ce l'ho nell'expandedQuery!!!\
+\
+\
+SOLUZIONE: \
+se nella 0.6 accedo a Set<string> terms, nella 0.7 accedo a expansionTerms\
+se nella 0.6 accedo a String queryString, 0.7 accedo a expandedQueryString\
+se nella 0.6 accedo al Set<RankedTag> in Map<query, Set<RankedTag>>, nella 0.7 accedo a expansionTags\
+\
+\
+%%%%%%%%%%%%%%%\
+\
+\
+\
+\
+\
+funzionamento di LUCENE: \
 http://www.lucidimagination.com/Community/Hear-from-the-Experts/Articles/Getting-Started-Lucene\
 un Document \'e9 il raggruppamento logico del contenuto = record nel db\
 Document \{Field0, Field1, ...\}\
