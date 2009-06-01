@@ -162,11 +162,15 @@ public class QueryExpander {
 		Set<RankedTerm> rankedTerms = new HashSet<RankedTerm>();
 		double maxValue = 0;
 		for(String term: coOccurrenceValues.keySet()) {
+			//se il termine non era nei termini della query E il valore Ž maggiore del massimo, aggiorna il massimo
 			if(!stemmedQueryTerms.contains(term)) {
 				if(coOccurrenceValues.get(term)>maxValue)
 					maxValue = coOccurrenceValues.get(term);
 			}
 		}
+		/* se il valore del termine nelle co-occorrenze Ž maggiore del valore minimo assoluto per l'espansione, divide per il valore massimo
+		e se il valore cos’ modificato Ž maggiore del valore minimo relativo, se il termine non c'era nei termini della query, 
+		allora aggiungi il ranked term in rankedTerms */
 		for(String term: coOccurrenceValues.keySet()) {
 			double newValue = coOccurrenceValues.get(term);
 			if(newValue>ParameterHandler.MIN_QUERYEXPANDER_ABSOLUTE_VALUE) {
@@ -178,13 +182,19 @@ public class QueryExpander {
 			}
 		}
 		
-		//set of original terms
+		
+		
+		//original terms
 		Set<RankedTerm> originalTerms = new TreeSet<RankedTerm>();
 		for(String originalQueryTerm: stemmedQueryTerms)
 			originalTerms.add(new RankedTerm(originalQueryTerm,1.));
 		
 		//remove all original terms from expansion terms
 		rankedTerms.removeAll(originalTerms);
+		
+		
+//		System.out.println("original terms: " + originalTerms);
+//		System.out.println("ranked terms: " + rankedTerms);
 		
 		//check if query was really expanded
 		boolean queryWasExpanded = rankedTerms.size()>0;
@@ -204,6 +214,7 @@ public class QueryExpander {
 		Set<RankedTerm> orderedTerms = new TreeSet<RankedTerm> (rankedTerms);
 		
 		//select most relevant expansion terms
+		/* limita anche il numero di termini da usare nell'espansione */
 		Set<String> relevantTerms = new HashSet<String>();
 		
 		
@@ -329,7 +340,6 @@ public class QueryExpander {
 		try {
 			hierarchicalClustering = treeHandler.retrieve(tagsList);
 		} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
 			hierarchicalClustering = new Tree();
 			e.printStackTrace();
 		}
@@ -357,9 +367,25 @@ public class QueryExpander {
 		
 		
 		/* per ora il taglio della similarity la faccio a 0.5 */
-		double cutSimilarity = 0.3;
+		double cutSimilarity = 0.5;
 		logger.info("cutting tree at: " + cutSimilarity);
-		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);
+		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);		
+		logger.info("cut clustering: " + clustering.toString());
+
+		
+		
+		/* prova per il cambiamento del punto di taglio: works */
+		/*
+		for (double simCut = 1.0; simCut > 0.0; simCut = simCut - 0.1) {
+			
+			Clustering clusteringCut = hierarchicalClustering.cutTreeAtSimilarity(simCut);
+			System.out.println("clusteringCut tagliato a " + simCut +": " + clusteringCut.toString());
+			
+		}
+		
+		*/
+	
+	
 		
 		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
@@ -399,17 +425,29 @@ public class QueryExpander {
 
 				} //for term1
 				
+//				System.out.println("merging maps: ");
+//				System.out.println(clusterValues);
+//				System.out.println("AND");
+//				System.out.println(coOccurrenceValues4tag);
 				/* somma i valori di ogni rankedTag in una mappa clusterValues */
 				HashMap<String, Double> tempClusterValues = mergeMaps(clusterValues, coOccurrenceValues4tag); 
-				clusterValues = tempClusterValues;//TODO???
+				clusterValues = tempClusterValues;
+				
+			
+				
 			}//for node in cluster
+	
 			
 			/* crea un'espansione a partire da clusterValues */
+		
+//			System.out.println("current cluster's clusterValues: " + clusterValues.toString());
 			
-			/* TODO: seleziona solo alcuni termini rilevanti, i primi k? */
+			/* seleziona solo alcuni termini rilevanti */
 			Map<String,Map<String,Integer>> clusterExpansionTerms = 
 				this.selectRelevantTerms(stemmedQueryTerms, clusterValues);
 			
+//			System.out.println("termini per l'espansione scelti come rilevanti");
+//			System.out.println(clusterExpansionTerms);
 
 			/* se ho trovato dei termini con cui fare l'espansione, */
 
@@ -419,7 +457,7 @@ public class QueryExpander {
 				if(expandedQueries.containsKey(expandedQuery))
 					rankedTags = expandedQueries.get(expandedQuery);
 				else {
-					rankedTags = new HashSet<RankedTag>();//?
+					rankedTags = new HashSet<RankedTag>();
 					expandedQueries.put(expandedQuery, rankedTags);
 				}
 	
@@ -453,9 +491,8 @@ public class QueryExpander {
 		
 		
 		
-		/* TODO: OLD SCHOOL */
-		/* OLD SCHOOL: per ogni ranked tag  (far— quasi la stessa cosa per ogni 
-		 * tag del cluster)*/
+		/* OLD SCHOOL */
+		/* OLD SCHOOL: per ogni ranked tag  */
 //		for(RankedTag tag: expansionTags) {
 //			/* calcola i valori di cooccorrenza per il tag nella subMatrix */
 //			Map<String,Double> coOccurrenceValues4tag =

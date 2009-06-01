@@ -145,6 +145,12 @@ public class Tree {
 		 * che sta visitando. 
 		 * */
 		
+		
+		if(similarity > 1.0) {
+			similarity = 1.0;
+		}
+		
+		
 		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
 		visitNodeAndGetClustering(this.getRoot(), similarity, clustering);
 		
@@ -159,26 +165,27 @@ public class Tree {
 		
 	}
 	
+	
+	
 	void visitNodeAndGetClustering(Node node, double similarity, 
 			HashSet<HashSet<Node>> clustering) {
 
 		if (node == null) {
 			return;
 		} else {
-
-
 			/* visita in preordine */
-
 			if (node.getSimilarity().doubleValue() < similarity) {
 
-				/* se Ž una foglia, con similarity piœ bassa di quella 
+				/* se Ž una foglia con similarity piœ bassa di quella 
 				 * specificata, comunque aggiungi la lista col nodo singolo */
+				//????? come fa ad essere una foglia con similarity pi bassa???
 				if (node.isLeaf()) {
 					HashSet<Node> leaf = new HashSet<Node>();
 					leaf.add(node);
 					clustering.add(leaf);
 				}
 
+//				System.out.println("nodo " + node.getValue() + " troppo generale, passo ai figli");
 				/* passa a visitare i figli, 
 				 * questo nodo Ž troppo generale per la similarity scelta.  */
 				for (Node child: node.getChildren()) {
@@ -187,7 +194,7 @@ public class Tree {
 			} else {
 				/* la similarity Ž = o > di quella scelta, 
 				 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
-				/* TODO: caso limite, se similarity Ž = a quella attuale. */
+				/* caso limite, se similarity Ž = a quella attuale. */
 				//			System.out.println("similarity corrente: " + node.getSimilarity());
 				LinkedList<Node> leavesList = this.getLeaves(node);
 				HashSet<Node> leavesSet = new HashSet(leavesList);
