@@ -343,8 +343,11 @@ public class SingleTest {
 			
 			expQueryRanks.put(expQuery, rank);
 		}
+		
+		
+		
 		//ordino le query per rilevanza (scritto malissimo. pessimo.)
-		List<model.Query> temp = new LinkedList<model.Query>(expQueries.keySet());
+		List<model.Query> temp = new LinkedList<model.Query>(expQueries);
 		System.out.println("\nQueries (sorted by relevance):");
 		bw.write("\nQueries (sorted by relevance):\n");
 		bw.flush();
