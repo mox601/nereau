@@ -46,6 +46,7 @@ public class DeliciousSubUrlTagFinderStrategy extends
 //		logger.info("contenuto rilevante della pagina di delicious: " + pageContent);
 		
 		while(pageContent.indexOf("</li>")!=-1) {
+			
 			int tagValuesStart = pageContent.indexOf("<li") + ("<li").length();
 			int tagValuesEnd = pageContent.indexOf("</li>");
 			String tagValues = pageContent.substring(tagValuesStart,tagValuesEnd);
@@ -64,11 +65,30 @@ public class DeliciousSubUrlTagFinderStrategy extends
 			 * <span class="m" title="3 (2450)">
 			 * anche il posto in classifica e la frequenza */
 			
+			
+			/* è fatto così: 
+			 * <li class="">
+	            	<a href="/tag/diseases;_ylt=A0wNBqEJxSZKAH8B3hxvRh54;_ylv=3" title="18 (66)" class="showTag">
+		            	<span class="m" title="18 (66)">
+			            	diseases
+			            		<em>66</em>
+			            	</span>
+	            	</a>
+          		</li>
+			 * 
+			 * */
+			
 			/* ancora sbagliati: 03/6/2009 */
 			
-			String stringBeforeTag = "<span class=\"m\">";///!!!!!!!!!!!!!!!!!!
+			String stringBeforeTag = "<span class=\"m\" title=\"";
 			int nameStart = tagValues.indexOf(stringBeforeTag) + stringBeforeTag.length();
 			int nameEnd = tagValues.indexOf("<em>");
+			
+			String contentTag = tagValues.substring(nameStart, nameEnd);
+			
+			String endClass = "\">";
+			int tagStart = contentTag.indexOf(endClass) + endClass.length();
+			int tagEnd = nameEnd;
 			
 			String tagFrequencyValues = tagValues.substring(nameEnd);
 			
@@ -77,7 +97,9 @@ public class DeliciousSubUrlTagFinderStrategy extends
 			
 			String frequencyString = tagFrequencyValues.substring(frequencyStart,frequencyEnd);
 			int frequency = Integer.parseInt(frequencyString);
-			String name = tagValues.substring(nameStart,nameEnd);
+			
+			String name = tagValues.substring(tagStart,tagEnd);
+			
 			logger.info("tag: " + name + "(frequenza: " + frequencyString + ")");
 			extractedTags.put(name, frequency);
 			pageContent = pageContent.substring(tagValuesEnd + ("</li>").length());
