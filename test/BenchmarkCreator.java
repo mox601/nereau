@@ -50,7 +50,6 @@ public class BenchmarkCreator {
 		//for(File f: subDirs)
 		//	System.out.println(f.getName());
 		
-		
 //		this.retrieveTestPages = true;
 		
 		//iterate over tag groups
@@ -71,16 +70,14 @@ public class BenchmarkCreator {
 			
 			//generate delicious query to search appropriate bookmarks
 			//cambio le stringhe, cambio la modalità di ricerca!!
-			
-			String deliciousQuery = 
-				TestParams.delicious_prefix + word + " AND " + subDir.getName() + TestParams.delicious_suffix;
+			//OLD
+//			String deliciousQuery = 
+//				TestParams.delicious_prefix + word + " AND " + subDir.getName() + TestParams.delicious_suffix;
 			
 		
-			
-			
-			
-			
-			
+			String deliciousQuery = 
+				TestParams.delicious_prefix + word + " AND " + subDir.getName() + TestParams.delicious_suffix_mytags;
+								
 			
 //			System.out.println("delicious query before bad/good tags " + deliciousQuery);
 			
@@ -96,7 +93,6 @@ public class BenchmarkCreator {
 			//aggiungo uno spazio prima delle parentesi chiuse
 			deliciousQuery = deliciousQuery.replace(")", " )");
 			
-	
 			System.out.println("deliciousQuery: " + deliciousQuery);
 			
 			bw.write("deliciousQuery: " + deliciousQuery + "\n");
@@ -161,8 +157,8 @@ public class BenchmarkCreator {
 		}
 		for(String badTag: badTags)
 			buf.append("-tag:" + badTag + ' ');
-
-		buf.append(TestParams.delicious_suffix);
+		//	only in mytags
+		buf.append(TestParams.delicious_suffix_mytags);
 		
 		return buf.toString();
 	}
@@ -247,14 +243,20 @@ public class BenchmarkCreator {
 	        
 			Set<RankedTag> rtags = new HashSet<RankedTag>();
 			
+			
+			
+			
 	        //download and store related tags
 	        if(trainingDoc) {
 		        System.out.println("with related tags (training set)...");
 		        writer.write("with related tags (training set)...\n");
 		        writer.flush();
+		        //TODO: strategia per trovare i tags!!
+		        //perché CompositeSubUrlTagFinderStrategy e non un'altra? è rotta?
+		        // exacturl = true
 				TagFinder tf = new TagFinder(new CompositeSubUrlTagFinderStrategy(),true);
 				rtags = tf.findTags(urlString);
-				//per ogni url almeno un tag!
+				//per ogni url almeno un tag! OK
 				if(rtags.size()<=1) {
 					System.out.println("no tags retrieved for training doc! (discarded)");
 					writer.write("no tags retrieved for training doc! (discarded)\n");
@@ -371,7 +373,8 @@ public class BenchmarkCreator {
 		deliciousQuery = deliciousQuery.replaceAll("\\(", "%28");
 		deliciousQuery = deliciousQuery.replaceAll("tag:", "tag%3A");
 		deliciousQuery = deliciousQuery.replaceAll("\\)", "%29");
-		deliciousQuery = deliciousQuery.replaceAll(" ", "%20");
+//		deliciousQuery = deliciousQuery.replaceAll(" ", "%20");
+		deliciousQuery = deliciousQuery.replaceAll(" ", "+");
 		
 		System.out.println("query sottomessa a delicious, filtrata: ");
 		System.out.println(deliciousQuery);

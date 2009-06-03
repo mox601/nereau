@@ -16,6 +16,9 @@ public class DeliciousSubUrlTagFinderStrategy extends
 	public DeliciousSubUrlTagFinderStrategy() {
 		super(DELICIOUS_URL_STARTSWITH,DELICIOUS_URL_ENDSWITH);
 	}
+	
+	
+	//FIXME: BROKEN!!
 
 	protected Map<String, Integer> extractTags(String pageContent) {
 		
@@ -60,7 +63,10 @@ public class DeliciousSubUrlTagFinderStrategy extends
 			/* nello span class ora c'Ž: 
 			 * <span class="m" title="3 (2450)">
 			 * anche il posto in classifica e la frequenza */
-			String stringBeforeTag = "<span class=\"m\">";
+			
+			/* ancora sbagliati: 03/6/2009 */
+			
+			String stringBeforeTag = "<span class=\"m\">";///!!!!!!!!!!!!!!!!!!
 			int nameStart = tagValues.indexOf(stringBeforeTag) + stringBeforeTag.length();
 			int nameEnd = tagValues.indexOf("<em>");
 			
