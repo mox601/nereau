@@ -61,6 +61,7 @@ nohup ./start.sh  > nohup.out &
 dump del database in remoto
 pg_dump --file=<nome_file>.sql --format=p --no-owner --column-inserts --encoding=LATIN9 --no-privileges
 //se il format Ž plain, non puoi usare il pg_restore
+//per il restore si fa con pgadmin III
 //sul server c'Ž uno script che lo fa nella directory dumps/<data>
 
 dump in locale del db

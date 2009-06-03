@@ -44,12 +44,18 @@ chi \'e9 che cambia lo style dei div di destra, dove sono contenuti i results?\
 non cambia bene a partire dall'ultimo di nereau vecchio TODO ??\
 il javascript sulla SX dovrebbe funzionare... \
 \
+riduci il numero di tag visualizzati nelle etichette dei risultati DONE: max 8 tags per label, fatto nell'interfaccia. \
+\
+le espansioni sono diverse se effettuate durante il clustering!!! FIXME\
+\
 problema: non prende i tag usati nell'espansione se cambio la pagina, scorrendo da 1 a 2. poi non funziona pi\'fa per nessuna etichetta FIXME. \
 \
 scrittura sulla tabella cluster_sets deve essere fatta atomicamente, evitare che siano visibili stati intermedi della tabella. TODO\
 SET TRANSACTION\
 ma devo capire come organizzare la transazione: \
 ho uno statement per ogni INSERT (tra l'altro \'e8 ricorsivo per la visita dell'albero) e uno per la DELETE iniziale. \
+\
+restore del database in remoto per far funzionare TODO\
 \
 indice della tesi con le direttive di claudio (molta bibliografia)\
 \

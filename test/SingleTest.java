@@ -244,18 +244,21 @@ public class SingleTest {
 			//é necessario usare Map<Query, Set<RTags>> ????
 			//proviamo a cambiare questo codice, lasciando le espansioni invariate
 //			Map<Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, user);
+			/* ****** ESPANSIONE OLD NEREAU 0.7 ****** */
 			Set<ExpandedQuery> expQueries = qef.expandQuery(testName, user);
 			
 			Set<Document> allDocs;
 			List<Document> selectedDocs = new LinkedList<Document>();
 			
-			//TODO: change arrangeResult to work with Set<ExpandedQuery>? oppure è utile?
+			//changed arrangeResult to work with Set<ExpandedQuery>
 			allDocs = this.arrangeResults(expQueries,selectedDocs,evaluationResults);
 			//ho raccolto tutti i documenti che si ottengono facendo la query
 			
 			System.out.println(allDocs.size() + " distinct docs retrieved (" + selectedDocs.size() + " shown):");
 			bw.write(allDocs.size() + " distinct docs retrieved (" + selectedDocs.size() + " shown):\n");
 			bw.flush();
+			
+			/* ho estratto i documenti, ora calcolo le misure di precision e recall */
 			
 			
 			countFirstCorrectResults = 0;
@@ -291,7 +294,7 @@ public class SingleTest {
 	}
 
 	
-	//TODO: change arrangeResult to work with Set<ExpandedQuery>
+	// changed arrangeResult to work with Set<ExpandedQuery>
 	private Set<Document> arrangeResults(Set<ExpandedQuery> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException, ParseException {
 
 		//risultati ottenuti a fronte di ogni expQuery
@@ -333,11 +336,11 @@ public class SingleTest {
 		for(model.Query expQuery: expQueryRanks.keySet()) {
 			double rank = expQueryRanks.get(expQuery);
 			rank *= normalize;
-			System.out.println(expQuery + "(rank=" + rank + ") for tags: " + expQueries.get(expQuery));
+			System.out.println(expQuery + "(rank=" + rank + ") for tags: " + expQuery.toString());
 			
 			
 			
-			bw.write(expQuery + "(rank=" + rank + ") for tags: " + expQueries.get(expQuery)+ "\n");
+			bw.write(expQuery + "(rank=" + rank + ") for tags: " + expQuery.toString() + "\n");
 			bw.flush();
 			
 			
@@ -345,6 +348,8 @@ public class SingleTest {
 		}
 		
 		
+		
+		/* riordino le query per rilevanza */
 		
 		//ordino le query per rilevanza (scritto malissimo. pessimo.)
 		List<model.Query> temp = new LinkedList<model.Query>(expQueries);

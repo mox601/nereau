@@ -1,0 +1,85 @@
+scaletta per prefuse
+http://prefuse.org/doc/manual/introduction/example/
+http://prefuse.org/doc/api/
+
+/* load data */
+
+/* the visualization */
+
+/* the renderers */
+
+/* the processing actions */
+
+/* the display */
+
+/* launch the visualization */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
