@@ -58,21 +58,35 @@ riga di comando per lanciarlo
 nohup ./start.sh  > nohup.out &
 
 
-dump del database in remoto
+
+%%%%%%%%%%%%%%% REMOTO %%%%%%%%%%%%%%%%%%%%%%%
+DUMP del database in remoto
 pg_dump --file=<nome_file>.sql --format=p --no-owner --column-inserts --encoding=LATIN9 --no-privileges
 //se il format Ž plain, non puoi usare il pg_restore
 //per il restore si fa con pgadmin III
 //sul server c'Ž uno script che lo fa nella directory dumps/<data>
+formato tar
+pg_dump --file=nereau_dump_old_03062009 --format=t -c --column-inserts --encoding=LATIN9 --no-owner --no-privileges
 
-dump in locale del db
-pg_dump --file=<filename> --format=p --no-owner --column-inserts --encoding=LATIN9 --no-privileges -U postgresuser -d nereau_dump
 
-Riga di comando per scaricare file da remoto: 
-scp -P 4422 web81_nereau@nereau.eunetwork.net:web/<file_remoto> <file_locale>
+RESTORE in remoto: 
+pg_dump --dbname=web81_nereau --format=t --no-owner -x -U web81_nereau
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Restore in locale - si fa con strumento di pgadmin III
+%%%%%%%%%%%%%%% LOCALE %%%%%%%%%%%%%%%%
+
+DUMP in locale del db formato TAR
+pg_dump --file=nereau_dump_03062009 --format=t -c --column-inserts --encoding=LATIN9 --no-owner --no-privileges -U postgresuser nereau_dump
+
+
+RESTORE in locale - si fa con strumento di pgadmin III
 pg_restore --format=t dumps/2009-03-04/earth.eushells.net.17\:16\:08.pg.sql
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Riga di comando per SCARICARE file da remoto: 
+scp -P 4422 web81_nereau@nereau.eunetwork.net:web/<file_remoto> <file_locale>
 
 
 %%%%%%% Configurare web81nereau in locale %%%%%%%

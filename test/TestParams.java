@@ -10,11 +10,14 @@ public abstract class TestParams {
 	public final static String dir = 				"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus";
 	public final static String data_dir = 			"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus/data";
 	public final static String index_dir = 			"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus/index";
-	public final static String noise_dir = 			"//Users/mox/Dati/Progetti/testingNereau/nereau_corpus/noise";
+	public final static String noise_dir = 			"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus/noise";
 	public final static String training_dir = 		"training";
 	public final static String test_dir = 			"test";
 	public final static String delicious_prefix = 	"http://delicious.com/search?p=";
 	public final static String delicious_suffix = 	"&context=all&lc=1&page=";
+	public final static String delicious_suffix_mytags = 	"&u=mox601&chk=&context=userposts&fr=del_icio_us&lc=";
+	public final static String delicious_search = "http://delicious.com/search?p=cancer+(tag%3Amedicine+OR+tag%3Ahealth+)+-tag%3Ahoroscope+-tag%3Aastrology1&u=mox601&chk=&context=userposts&fr=del_icio_us&lc=";
+
 	//old seem to work. useless: 
 //	public final static String delicious_suffix_new = "&u=&chk=&context=main&fr=del_icio_us&lc=0";
 	//int

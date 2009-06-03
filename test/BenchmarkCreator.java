@@ -34,12 +34,12 @@ public class BenchmarkCreator {
 	private File logFile, noiseLogFile;
 	private FileWriter fw, nfw;
 	private BufferedWriter bw, nbw;
+	// to switch delicious url string, it's different
 	
 	public BenchmarkCreator(String word, List<Set<String>> tagGroups) throws IOException {
 		super();
 		this.word = word;
 		this.tagGroups = tagGroups;
-
 
 	}
 	
@@ -49,6 +49,9 @@ public class BenchmarkCreator {
 		Map<File,Set<String>> subDirs = this.createSubDirectoriesAndLogs(word,tagGroups);
 		//for(File f: subDirs)
 		//	System.out.println(f.getName());
+		
+		
+//		this.retrieveTestPages = true;
 		
 		//iterate over tag groups
 		for(File subDir: subDirs.keySet()) {
@@ -67,8 +70,19 @@ public class BenchmarkCreator {
 			
 			
 			//generate delicious query to search appropriate bookmarks
+			//cambio le stringhe, cambio la modalitˆ di ricerca!!
+			
 			String deliciousQuery = 
 				TestParams.delicious_prefix + word + " AND " + subDir.getName() + TestParams.delicious_suffix;
+			
+		
+			
+			
+			
+			
+			
+			
+//			System.out.println("delicious query before bad/good tags " + deliciousQuery);
 			
 			Set<String> badTags = null;
 			for(Set<String> tagGroup: tagGroups)
@@ -78,13 +92,18 @@ public class BenchmarkCreator {
 				}
 			
 			deliciousQuery = this.generateDeliciousQuery(goodTags,badTags);
+
+			//aggiungo uno spazio prima delle parentesi chiuse
+			deliciousQuery = deliciousQuery.replace(")", " )");
 			
+	
 			System.out.println("deliciousQuery: " + deliciousQuery);
+			
 			bw.write("deliciousQuery: " + deliciousQuery + "\n");
 			bw.flush();
 			
 			//select urls whose content has to be downloaded
-			List<String> selectedUrls = this.selectUrls(deliciousQuery,TestParams.docs_list);
+			List<String> selectedUrls = this.selectUrls(deliciousQuery, TestParams.docs_list);
 			System.out.println("Retrieved " + selectedUrls.size() + " urls.");
 			bw.write("Retrieved " + selectedUrls.size() + " urls.\n\n");
 			bw.flush();
@@ -328,11 +347,9 @@ public class BenchmarkCreator {
 				break;
 			pageNumber++;
 			
-		
 			//populate the result list
 			result.addAll(deliciousList.subList(0, 
 					Math.min(deliciousList.size(), listSize-result.size())));
-		
 		}
 		
 		return result;
@@ -342,13 +359,26 @@ public class BenchmarkCreator {
 	private List<String> getDeliciousList(String deliciousQuery) 
 		throws IOException{
 
+		
+		System.out.println("delicious query before char replacement: " + deliciousQuery);
+		String example = "cancer+(tag:medicine+OR+tag:health+)+-tag:horoscope+-tag:astrology";
+
+		//rimpiazza gli spazi con +
+		
+		String example2 = "cancer+(tag%3Amedicine+OR+tag%3Ahealth+)+-tag%3Ahoroscope+-tag%3Aastrology";
+		
 		List<String> deliciousList = new LinkedList<String>();
 		deliciousQuery = deliciousQuery.replaceAll("\\(", "%28");
 		deliciousQuery = deliciousQuery.replaceAll("tag:", "tag%3A");
 		deliciousQuery = deliciousQuery.replaceAll("\\)", "%29");
 		deliciousQuery = deliciousQuery.replaceAll(" ", "%20");
 		
-//		System.out.println("query sottomessa a delicious, filtrata?: " + deliciousQuery);
+		System.out.println("query sottomessa a delicious, filtrata: ");
+		System.out.println(deliciousQuery);
+		
+	
+		
+
 		//works
 
 		Scanner scanner = new Scanner(new URL(deliciousQuery).openStream());
@@ -378,14 +408,15 @@ public class BenchmarkCreator {
 		//retrieve document list
 		//estrazione della lista dei documenti contenuti nella pagina dei risultati
 		while(pageContent.indexOf("bookmark  NOTHUMB")>=0) {
-			
 			//find next url
-			int startUrl = pageContent.indexOf("<a rel=\"nofollow\" class=\"taggedlink\" href=\"") +
-			("<a rel=\"nofollow\" class=\"taggedlink\" href=\"").length();
+			//aggiunto uno spazio dopo taggedlink!!
+			String urlContext = "<a rel=\"nofollow\" class=\"taggedlink \" href=\"";
+			int startUrl = pageContent.indexOf(urlContext) +
+			(urlContext).length();
 			int endUrl = pageContent.indexOf("\" >", startUrl);
 			String urlString = pageContent.substring(startUrl, endUrl);
 			deliciousList.add(urlString);
-			//System.out.println("url retrieved: " + urlString);
+			System.out.println("url retrieved: " + urlString);
 			pageContent = pageContent.substring(endUrl);
 			
 		}
@@ -463,15 +494,15 @@ public class BenchmarkCreator {
 		Set<String> group2 = new HashSet<String>();
 		group1.add("health");
 		group1.add("medicine");
-		group1.add("astrology");
+		group2.add("astrology");
 		group2.add("horoscope");
 		tagGroups.add(group1);
 		tagGroups.add(group2);
 		//crea un BenchMarkCreator con (parola, lista di tags) 
 		//per creare un contesto semantico con i tags
 		BenchmarkCreator bc = new BenchmarkCreator("cancer",tagGroups);
-		//bc.retrieveTestPages();
-		bc.addNoise();
+		bc.retrieveTestPages();
+//		bc.addNoise();
 		
 	}
 

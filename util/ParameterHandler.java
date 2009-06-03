@@ -7,7 +7,7 @@ public class ParameterHandler {
 	//persistence
 	public static final String DATABASE_CONFIG = "files/database_config";
 	
-	public static final String DB_URI = "jdbc:postgresql://localhost/nereau_backup";
+	public static final String DB_URI = "jdbc:postgresql://localhost/nereau_dump";
 	public static final String DB_USERNAME = "postgres";
 	public static final String DB_PASSWORD = "prova";
 

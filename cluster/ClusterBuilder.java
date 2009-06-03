@@ -283,12 +283,14 @@ public class ClusterBuilder {
 	}
 	
 	
-	
-	
 
 	public void saveActualClustering() {
 		try {
-			this.treeHandler.save(actualClustering);
+			
+			if (actualClustering.getRoot() != null) {
+				this.treeHandler.save(actualClustering);
+			}
+			
 		} catch (PersistenceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
