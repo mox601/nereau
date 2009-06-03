@@ -98,7 +98,19 @@ public class CombineTasks {
 		//fw.close();
 
 	}
-
+	
+	/*
+	
+	testName1
+	[tag1, tag2, tag3, tag4]
+	[tag5, tag6]
+	testName2
+	[tag7, tag8, tag9]
+	testName3
+	...
+	
+	
+	 */
 	private static Map<String, List<Set<String>>> parseTests() throws FileNotFoundException {
 
 		Map<String, List<Set<String>>> result = new HashMap<String, List<Set<String>>>();

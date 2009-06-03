@@ -102,8 +102,6 @@ public class SingleTest {
 		this.fw = new FileWriter(logFile);
 		this.bw = new BufferedWriter(fw);
 		
-		
-		
 		System.out.println(this.testName.toUpperCase() + "\n\n");
 		bw.write(this.testName.toUpperCase() + "\n\n\n");
 		bw.flush();

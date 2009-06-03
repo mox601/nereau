@@ -15,7 +15,7 @@ public abstract class TestParams {
 	public final static String test_dir = 			"test";
 	public final static String delicious_prefix = 	"http://delicious.com/search?p=";
 	public final static String delicious_suffix = 	"&context=all&lc=1&page=";
-	//old works. useless: 
+	//old seem to work. useless: 
 //	public final static String delicious_suffix_new = "&u=&chk=&context=main&fr=del_icio_us&lc=0";
 	//int
 	public final static int docs_per_tag_group = 100;

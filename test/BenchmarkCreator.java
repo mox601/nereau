@@ -196,6 +196,7 @@ public class BenchmarkCreator {
 			}
 		}
 		else {
+			//problemi con il contenuto dell'urlString: prende molto html
 			System.out.println("url WITHOUT file extension: " + urlString);
 			writer.write("url WITHOUT file extension: " + urlString + '\n');
 			writer.flush();
@@ -346,6 +347,10 @@ public class BenchmarkCreator {
 		deliciousQuery = deliciousQuery.replaceAll("tag:", "tag%3A");
 		deliciousQuery = deliciousQuery.replaceAll("\\)", "%29");
 		deliciousQuery = deliciousQuery.replaceAll(" ", "%20");
+		
+//		System.out.println("query sottomessa a delicious, filtrata?: " + deliciousQuery);
+		//works
+
 		Scanner scanner = new Scanner(new URL(deliciousQuery).openStream());
 		StringBuffer buf = new StringBuffer();
 		
@@ -355,17 +360,23 @@ public class BenchmarkCreator {
 		int tempIndex = buf.indexOf("context-bookmarklist");
 		if(tempIndex<0)
 			return deliciousList;
+		//indice del primo blocco del primo post
 		int startIndex = buf.indexOf("<li",tempIndex);
+		//indice della paginazione, per avanzare nei risultati
 		int endIndex = buf.lastIndexOf("pagination");
+		//indici del contenuto della pagina dei risultati di delicious
 		System.out.println("startIndex=" + startIndex + ", endIndex=" + endIndex);
+			
 		if(startIndex<0 || endIndex<0 || startIndex>=endIndex)
 			return deliciousList;
 		
+		//estrai solo il contenuto interessante
 		String pageContent = buf.substring(startIndex, endIndex);
 		//System.out.println("analyzing delicious page content...");
 		//System.out.println("index of bookmark NOTHUMB = " + pageContent.indexOf("bookmark NOTHUMB"));
 		
 		//retrieve document list
+		//estrazione della lista dei documenti contenuti nella pagina dei risultati
 		while(pageContent.indexOf("bookmark  NOTHUMB")>=0) {
 			
 			//find next url
