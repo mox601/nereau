@@ -86,19 +86,28 @@ public class DeliciousSubUrlTagFinderStrategy extends
 			
 			String contentTag = tagValues.substring(nameStart, nameEnd);
 			
+//			System.out.println("contenuto dopo span class=m title= " + contentTag);
+			
 			String endClass = "\">";
 			int tagStart = contentTag.indexOf(endClass) + endClass.length();
 			int tagEnd = nameEnd;
 			
 			String tagFrequencyValues = tagValues.substring(nameEnd);
 			
+					
 			int frequencyStart = tagFrequencyValues.indexOf("<em>") + ("<em>").length();
 			int frequencyEnd = tagFrequencyValues.indexOf("</em>");
 			
 			String frequencyString = tagFrequencyValues.substring(frequencyStart,frequencyEnd);
 			int frequency = Integer.parseInt(frequencyString);
 			
-			String name = tagValues.substring(tagStart,tagEnd);
+//			System.out.println("frequenza del tag: " + frequencyString);
+			
+//			String name = tagValues.substring(tagStart,tagEnd);
+			String name = contentTag.substring(tagStart);
+
+			
+//			System.out.println("tag trovato: " + name);
 			
 			logger.info("tag: " + name + "(frequenza: " + frequencyString + ")");
 			extractedTags.put(name, frequency);

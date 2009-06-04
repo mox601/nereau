@@ -50,6 +50,7 @@ public class BenchmarkCreator {
 		//for(File f: subDirs)
 		//	System.out.println(f.getName());
 		
+		// aggiunta mia
 //		this.retrieveTestPages = true;
 		
 		//iterate over tag groups
@@ -67,18 +68,15 @@ public class BenchmarkCreator {
 				if(!trainingDir.mkdir())
 					throw new IOException();
 			
-			
 			//generate delicious query to search appropriate bookmarks
-			//cambio le stringhe, cambio la modalità di ricerca!!
+			//cambio le stringhe, cambio la modalità di ricerca!! altrimenti non funziona
 			//OLD
 //			String deliciousQuery = 
 //				TestParams.delicious_prefix + word + " AND " + subDir.getName() + TestParams.delicious_suffix;
 			
-		
 			String deliciousQuery = 
 				TestParams.delicious_prefix + word + " AND " + subDir.getName() + TestParams.delicious_suffix_mytags;
 								
-			
 //			System.out.println("delicious query before bad/good tags " + deliciousQuery);
 			
 			Set<String> badTags = null;
@@ -104,21 +102,36 @@ public class BenchmarkCreator {
 			bw.write("Retrieved " + selectedUrls.size() + " urls.\n\n");
 			bw.flush();
 			
-			int stored=0;
 			//casually choose between test and training set (HORRIBLE CODE!)
+			//faccio una lista di interi, che sono gli indici dei documenti
+			//trainingSet e testSet
+			//100 docs per tag
 			List<Integer> indList = new LinkedList<Integer>();
 			for(int i=0; i<TestParams.docs_per_tag_group; i++)
 				indList.add(i);
+			
+//			System.out.println("indList prima del remove: " + indList);
+			
 			Set<Integer> trainingSet = new HashSet<Integer>();
 			Random random = new Random();
+			//levo 50 interi di training dalla indList
 			for(int i=0; i<TestParams.training_docs_per_tag_group; i++)
 				trainingSet.add(indList.remove(random.nextInt(indList.size())));
-			indList = null;
 			
+			
+//			System.out.println("indList dopo del remove: " + indList);
+			System.out.println("numero di docs per trainingSet: " + trainingSet.size());
+
+			indList = null;
+
+			int stored=0;
 			//retrieve and store urls with associated tags
 			for(String urlString: selectedUrls) {
+				//nel training set c'é l'indice corrente?
+				//se si, allora é un training doc, altrimenti é di test
 				boolean trainingDoc = trainingSet.contains(stored);
 				File storingDir = trainingDoc ? trainingDir : testDir;
+				//codice che scarica effettivamente la pagina su disco
 				if(this.retrieveUrlWithTags(urlString,storingDir,trainingDoc,bw)) {
 					stored++;
 					System.out.println(stored + " docs stored.");
@@ -224,8 +237,6 @@ public class BenchmarkCreator {
 			//fix timeout
 			urlConnection.setConnectTimeout(ParameterHandler.URL_TIMEOUT);
 			
-
-			
 			//download parse and store web document
 			System.out.print("parsing and saving '" + urlString + "'... ");
 			writer.write("parsing and saving '" + urlString + "'... ");
@@ -242,17 +253,13 @@ public class BenchmarkCreator {
 			}
 	        
 			Set<RankedTag> rtags = new HashSet<RankedTag>();
-			
-			
-			
-			
+		
 	        //download and store related tags
 	        if(trainingDoc) {
 		        System.out.println("with related tags (training set)...");
 		        writer.write("with related tags (training set)...\n");
 		        writer.flush();
 		        //TODO: strategia per trovare i tags!!
-		        //perché CompositeSubUrlTagFinderStrategy e non un'altra? è rotta?
 		        // exacturl = true
 				TagFinder tf = new TagFinder(new CompositeSubUrlTagFinderStrategy(),true);
 				rtags = tf.findTags(urlString);
@@ -520,7 +527,6 @@ public class BenchmarkCreator {
 		//initialize filewriter and bufferedwriter
 		this.nfw = new FileWriter(noiseLogFile);
 		this.nbw = new BufferedWriter(nfw);
-		
 		
 		String deliciousNoiseQuery = this.generateNoiseQuery();
 		System.out.println("deliciousNoiseQuery: " + deliciousNoiseQuery);

@@ -49,7 +49,7 @@ public class CombineTasks {
 		}
 		
 		
-		//effettua i test
+		//effettua i test trovati nel file
 		for(String test: testSpecs.keySet()) {
 			st = new SingleTest(test);
 			st.performFirstTest();

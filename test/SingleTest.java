@@ -147,7 +147,6 @@ public class SingleTest {
 	// evaluationResults è il numero di risultati iniziali che devo considerare
 	public Map<String,Double[]> performFirstTest(int evaluationResults) throws IOException, ParseException {
 		
-		
 		//create log file
 		this.logFile = new File(TestParams.data_dir,this.testName + "_test1" + this.suffix + ".log");
 		if(!this.logFile.exists())

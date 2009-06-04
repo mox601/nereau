@@ -6,7 +6,7 @@ public abstract class TestParams {
 	// root dei test: /Users/mox/Dati/Progetti/testingNereau
 	
 	
-	public final static String test_specs = 		"/home/olbion/delicious2";
+	public final static String test_specs = 		"/Users/mox/Dati/Progetti/testingNereau/testspecs.txt";
 	public final static String dir = 				"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus";
 	public final static String data_dir = 			"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus/data";
 	public final static String index_dir = 			"/Users/mox/Dati/Progetti/testingNereau/nereau_corpus/index";
