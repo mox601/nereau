@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,6 +10,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import model.usermodel.tags.TagFinder;
+import model.usermodel.tags.TxtSubUrlTagFinderStrategy;
 
 
 import cluster.Tagtfidf;
@@ -51,6 +53,8 @@ public class GlobalProfileModel {
 	// url ricevuti dallo usermatrixcalculator. 
 	private LinkedList<URLTags> urlsToSave;
 	private URLTagsDAO URLTagsHandler;
+
+	private boolean alreadyRetrieved;
 	
 	public GlobalProfileModel(LinkedList<URLTags> urlTagsToSave) {
 		this.urlsToSave = urlTagsToSave;
@@ -62,7 +66,13 @@ public class GlobalProfileModel {
 	}
 	
 	/* prendo direttamente i visitedURLs ed estraggo i tag per conto mio */
-	public GlobalProfileModel(List<VisitedURL> visitedURLs) {
+	public GlobalProfileModel(List<VisitedURL> visitedURLs, boolean alreadyRetrieved) {
+		
+		
+		this.alreadyRetrieved = alreadyRetrieved;
+//		System.out.println("gli url sono tutti sul filesystem? " + this.alreadyRetrieved);
+		
+		
 		/* devo passare da visitedURL a URLTags */
 		LinkedList<URLTags> urlTagsToSave = null;
 		
@@ -79,25 +89,46 @@ public class GlobalProfileModel {
 		
 		this.URLTagsHandler = new URLTagsDAOPostgres();
 		
-		
+	
 		
 	}
 
 
 	private LinkedList<URLTags> convertVisitedUrlsToURLTags(List<VisitedURL> visitedURLs) {
 		/* deve estrarre i tag da ogni url e costruire una lista di URLTags */
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		
-		TagFinder tagFinder = new TagFinder();
-		
+		TagFinder tagFinder = null;		
 		LinkedList<URLTags> listUrlTags = new LinkedList<URLTags>();
 		
 		for (VisitedURL visitedURL: visitedURLs) {
-			Logger logger = LogHandler.getLogger(this.getClass().getName());
+			
+			String urlString = visitedURL.getURL();
+			//se devo lavorare sugli url
+			if (!this.alreadyRetrieved) {
+				logger.info("lavoro sull'URL " + urlString);
+				tagFinder = new TagFinder();				
+			} else {
+				//o direttamente sui files
+				
+				tagFinder = new TagFinder(new TxtSubUrlTagFinderStrategy());
+				//modifica l'url per il salvataggio
+				String preUrlString = urlString.substring(0, urlString.lastIndexOf('/')+1);
+				String postUrlString = urlString.substring(urlString.lastIndexOf('/')+1);
+				urlString = preUrlString + "tags_" + postUrlString;
+				
+				System.out.println("lavoro sul file " + urlString);
+				
+			}
+				
 			logger.info("Estraggo i tag dell'url: " + visitedURL.toString());
-			Set<RankedTag> tags = tagFinder.findTags(visitedURL.getURL());
-			URLTags currentUrlTag = new URLTags(visitedURL.getURL(), tags);
+			Set<RankedTag> tags = tagFinder.findTags(urlString);
+			URLTags currentUrlTag = new URLTags(urlString, tags);
 			logger.info("ho ottenuto i tags: " + tags);
 			listUrlTags.add(currentUrlTag);
+			
+			
+			
 		}
 		
 		/* ho gli URLTags in una lista, ora posso salvarli sul database */

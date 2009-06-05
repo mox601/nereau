@@ -109,7 +109,7 @@ public class SingleTest {
 		
 		//feed user model with data from tag groups
 		//fai il modello utente, visitando le pagine é il training
-		//this.feedUserModel();
+		this.feedUserModel();
 		
 		//perform test 1
 		//cartella del test set, per verificare le espansioni
@@ -536,10 +536,13 @@ public class SingleTest {
 					model.Query query = new model.Query(this.testName);
 					vUrl = new VisitedURL(doc.getAbsolutePath(),null,null,query);
 					vUrls.add(vUrl);
-					System.out.print("extracting data from '" + doc.getName() + "'... ");
+					System.out.println("extracting data from '" + doc.getName() + "'... ");
 					bw.write("extracting data from '" + doc.getName() + "'... ");
 					bw.flush();
 					umu.update(testUser, vUrls);
+					
+					//TODO: ERROR: insert or update on table "tagvisitedurls" violates foreign key constraint "id_url"
+					
 					System.out.println("done.");
 					bw.write("done.\n");
 					bw.flush();

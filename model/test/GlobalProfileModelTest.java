@@ -108,8 +108,8 @@ public class GlobalProfileModelTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
+		//TODO: boolean
+		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs, false);
 		fasterGlobalProfile.updateGlobalProfile();
 		
 		

@@ -76,7 +76,7 @@ public class UserMatrixCalculator {
 			}
 			
 			else {
-				
+				//per il testing
 				logger.info("lavoro sul file " + urlString);
 				tagFinder = new TagFinder(new TxtSubUrlTagFinderStrategy());
 				try {
@@ -129,14 +129,7 @@ public class UserMatrixCalculator {
 			//logger.info("matrice temporanea (solo keyset): " + tempMatrixForLog);
 		}
 		
-		/* ho estratto i tag da tutti gli url che avevo, ora posso dire 
-		 * al GlobalProfileModel di costruire i Tagtfidf e salvarli nel db */
-		
-//		GlobalProfileModel globalModel = new GlobalProfileModel(urlTagsToSave);
-		/* il problema Ž che forse non ho ancora salvato gli url e i tag nel db
-		 * quindi avrei delle chiavi esterne non disponibili. 
-		 * quindi non lo faccio ora */
-		
+	
 		
 		return tempMatrix;
 		

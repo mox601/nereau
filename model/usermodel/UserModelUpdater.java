@@ -104,14 +104,12 @@ public class UserModelUpdater {
 		/* contiene la lista di urltags da passare al GlobalModel e al PersonalModel */
 		LinkedList<URLTags> urls = new LinkedList<URLTags>();
 		
-		
-		
 		/* posso costruire un globalModel direttamente con i visitedURL 
 		 * ed estrarre per conto mio i tag di delicious, senza aspettare 
 		 * il processamento di tutte le matrici. 
-		 * purtroppo poi dovr— ri-estrarli? */
-		
-		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs);
+		 * purtroppo poi dovr— ri-estrarli? si */
+		/* aggiungo boolean alreadyRetrieved, per modellare l'estrazione dei tags da file */
+		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs, alreadyRetrieved);
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
@@ -119,7 +117,11 @@ public class UserModelUpdater {
 		//ricerca dei tag da file... 
 		//TODO: vedi se already retrieved Ž vero, per creare un tag finder corretto (TxtTagFinder... )
 		
-		/* AGGIORNAMENTO DEL MODELLO UTENTE */
+		
+		
+		
+		
+		/* AGGIORNAMENTO DEL MODELLO UTENTE, OLD NEREAU */
 		/* itera su tutte le pagine visitate */
 		//MODIFICA: lavoro su una pagina per volta (altrimenti la memoria non basta!)
 		for(VisitedURL vu: visitedURLs) {
