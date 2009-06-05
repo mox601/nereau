@@ -499,6 +499,8 @@ public class BenchmarkCreator {
 	
 	public static void main(String[] args) throws IOException {
 		
+		//never launch!! 
+		//it overwrites dataset directories!!
 		List<Set<String>> tagGroups = new LinkedList<Set<String>>();
 		Set<String> group1 = new HashSet<String>();
 		Set<String> group2 = new HashSet<String>();
@@ -511,7 +513,7 @@ public class BenchmarkCreator {
 		//crea un BenchMarkCreator con (parola, lista di tags) 
 		//per creare un contesto semantico con i tags
 		BenchmarkCreator bc = new BenchmarkCreator("cancer",tagGroups);
-		bc.retrieveTestPages();
+//		bc.retrieveTestPages();
 //		bc.addNoise();
 		
 	}

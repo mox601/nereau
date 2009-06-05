@@ -116,8 +116,8 @@ public class UserModelUpdater {
 		 * aggiungendo tutti gli url e le occorrenze come righe della tabella 
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
 		fasterGlobalProfile.updateGlobalProfile();
-		
-		
+		//ricerca dei tag da file... 
+		//TODO: vedi se already retrieved Ž vero, per creare un tag finder corretto (TxtTagFinder... )
 		
 		/* AGGIORNAMENTO DEL MODELLO UTENTE */
 		/* itera su tutte le pagine visitate */
