@@ -383,7 +383,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 		}
 	}
 	
-	
+	/* cancella gli url visitati */
 	public void deleteVisitedURLs(List<VisitedURL> visitedURLs, User user) throws PersistenceException {
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();

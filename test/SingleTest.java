@@ -30,6 +30,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
+import cluster.ClusterBuilder;
+
 import persistence.PersistenceException;
 import persistence.UserDAO;
 import persistence.postgres.UserDAOPostgres;
@@ -45,6 +47,8 @@ public class SingleTest {
 	private FileWriter fw;
 	private BufferedWriter bw;
 	private String suffix;
+	private ClusterBuilder clusterer;
+
 	
 	
 	
@@ -110,6 +114,34 @@ public class SingleTest {
 		//feed user model with data from tag groups
 		//fai il modello utente, visitando le pagine é il training
 		this.feedUserModel();
+		
+		
+		//dopo aver fatto il feed user model, devo lanciare l'algoritmo di clustering
+		//che mi salvi sul database i clusters risultanti. 
+		
+		/* start of clustering */
+		System.out.println("INIZIO DEL CLUSTERING DEI TAG E SALVATAGGIO SU DB");
+		
+		ClusterBuilder clusterer = this.clusterer.getInstance();
+		/* retrieve tags and build the singleton clusters to be clustered */
+		clusterer.retrieveAllTagsFromDatabase();
+		clusterer.buildClusters();
+//		Tree actualClustering = clusterer.getActualClustering();
+		
+
+		if (clusterer.getActualClustering() != null) {
+			System.out.println("SAVING CLUSTERING ON DATABASE");
+			clusterer.saveActualClustering();
+		}
+
+		System.out.println("FINE DEL CLUSTERING DEI TAG E SALVATAGGIO SUL DATABASE");
+		
+		
+		
+		
+		/* end of clustering */
+		
+		
 		
 		//perform test 1
 		//cartella del test set, per verificare le espansioni
@@ -279,6 +311,19 @@ public class SingleTest {
 			System.out.println("F1-measure: " + fmeasureEXP);
 			bw.write("F1-measure: " + fmeasureEXP + "\n\n");
 			bw.flush();
+			
+			
+			
+			
+			/* RISULTATI DI NEREAU 0.7 NEW  */
+
+			
+			
+			
+			
+			
+			/* ********END_NEW************* */
+			
 
 			//update results
 			Double[] measures = {fmeasureNOEXP,fmeasureEXP};
@@ -540,9 +585,7 @@ public class SingleTest {
 					bw.write("extracting data from '" + doc.getName() + "'... ");
 					bw.flush();
 					umu.update(testUser, vUrls);
-					
-					//TODO: ERROR: insert or update on table "tagvisitedurls" violates foreign key constraint "id_url"
-					
+										
 					System.out.println("done.");
 					bw.write("done.\n");
 					bw.flush();

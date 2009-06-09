@@ -73,6 +73,13 @@ public class GlobalProfileModel {
 //		System.out.println("gli url sono tutti sul filesystem? " + this.alreadyRetrieved);
 		
 		
+		
+		if(alreadyRetrieved) {
+			//devo ancora salvare gli url su database, altrimenti non avranno ID!!
+		}
+		
+		
+		
 		/* devo passare da visitedURL a URLTags */
 		LinkedList<URLTags> urlTagsToSave = null;
 		
@@ -193,7 +200,7 @@ public class GlobalProfileModel {
 		}
 		
 		
-		/* posso eliminare tutti i tag no_tag: lo devo saltare, non mi Ž utile */
+		/* posso eliminare tutti i tag no_tag, non mi Ž utile */
 	
 		int index = -1;
 		for (Tagtfidf tag: tags) {

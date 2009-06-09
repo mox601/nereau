@@ -25,12 +25,16 @@ salvataggio dei tag indipendente dal nereau vecchio DONE\
 \
 c'era un problema di JSON, dovuto alle righe lette in php. DONE\
 \
-dimensione dei caratteri dei tag nelle etichette TODO\
+dimensione dei caratteri dei tag nelle etichette DONE\
 \
 voglio numero maggiore di tag che collaborino all'espansione: \'e9 possibile?\
 nel file QueryExpander.java, vedi funzione selectRelevantTerms(). \
 ne voglio di meno, o comunque lo stesso numero, altrimenti \'e9 troppo lento!! \
 rimesso come era su nereau vecchio: DONE\
+\
+restore del database in remoto per far funzionare DONE\
+\
+riduci il numero di tag visualizzati nelle etichette dei risultati DONE: max 8 tags per label, fatto nell'interfaccia. DONE\
 \
 \
 TODO\
@@ -50,9 +54,8 @@ chi \'e9 che cambia lo style dei div di destra, dove sono contenuti i results?\
 non cambia bene a partire dall'ultimo di nereau vecchio TODO ??\
 il javascript sulla SX dovrebbe funzionare... \
 \
-riduci il numero di tag visualizzati nelle etichette dei risultati DONE: max 8 tags per label, fatto nell'interfaccia. \
 \
-le espansioni sono diverse se effettuate durante il clustering!!! FIXME\
+le espansioni sono diverse se effettuate DURANTE il clustering!!! FIXME\
 \
 genera anche espansioni con solo il termine della query originale FIXME\
 \
@@ -61,11 +64,8 @@ problema: non prende i tag usati nell'espansione se cambio la pagina, scorrendo 
 scrittura sulla tabella cluster_sets deve essere fatta atomicamente, evitare che siano visibili stati intermedi della tabella. TODO\
 SET TRANSACTION\
 ma devo capire come organizzare la transazione: \
-ho uno statement per ogni INSERT (tra l'altro \'e8 ricorsivo per la visita dell'albero) e uno per la DELETE iniziale. \
+ho uno statement per ogni INSERT (tra l'altro \'e8 ricorsivo per la visita dell'albero) e uno per la DELETE iniziale. oppure con sincronizzazione tra thread?\
 \
-restore del database in remoto per far funzionare TODO\
-\
-indice della tesi con le direttive di claudio (molta bibliografia)\
 \
 \
 \

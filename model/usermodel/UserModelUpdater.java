@@ -85,10 +85,33 @@ public class UserModelUpdater {
 		
 		//retrieve visited urls from db
 		List<VisitedURL> visitedURLs = null;
+		
+		
+		if(alreadyRetrieved) {
+			/* prima devo salvarli sul database, visto che sto eseguendo il TEST 
+			 * e nessuno aveva salvato questi url sul database */
+			for (VisitedURL vUrl: this.vUrls) {
+				
+				try {
+					this.visitedURLHandler.saveVisitedURL(vUrl, user);
+				} catch (PersistenceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
+			
+		}
+		
+		
 		if(alreadyRetrieved)
 			/* se gli url sono stati passati nel metodo update(User user, List<VisitedURL> alreadyRetrieved), 
-			 * allora usa quelli che ti hanno passato */
+			 * allora usa quelli che ti hanno passato. 
+			 * PROBLEMA RISOLTO: prima li ho salvati sul database, e ho la possibilit‡ di
+			 * estrarre l'ID quando mi serve */
 			visitedURLs = this.vUrls;
+		
 		else {
 			try {
 				/* altrimenti, devi prendere dal db TUTTI gli url visitati dallo user */
@@ -103,11 +126,13 @@ public class UserModelUpdater {
 		
 		/* contiene la lista di urltags da passare al GlobalModel e al PersonalModel */
 		LinkedList<URLTags> urls = new LinkedList<URLTags>();
+	
+		
 		
 		/* posso costruire un globalModel direttamente con i visitedURL 
 		 * ed estrarre per conto mio i tag di delicious, senza aspettare 
 		 * il processamento di tutte le matrici. 
-		 * purtroppo poi dovr— ri-estrarli? si */
+		 * purtroppo poi dovr— ri-estrarli? SI */
 		/* aggiungo boolean alreadyRetrieved, per modellare l'estrazione dei tags da file */
 		GlobalProfileModel fasterGlobalProfile = new GlobalProfileModel(visitedURLs, alreadyRetrieved);
 		/* dopo che l'ho creato, posso salvare il GlobalProfileModel nel db 
@@ -115,7 +140,6 @@ public class UserModelUpdater {
 		 * tagsvisitedurl, usando per— gli id degli url e dei tags. */
 		fasterGlobalProfile.updateGlobalProfile();
 		//ricerca dei tag da file... 
-		//TODO: vedi se already retrieved Ž vero, per creare un tag finder corretto (TxtTagFinder... )
 		
 		
 		
@@ -228,6 +252,10 @@ public class UserModelUpdater {
 		 * co-occorrenze tag-tag */
 //		PersonalProfileModel personalProfile = new PersonalProfileModel(urls);
 //		personalProfile.updatePersonalProfile();
+		
+		
+		
+		/* utile per il test? cancellare i visitedurls??? NO */
 		
 		/*
 		//delete visited urls from db

@@ -55,7 +55,8 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 		try {
 			/* mi restituisce il primo id con cui é apparso quell'url 
 			 * l'url sará sicuramente in quella tabella? 
-			 * é giá stato salvato? si, perché sono visitedurls!
+			 * é giá stato salvato? NO, perché ancora non é stato inserito dall'updater...!!
+			 * 
 			 * é un problema avere due visitedurls diversi
 			 * con la stessa stringa url? no, se ottengo sempre il primo
 			 * id allora funziona
@@ -70,6 +71,9 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			Integer idUrl = -1;
 			if (result.next()) {
 				idUrl = result.getInt("id");
+			} else {
+				logger.info("il visitedurl non é ancora stato salvato nel database");
+				
 			}
 	
 			for(RankedTag rTag: url.getTags()) {
