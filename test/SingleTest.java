@@ -112,7 +112,7 @@ public class SingleTest {
 		
 		
 		//feed user model with data from tag groups
-		//fai il modello utente, visitando le pagine √© il training
+		//fai il modello utente, visitando le pagine del training
 		this.feedUserModel();
 		
 		
@@ -152,6 +152,13 @@ public class SingleTest {
 		//che conterrano i termini in due contesti diversi. molti pi√∫ problemi. 
 		//this.performSecondTest();
 		
+		
+		/* al termine del test, restano sul database le associazioni url-tag ottenute 
+		 * dopo le visite degli url di training: ogni utente risente del profilo precedente */
+		
+		/* cancello la tabella tagvisitedurls */
+		//TODO
+		
 	}
 	
 	@SuppressWarnings("unused")
@@ -175,7 +182,8 @@ public class SingleTest {
 	public Map<String,Double[]> performFirstTest() throws IOException, ParseException {
 		return this.performFirstTest(TestParams.docs_per_evaluation);
 	}
-	// il parametro è il numero di documenti da considerare per la valutazione (?)
+	
+	
 	// evaluationResults è il numero di risultati iniziali che devo considerare
 	public Map<String,Double[]> performFirstTest(int evaluationResults) throws IOException, ParseException {
 		
@@ -315,8 +323,31 @@ public class SingleTest {
 			
 			
 			
+			
+			
+			
 			/* RISULTATI DI NEREAU 0.7 NEW  */
 
+			System.out.println("Results with Query Expansion and Tag Clustering:");
+			bw.write("Results with Query Expansion and Tag Clustering:\n\n");
+			bw.flush();
+			QueryExpander qefTfidf = new QueryExpander();
+			Set<ExpandedQuery> expQueriesTfidf = qefTfidf.expandQueryTfidf(testName, user);
+
+			
+			Set<Document> allDocsTfidf;
+			List<Document> selectedDocsTfidf = new LinkedList<Document>();
+			
+			//changed arrangeResult to work with Set<ExpandedQuery>
+			allDocsTfidf = this.arrangeResults(expQueriesTfidf,selectedDocsTfidf,evaluationResults);
+			//ho raccolto tutti i documenti che si ottengono facendo la query
+			
+			System.out.println(allDocsTfidf.size() + " distinct docs retrieved (" + selectedDocsTfidf.size() + " shown):");
+			bw.write(allDocsTfidf.size() + " distinct docs retrieved (" + selectedDocsTfidf.size() + " shown):\n");
+			bw.flush();
+			
+			/* ho estratto i documenti, ora calcolo le misure di precision e recall */
+			
 			
 			
 			
