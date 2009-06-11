@@ -157,6 +157,20 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 		return allTags;
 	}
 	
+	public void deleteTagVisitedUrls() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	
+	private static String SQL_DELETE_ALL_TAGVISITEDURLS = 
+		"DELETE from tagvisitedurls;";
+	
+
+
+
+
 	private static String SQL_JOIN_TAGVISITEDURLS_URLS_TAGS = 
 		"SELECT * FROM " +
 		"(SELECT * FROM visitedurls " +

@@ -21,6 +21,7 @@ public class ClusterBuilder {
 	private List<Node> clustersToMerge;
 	private Tree actualClustering;
 	private TreeDAOPostgres treeHandler;
+	private TagtfidfDAOPostgres tagsVisitedUrlHandler;
 	
 	 private static final ClusterBuilder INSTANCE = new ClusterBuilder();
 	 
@@ -31,8 +32,11 @@ public class ClusterBuilder {
    // should be a Private constructor: prevents instantiation from other classes
 	public ClusterBuilder(List<Node> clusters) {
 		this.clustersToMerge = clusters;
+		this.treeHandler = new TreeDAOPostgres();
+		this.tagsVisitedUrlHandler = new TagtfidfDAOPostgres();
 	}
 	
+	//usato solo nei test
 	public ClusterBuilder() {
 		this.clustersToMerge = new LinkedList<Node>();
 		this.treeHandler = new TreeDAOPostgres();
@@ -51,16 +55,15 @@ public class ClusterBuilder {
 		int similarity = 10;
 		int scala = 10;
 		while (similarity >= 0 && clustersToMerge.size() > 1) {
-			logger.info("Similarity: " + similarity);
+//			logger.info("Similarity: " + similarity);
 			double similarityValue = (double) similarity / scala;
-			logger.info("Similarity: " + similarity + " diviso 10 = " + similarityValue);
+//			logger.info("Similarity: " + similarity + " diviso 10 = " + similarityValue);
 			/* calcola la somiglianza tra tutti i cluster attuali, 
 			 * e accorpa quelli con somiglianza uguale alla similarity */
 			
 			/* prende tutti i cluster attuali */
 			/* li passa a un metodo insieme alla somiglianza, e ottiene 
-			 * una lista di coppie con somiglianza >= similarity !! */
-			/* il problema Ž qui, dovrei poter fondere non coppie, ma liste di nodi */
+			 * una lista di liste di nodi con somiglianza >= similarity !! */
 			LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, similarityValue);
 
 			/* itera su queste coppie e crea un cluster fusione per ogni coppia */			
@@ -70,13 +73,13 @@ public class ClusterBuilder {
 				/* crea un cluster merge */
 				Node newCluster = new Node(actualMergingCouple, similarityValue);			
 				/* elimina i due cluster fusi dal clustersToMerge */
-				logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
-						 + " AND " + actualMergingCouple.getLast().toString());
+//				logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
+//						 + " AND " + actualMergingCouple.getLast().toString());
 				clustersToMerge.remove(actualMergingCouple.getFirst());
 				clustersToMerge.remove(actualMergingCouple.getLast());
 				/* aggiungi il cluster merged nel clustersToMerge */
 				clustersToMerge.add(newCluster);
-				logger.info("ADDED cluster: " + newCluster.getValue());
+//				logger.info("ADDED cluster: " + newCluster.getValue());
 			}			
 			similarity = similarity - 1;
 		}
@@ -85,21 +88,21 @@ public class ClusterBuilder {
 		
 		if (clustersToMerge.size() > 0) {
 			if (clustersToMerge.size() > 1) {
-				logger.info("c'Ž una foresta, e la similarity Ž a 0: " + 
-						clustersToMerge.toString());
+//				logger.info("c'Ž una foresta, e la similarity Ž a 0: " + 
+//						clustersToMerge.toString());
 				/* fondo tutti i nodi rimanenti */
 				LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, 0.0);				
 
 				for (LinkedList<Node> actualMergingCouple: mergingClusters) {
 					Node newCluster = new Node(actualMergingCouple, 0.0);			
 					/* elimina i due cluster fusi dal clustersToMerge */
-					logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
-							+ " AND " + actualMergingCouple.getLast().toString());
+//					logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
+//							+ " AND " + actualMergingCouple.getLast().toString());
 					clustersToMerge.remove(actualMergingCouple.getFirst());
 					clustersToMerge.remove(actualMergingCouple.getLast());
 					/* aggiungi il cluster merged nel clustersToMerge */
 					clustersToMerge.add(newCluster);
-					logger.info("ADDED cluster: " + newCluster.getValue());
+//					logger.info("ADDED cluster: " + newCluster.getValue());
 				}
 			}
 			
@@ -112,7 +115,7 @@ public class ClusterBuilder {
 			actualClustering.assignIds();
 
 		} else {
-			logger.info("nessun tag trovato nel database, non si effettua il clustering");
+			logger.info("nessun tag nel database, non si effettua il clustering");
 			this.actualClustering = new Tree();
 		}
 		
@@ -156,7 +159,7 @@ public class ClusterBuilder {
 
 	}	
 
-
+	/*TODO: riesce a restituire liste, o solo coppie? */
 	private LinkedList<LinkedList<Node>> getClusterWithSimilarity(
 			List<Node> clustersToMerge, double similarity) {
 
@@ -297,6 +300,25 @@ public class ClusterBuilder {
 		}
 
 		
+	}
+
+	
+	/* cancella tutti i tagsvisited urls, utile durante i test per cancellarli tra un 
+	 * test e l'altro. 
+	 * cancella anche i risultati del clustering */
+	public void deleteAllTagsFromDatabase() {
+		//cancella il clustering di tutti i tags sul database
+		//INUTILE: lo fa comunque il clustering
+//		try {
+//			this.treeHandler.deleteClustering();
+//		} catch (PersistenceException e) {
+//			e.printStackTrace();
+//		}
+		//cancella tutti gli url e i tag a loro associati di TUTTI gli utenti
+		this.tagsVisitedUrlHandler.deleteTagVisitedUrls();
+		
+		
+			
 	}
 
 }

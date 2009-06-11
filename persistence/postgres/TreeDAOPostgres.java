@@ -206,6 +206,23 @@ public class TreeDAOPostgres implements TreeDAO {
 	}
 	
 	
+	public void deleteClustering() throws PersistenceException {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());		
+		
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SQL_DELETE_ALL_CLUSTERS_SETS);
+			statement.executeUpdate();
+
+		} catch (SQLException e){
+			throw new PersistenceException(e.getMessage());
+		}
+	}
+
+
 	private Tree buildTreeFromHierarchies(
 			LinkedList<LinkedList<Node>> hierarchiesList) {
 		/* algoritmo che ricostruisce un albero a partire da una lista di gerarchie */
@@ -414,6 +431,11 @@ public class TreeDAOPostgres implements TreeDAO {
 		"(SELECT id " +
 		"FROM tags " +
 		"WHERE tag = ?);";
+
+	private static String SQL_DELETE_ALL_CLUSTERS_SETS =
+		"DELETE from clusters_sets;";
+
+	
 	
 
 }

@@ -159,6 +159,8 @@ public class SingleTest {
 		/* cancello la tabella tagvisitedurls */
 		//TODO
 		
+		clusterer.deleteAllTagsFromDatabase();
+		
 	}
 	
 	@SuppressWarnings("unused")

@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf460
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+DONE\
+separazione dell'espansione nuova rispetto al calcolo delle matrici DONE\
+\
+per la valutazione le stelline funzionano? si per tutti: DONE\
+\
+modificare la query che usa la stored procedure in una query semplice DONE\
+\
+valuta la correttezza dell'algoritmo principale con claudio DONE\
+\
+salvataggio dei tag indipendente dal nereau vecchio DONE\
+\
+c'era un problema di JSON, dovuto alle righe lette in php. DONE\
+\
+dimensione dei caratteri dei tag nelle etichette DONE\
+\
+voglio numero maggiore di tag che collaborino all'espansione: \'e9 possibile?\
+nel file QueryExpander.java, vedi funzione selectRelevantTerms(). \
+ne voglio di meno, o comunque lo stesso numero, altrimenti \'e9 troppo lento!! \
+rimesso come era su nereau vecchio: DONE\
+\
+restore del database in remoto per far funzionare DONE\
+\
+riduci il numero di tag visualizzati nelle etichette dei risultati DONE: max 8 tags per label, fatto nell'interfaccia. DONE\
+\
+\
+TODO\
+\
+come distinguere le espansioni, per le statistiche? nel database se ho cliccato su un'espansione tfidf ho i valori dei pesi dei tag tutti uguali a 0.0: o cambio la cosa oppure la sfrutto per fare statistiche su db. \
+\
+testing approfondito dell'espansione e del salvataggio degli url visitati, con\
+integrazione della sperimentazione di claudio TODO\
+steps: \
+creazione benchmark per scaricamento pagine DOING\
+perch\'e9 non riesco ad avere 50 - 100 file in test e training?\
+indicizzazione con lucene delle pagine scaricate\
+lancio del single test\
+lancio di tutti i test \
+\
+nel momento in cui si salva l'url e i suoi tag per creare il tagtfidf, salvare anche l'utente che ha effettuato la visita. utile per cancellare in futuro i dati di un utente TODO\
+\
+chi \'e9 che cambia lo style dei div di destra, dove sono contenuti i results?\
+non cambia bene a partire dall'ultimo di nereau vecchio TODO ??\
+il javascript sulla SX dovrebbe funzionare... \
+\
+\
+le espansioni sono diverse se effettuate DURANTE il clustering!!! FIXME\
+\
+genera anche espansioni con solo il termine della query originale FIXME\
+\
+problema: non prende i tag usati nell'espansione se cambio la pagina, scorrendo da 1 a 2. poi non funziona pi\'fa per nessuna etichetta FIXME. \
+\
+scrittura sulla tabella cluster_sets deve essere fatta atomicamente, evitare che siano visibili stati intermedi della tabella. TODO\
+SET TRANSACTION\
+ma devo capire come organizzare la transazione: \
+ho uno statement per ogni INSERT (tra l'altro \'e8 ricorsivo per la visita dell'albero) e uno per la DELETE iniziale. oppure con sincronizzazione tra thread?\
+\
+\
+}
