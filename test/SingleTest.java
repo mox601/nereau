@@ -217,6 +217,8 @@ public class SingleTest {
 			bw.write("Results without Query Expansion:\n\n");
 			bw.flush();
 			
+			
+			
 			//lucene
 			QueryParser qp = new QueryParser("contents",new StemmingAnalyzer());
 			Hits noExp = this.is.search(qp.parse(testName));
@@ -322,7 +324,7 @@ public class SingleTest {
 			
 			
 			
-			
+			//TODO: integra, integra!!
 			/* RISULTATI DI NEREAU 0.7 NEW  */
 
 			System.out.println("Results with Query Expansion and Tag Clustering:");
