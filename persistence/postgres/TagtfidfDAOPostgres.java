@@ -9,10 +9,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import cluster.Tagtfidf;
 import persistence.PersistenceException;
 import persistence.TagtfidfDAO;
+import util.LogHandler;
 
 public class TagtfidfDAOPostgres implements TagtfidfDAO {
 
@@ -157,9 +159,28 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 		return allTags;
 	}
 	
-	public void deleteTagVisitedUrls() {
-		// TODO Auto-generated method stub
-		
+	
+	/* cancella tutte le righe dalla tabella tagvisitedurls, per pulire tra un 
+	 * test e l'altro */
+	public void deleteTagVisitedUrls() throws PersistenceException {
+		Logger logger = LogHandler.getLogger(this.getClass().getName());
+
+		DataSource dataSource = DataSource.getInstance();
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		try {
+			System.out.println("deleting all tagvisitedurls");
+			statement = connection.prepareStatement(SQL_DELETE_ALL_TAGVISITEDURLS);
+			statement.executeUpdate();
+
+		} catch (SQLException e){
+			throw new PersistenceException(e.getMessage());
+		}
+		finally {
+			dataSource.close(statement);
+			dataSource.close(connection);
+		}
+
 	}
 	
 	

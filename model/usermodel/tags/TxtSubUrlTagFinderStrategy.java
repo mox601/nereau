@@ -41,7 +41,14 @@ public class TxtSubUrlTagFinderStrategy extends SubUrlTagFinderStrategy {
 				next = scanner.nextLine();
 				tag = next.substring(0, next.indexOf(" "));
 				rankString = next.substring(next.indexOf(" ")+1);
-				rank = Double.parseDouble(rankString);
+				
+				try{
+					rank = Double.parseDouble(rankString);
+				}catch (NumberFormatException e) {
+					// in caso non
+					rank = 0.0;
+				}
+				
 				result.add(new RankedTag(tag,rank));
 			}
 			

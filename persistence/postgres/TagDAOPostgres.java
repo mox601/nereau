@@ -98,10 +98,10 @@ public class TagDAOPostgres implements TagDAO {
 
 	private String prepareStatementForRetrieve(String tag) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("estrazione tag: " + tag);
+//		logger.info("estrazione tag: " + tag);
 		StringBuffer query = new StringBuffer();
 		query.append(SQL_SELECT_ID_TAG);
-		logger.info("query: \n" + query);
+//		logger.info("query: \n" + query);
 		return query.toString();
 	}
 

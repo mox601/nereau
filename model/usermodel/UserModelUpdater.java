@@ -91,9 +91,18 @@ public class UserModelUpdater {
 			/* prima devo salvarli sul database, visto che sto eseguendo il TEST 
 			 * e nessuno aveva salvato questi url sul database */
 			for (VisitedURL vUrl: this.vUrls) {
-				
 				try {
 					this.visitedURLHandler.saveVisitedURL(vUrl, user);
+					System.out.println("Saved visitedurl " + vUrl.getURL() +" on db");
+					//gli url visitati cominciano con http
+					//quando aggiorno il globalProfile invece mi lavora sui file tags_http:__
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				} catch (PersistenceException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -109,7 +118,8 @@ public class UserModelUpdater {
 			/* se gli url sono stati passati nel metodo update(User user, List<VisitedURL> alreadyRetrieved), 
 			 * allora usa quelli che ti hanno passato. 
 			 * PROBLEMA RISOLTO: prima li ho salvati sul database, e ho la possibilit‡ di
-			 * estrarre l'ID quando mi serve */
+			 * estrarre l'ID quando mi serve.
+			 * TODO:  */
 			visitedURLs = this.vUrls;
 		
 		else {
@@ -127,7 +137,7 @@ public class UserModelUpdater {
 		/* contiene la lista di urltags da passare al GlobalModel e al PersonalModel */
 		LinkedList<URLTags> urls = new LinkedList<URLTags>();
 	
-		
+		logger.info("aggiornamento globalProfile");
 		
 		/* posso costruire un globalModel direttamente con i visitedURL 
 		 * ed estrarre per conto mio i tag di delicious, senza aspettare 
@@ -143,7 +153,7 @@ public class UserModelUpdater {
 		
 		
 		
-		
+		logger.info("aggiornamento OLD NEREAU");
 		
 		/* AGGIORNAMENTO DEL MODELLO UTENTE, OLD NEREAU */
 		/* itera su tutte le pagine visitate */

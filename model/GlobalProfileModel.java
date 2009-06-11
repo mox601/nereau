@@ -111,31 +111,38 @@ public class GlobalProfileModel {
 		for (VisitedURL visitedURL: visitedURLs) {
 			
 			String urlString = visitedURL.getURL();
+			
+			
+			Set<RankedTag> tags = null;
+			
 			//se devo lavorare sugli url
 			if (!this.alreadyRetrieved) {
 				logger.info("lavoro sull'URL " + urlString);
-				tagFinder = new TagFinder();				
-			} else {
-				//o direttamente sui files
+				tagFinder = new TagFinder();	
+				tags = tagFinder.findTags(urlString);
 				
+			} else {
+				//o lavoro direttamente sui files
 				tagFinder = new TagFinder(new TxtSubUrlTagFinderStrategy());
 				//modifica l'url per il salvataggio
 				String preUrlString = urlString.substring(0, urlString.lastIndexOf('/')+1);
 				String postUrlString = urlString.substring(urlString.lastIndexOf('/')+1);
-				urlString = preUrlString + "tags_" + postUrlString;
 				
-				System.out.println("lavoro sul file " + urlString);
+				//qui devo scrivere l'url di cosa?
+				String tagString = preUrlString + "tags_" + postUrlString;
+//				urlString = preUrlString + postUrlString;
+
+//				System.out.println("estraggo i tags dal file " + tagString);
+				tags = tagFinder.findTags(tagString);
+
 				
 			}
 				
-			logger.info("Estraggo i tag dell'url: " + visitedURL.toString());
-			Set<RankedTag> tags = tagFinder.findTags(urlString);
+			logger.info("Estraggo i tag relativi all'url: " + visitedURL.toString());
 			URLTags currentUrlTag = new URLTags(urlString, tags);
 			logger.info("ho ottenuto i tags: " + tags);
 			listUrlTags.add(currentUrlTag);
-			
-			
-			
+
 		}
 		
 		/* ho gli URLTags in una lista, ora posso salvarli sul database */
@@ -144,6 +151,54 @@ public class GlobalProfileModel {
 		
 		
 	}
+
+	private void convertUrlsToTagtfidf(LinkedList<URLTags> urlsToSave) {
+			/* logger */
+			Logger logger = LogHandler.getLogger(this.getClass().getName());
+	//		logger.info("inizio la conversione da URLTags a Tagtfidf");
+			/* itera sugli url */
+			for (URLTags currentUrl: urlsToSave) {
+				/* itera sui tags del currentUrl */
+				/* costruisci un tag tfidf per ogni tag associato all'url, ma se gi‡ esiste nei tags gi‡ incontrati 
+				 * un tag con quel valore, aggiungi il currentUrl a quel tag */
+				for (RankedTag currentTag: currentUrl.getTags()) {
+						Tagtfidf presentTag = null;
+						presentTag = findTagtfidf(currentTag.getTag());
+						if ( presentTag != null) {
+							/* se hai gi‡ incontrato questo tag, aggiungi un url al tag 
+							 * esistente
+							 */
+							presentTag.addUrlOccurrences(currentUrl.getUrlString(), 1.0);
+							System.out.println("converting currentUrl: " + currentUrl.getUrlString());
+						} else {
+							/* altrimenti, crea un nuovo tag Tfidf */
+							Map<String, Double> tagUrlsMap = new HashMap<String, Double>();
+							tagUrlsMap.put(currentUrl.getUrlString(), 1.0);
+							Tagtfidf newTagtfidf = new Tagtfidf(currentTag.getTag(), tagUrlsMap);
+							this.tags.add(newTagtfidf);
+						}
+				}
+	
+				/* ho terminato la conversione */
+			}
+			
+			
+			/* posso eliminare tutti i tag no_tag, non mi Ž utile */
+		
+			int index = -1;
+			for (Tagtfidf tag: tags) {
+				logger.info(tag.toString());
+				if (tag.getTag().equals("no_tag")) {
+					index = tags.indexOf(tag);
+	//				logger.info("levo il tag no_tag all'indice " + index);
+				}
+			}
+			
+			if (index > -1) {
+				tags.remove(index);	
+			}
+	
+		}
 
 	private void convertUrlsToTagCoOcc() {
 		// TODO trasformazione in rappresentazione dei tag in co-occorrenze. 
@@ -169,56 +224,6 @@ public class GlobalProfileModel {
 	}
 
 	
-	private void convertUrlsToTagtfidf(LinkedList<URLTags> urlsToSave) {
-		/* logger */
-		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("inizio la conversione da URLTags a Tagtfidf");
-		/* itera sugli url */
-		for (URLTags currentUrl: urlsToSave) {
-			/* itera sui tags del currentUrl */
-			/* costruisci un tag tfidf per ogni tag associato all'url, ma se gi‡ esiste nei tags gi‡ incontrati 
-			 * un tag con quel valore, aggiungi il currentUrl a quel tag */
-			for (RankedTag currentTag: currentUrl.getTags()) {
-					Tagtfidf presentTag = null;
-					presentTag = findTagtfidf(currentTag.getTag());
-					if ( presentTag != null) {
-						/* se hai gi‡ incontrato questo tag, aggiungi un url al tag 
-						 * esistente
-						 */
-						presentTag.addUrlOccurrences(currentUrl.getUrlString(), 1.0);	
-					} else {
-						/* altrimenti, crea un nuovo tag Tfidf */
-						Map<String, Double> tagUrlsMap = new HashMap<String, Double>();
-						tagUrlsMap.put(currentUrl.getUrlString(), 1.0);
-						Tagtfidf newTagtfidf = new Tagtfidf(currentTag.getTag(), tagUrlsMap);
-						this.tags.add(newTagtfidf);
-					}
-				
-			}
-
-			/* ho terminato la conversione */
-		}
-		
-		
-		/* posso eliminare tutti i tag no_tag, non mi Ž utile */
-	
-		int index = -1;
-		for (Tagtfidf tag: tags) {
-			logger.info(tag.toString());
-			if (tag.getTag().equals("no_tag")) {
-				index = tags.indexOf(tag);
-				logger.info("levo il tag no_tag all'indice " + index);
-			}
-		}
-		
-		if (index > -1) {
-			tags.remove(index);	
-		}
-
-	}
-
-	
-
 	public void updateGlobalProfile() {
 		try {
 			this.URLTagsHandler.save(urlsToSave);

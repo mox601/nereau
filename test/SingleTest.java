@@ -137,11 +137,7 @@ public class SingleTest {
 		System.out.println("FINE DEL CLUSTERING DEI TAG E SALVATAGGIO SUL DATABASE");
 		
 		
-		
-		
 		/* end of clustering */
-		
-		
 		
 		//perform test 1
 		//cartella del test set, per verificare le espansioni
@@ -154,12 +150,11 @@ public class SingleTest {
 		
 		
 		/* al termine del test, restano sul database le associazioni url-tag ottenute 
-		 * dopo le visite degli url di training: ogni utente risente del profilo precedente */
+		 * dopo le visite degli url di training: ogni utente risente del profilo precedente. 
+		 * nel caso base, devo eliminarle prima di ogni test */
 		
 		/* cancello la tabella tagvisitedurls */
-		//TODO
-		
-		clusterer.deleteAllTagsFromDatabase();
+//		clusterer.deleteAllTagsFromDatabase();
 		
 	}
 	
@@ -368,8 +363,10 @@ public class SingleTest {
 		
 	}
 
-	
-	// changed arrangeResult to work with Set<ExpandedQuery>
+	/* dispone i risultati: 
+	 * restituisce un insieme di documenti, a partire da un insieme di query espanse. 
+	 * é utile nel caso di nereau vecchio, nel mio caso ho solo x espansioni, che non 
+	 * hanno peso per—. Devo avere una diversa politica di riordinamento. */	
 	private Set<Document> arrangeResults(Set<ExpandedQuery> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException, ParseException {
 
 		//risultati ottenuti a fronte di ogni expQuery
@@ -387,7 +384,7 @@ public class SingleTest {
 		bw.flush();
 		
 		
-		//per ogni query tra le query espanse
+		//calcola la somma dei pesi dei tag di ogni query
 		for(model.Query expQuery: expQueries) {
 			QueryParser qp = new QueryParser("contents",new StemmingAnalyzer());
 			Hits expHit = this.is.search(qp.parse(expQuery.toString()));
@@ -402,7 +399,7 @@ public class SingleTest {
 			expQueryRanks.put(expQuery, expQueryRank);
 			queryRankSum += expQueryRank;
 		}
-		//ho calcolato la queryRankSum, utile per pesare il valore dell'espansione?
+		//ho calcolato la queryRankSum, utile per pesare il valore dell'espansione. 
 		
 		
 		double normalize = (double)evaluationResults/(queryRankSum);
@@ -421,7 +418,6 @@ public class SingleTest {
 			
 			expQueryRanks.put(expQuery, rank);
 		}
-		
 		
 		
 		/* riordino le query per rilevanza */
@@ -551,6 +547,90 @@ public class SingleTest {
 		
 		return allDocs;
 	}
+	
+	
+	
+	
+	
+	private Set<Document> arrangeResultsTfidf(Set<ExpandedQuery> expQueries, List<Document> selectedDocs, int evaluationResults) throws IOException {
+		
+		//risultati ottenuti a fronte di ogni expQuery
+		Map<model.Query,Hits> expHits = new HashMap<model.Query,Hits>();
+		//rank di ogni query
+		Map<model.Query,Double> expQueryRanks = new HashMap<model.Query,Double>();
+		//numero di risultati garantiti per ogni query (nella lista filtrata)
+		Map<model.Query,Integer> expQueryResNums = new HashMap<model.Query,Integer>();
+		//lista delle query ordinate per rilevanza
+		List<model.Query> sortedExpQueries = new LinkedList<model.Query>();
+		//somma dei rank (per normalizzare rispetto alla dim. della lista filtrata)
+		double queryRankSum = 0.0;
+		System.out.println("List of expanded queries TFIDF:");
+		bw.write("List of expanded queries with TFIDF:\n");
+		bw.flush();
+		
+		
+		
+		Set<Document> allDocs = new HashSet<Document>();
+		Set<String> allDocsPaths = new HashSet<String>();
+		Set<String> selectedDocsPaths = new HashSet<String>();
+		boolean firstIteration = true;
+		//create list with selected results
+		while(selectedDocs.size()<evaluationResults) {
+			
+			boolean noMoreResults = true;
+			
+			for(model.Query expQuery: sortedExpQueries) {
+				Hits hits = expHits.get(expQuery);
+				int chosenRes = 0;
+				int allowedRes = expQueryResNums.get(expQuery);
+				for(int i=0; i<hits.length() && chosenRes<allowedRes; i++) {
+					if(!selectedDocsPaths.contains(hits.doc(i).get("filename"))) {
+						if(firstIteration)
+							selectedDocs.add(0,hits.doc(i));
+						else
+							selectedDocs.add(hits.doc(i));
+						selectedDocsPaths.add(hits.doc(i).get("filename"));
+						chosenRes++;
+					}
+				}
+				if(chosenRes>0) {
+					noMoreResults = false;
+					expQueryResNums.put(expQuery, allowedRes-chosenRes);
+				}
+			}
+			
+			if(noMoreResults)
+				break;
+			
+			firstIteration = false;
+			
+		}
+		
+		//create set with all retrieved docs
+		for(model.Query expQuery: expHits.keySet()) {
+			Hits hits = expHits.get(expQuery);
+			for(int i=0; i<hits.length(); i++) {
+				if(!allDocsPaths.contains(hits.doc(i).get("filename"))) {
+					allDocs.add(hits.doc(i));
+					allDocsPaths.add(hits.doc(i).get("filename"));
+				}
+			}
+		}
+		
+		System.out.println();
+		bw.write("\n\n");
+		bw.flush();
+		
+		return allDocs;
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 
 	@SuppressWarnings("unused")
 	public void feedUserModel() throws PersistenceException, IOException {
@@ -606,18 +686,26 @@ public class SingleTest {
 		
 		UserModelUpdater umu = new UserModelUpdater();
 		
+		//TODO: per ridurre i tempi di test, poi si cambia
+			
+		int totalPagesToVisit = 5;
+		
 		for(File dataDir: dataDirs) {
+			int pagesVisited = 0;			
 			for(File doc: dataDir.listFiles()) {
-				if(!doc.getName().startsWith("tags_")) {
+				//totalPages
+				if(!doc.getName().startsWith("tags_") && pagesVisited < totalPagesToVisit) {
 					List<VisitedURL> vUrls = new LinkedList<VisitedURL>();
 					VisitedURL vUrl;
 					model.Query query = new model.Query(this.testName);
 					vUrl = new VisitedURL(doc.getAbsolutePath(),null,null,query);
 					vUrls.add(vUrl);
-					System.out.println("extracting data from '" + doc.getName() + "'... ");
+					System.out.println("extracting data from '" + doc.getName() + "'... pageNumber " + pagesVisited);
 					bw.write("extracting data from '" + doc.getName() + "'... ");
 					bw.flush();
 					umu.update(testUser, vUrls);
+					
+					pagesVisited++;
 										
 					System.out.println("done.");
 					bw.write("done.\n");

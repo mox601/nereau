@@ -49,6 +49,22 @@ public class TagtfidfDAOPostgresTest {
 		
 	}
 	
+	@Ignore
+	@Test
+	public void testDeleteAllTags() {
+		TagtfidfDAOPostgres tagsHandler = new TagtfidfDAOPostgres();
+		
+		try {
+			tagsHandler.deleteTagVisitedUrls();
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("deleted!");
+		
+
+	}
+	
 	
 	
 

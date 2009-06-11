@@ -257,6 +257,7 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				statement.setInt(1, visitedUrlId);
 				statement.setString(2, tag);
 				statement.setDouble(3, rank);
+				System.out.println(statement.toString());
 				statement.executeUpdate();
 			}
 			

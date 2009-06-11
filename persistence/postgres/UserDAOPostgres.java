@@ -210,6 +210,7 @@ public class UserDAOPostgres implements UserDAO {
 			vUrlDAO.deleteAllVisitedURLs(user);
 			
 		}
+		
 		catch (SQLException e) {
 			logger.info(e.getMessage());
 			throw new PersistenceException(e.getMessage());

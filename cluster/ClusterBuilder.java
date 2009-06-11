@@ -152,7 +152,7 @@ public class ClusterBuilder {
 			for (Tagtfidf tag: extractedTags) {
 				Node currentNode = new Node(tag.getTag(), tag);
 				this.clustersToMerge.add(currentNode); 
-				logger.info("from Tagtfidf to Node tag: " + currentNode.toString());
+//				logger.info("from Tagtfidf to Node tag: " + currentNode.toString());
 			}
 
 		}
@@ -305,7 +305,8 @@ public class ClusterBuilder {
 	
 	/* cancella tutti i tagsvisited urls, utile durante i test per cancellarli tra un 
 	 * test e l'altro. 
-	 * cancella anche i risultati del clustering */
+	*/
+	
 	public void deleteAllTagsFromDatabase() {
 		//cancella il clustering di tutti i tags sul database
 		//INUTILE: lo fa comunque il clustering
@@ -314,8 +315,14 @@ public class ClusterBuilder {
 //		} catch (PersistenceException e) {
 //			e.printStackTrace();
 //		}
-		//cancella tutti gli url e i tag a loro associati di TUTTI gli utenti
-		this.tagsVisitedUrlHandler.deleteTagVisitedUrls();
+		
+		//cancella tutti gli url visitati e i tag a loro associati di TUTTI gli utenti
+		try {
+			this.tagsVisitedUrlHandler.deleteTagVisitedUrls();
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 			

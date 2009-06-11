@@ -21,7 +21,7 @@ public class ClusterCombinator {
 
 		this.clustersToCombine = clusters;
 		int clusterNumber = clusters.size();
-		logger.info("calling combinator with clusterNumber = " + clusterNumber);
+//		logger.info("calling combinator with clusterNumber = " + clusterNumber);
 		this.combinator = new CombinationGenerator(clusterNumber, 2);
 	}
 	

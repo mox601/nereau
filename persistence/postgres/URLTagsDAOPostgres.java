@@ -72,7 +72,7 @@ public class URLTagsDAOPostgres implements URLTagsDAO {
 			if (result.next()) {
 				idUrl = result.getInt("id");
 			} else {
-				logger.info("il visitedurl non Ž ancora stato salvato nel database");
+				logger.info("il visitedurl " + url.getUrlString() + " non Ž ancora stato salvato nel database. ");
 				
 			}
 	

@@ -96,11 +96,11 @@ public class TreeDAOPostgres implements TreeDAO {
 		/* qui devo mantenere l'id che Ž stato assegnato dal database alla tupla 
 		 * inserita, che Ž il padre delle prossime tuple */
 		
-		logger.info("visito il nodo: " + node.toString());
+//		logger.info("visito il nodo: " + node.toString());
 //		int fatherId = -1; 
 		
 		if (node.getFather() == null) {
-			System.out.println("nodo root");
+//			System.out.println("nodo root");
 //			fatherId = 0;
 		} else {
 //			fatherId = node.getFather().getIdNode();	
@@ -138,7 +138,7 @@ public class TreeDAOPostgres implements TreeDAO {
 			statement.setInt(4, node.getRight());			
 			statement.setFloat(5, similarity);
 			
-			logger.info("statement: " + statement.toString());
+//			logger.info("statement: " + statement.toString());
 			
 			statement.executeUpdate();
 		}
@@ -157,7 +157,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		StringBuffer query = new StringBuffer();
 		query.append(SQL_INSERT_CLUSTER);
-		logger.info("query: \n" + query);
+//		logger.info("query: \n" + query);
 		return query.toString();
 	}
 
@@ -186,7 +186,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		
 		/* estrae tutte le liste degli antenati di ogni tag */
 		for (RankedTag currentTag: tags) {
-			logger.info("estraggo gli ancestor del tag: " + currentTag.getTag());
+//			logger.info("estraggo gli ancestor del tag: " + currentTag.getTag());
 			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
 			/* l'ultimo nodo nella gerarchia Ž il nodo del rankedtag che si sta calcolando */
 			if (singleTagHierarchy.size() != 0) {
@@ -244,7 +244,7 @@ public class TreeDAOPostgres implements TreeDAO {
 //			currentNode.setRight(hierarchy.getLast().getRight());
 //			currentNode.setIdNode(hierarchy.getLast().getIdNode());
 //			currentNode.setSimilarity(hierarchy.getLast().getSimilarity());
-			logger.info("from list to Node: " + currentNode.toString());
+//			logger.info("from list to Node: " + currentNode.toString());
 			nodesList.add(currentNode);
 		}
 		
@@ -311,20 +311,20 @@ public class TreeDAOPostgres implements TreeDAO {
 			double actualSimilarity = 0.0;
 			Node ancestor = Node.calculateFirstAncestor(couple);
 			actualSimilarity = ancestor.getSimilarity().doubleValue();
-			logger.info("cerco l'ancestor dei nodi: " + 
-					couple.getFirst().toString() + " e " + 
-					couple.getLast().toString());
-			logger.info("found ancestor: " + ancestor.toString());
+//			logger.info("cerco l'ancestor dei nodi: " + 
+//					couple.getFirst().toString() + " e " + 
+//					couple.getLast().toString());
+//			logger.info("found ancestor: " + ancestor.toString());
 			
 			if (actualSimilarity >= maxSimilarity) {
 				//aggiorno l'antenato, la sua similarity trovata
 				//e la coppia di nodi a cui corrisponde l'antenato con 
 				//similarity piœ alta
-				logger.info("found ancestor with similarity " + actualSimilarity +
-						", HIGHER than = " + maxSimilarity);
-				logger.info("ancestor with highest sim: " + ancestor.getIdNode() +
-						"{ "+ ancestor.getLeft() + ", " + ancestor.getRight() + "}" + 
-						" similarity: " + actualSimilarity);
+//				logger.info("found ancestor with similarity " + actualSimilarity +
+//						", HIGHER than = " + maxSimilarity);
+//				logger.info("ancestor with highest sim: " + ancestor.getIdNode() +
+//						"{ "+ ancestor.getLeft() + ", " + ancestor.getRight() + "}" + 
+//						" similarity: " + actualSimilarity);
 				maxSimilarity = actualSimilarity;
 				twoNodes.clear();
 				twoNodes.addAll(couple);
@@ -390,13 +390,13 @@ public class TreeDAOPostgres implements TreeDAO {
 				currentAncestor.setLeft(left);
 				currentAncestor.setRight(right);
 				currentAncestor.setSimilarity(similarity);
-				logger.info("found ancestor with value: " + nodeValue + " sim: " + 
-						currentAncestor.getSimilarity() + 
-						" {" + currentAncestor.getLeft() + ", " + currentAncestor.getRight() + "}");
+//				logger.info("found ancestor with value: " + nodeValue + " sim: " + 
+//						currentAncestor.getSimilarity() + 
+//						" {" + currentAncestor.getLeft() + ", " + currentAncestor.getRight() + "}");
 				
 				//ho trovato l'ultimo nodo, quello da cui ha origine questa gerarchia
 				if ((left + 1) == right) {
-					logger.info("raggiunta foglia: " + tag.getTag());
+//					logger.info("raggiunta foglia: " + tag.getTag());
 					currentAncestor.setValue(tag.getTag());
 				}
 				ancestors.add(currentAncestor);
