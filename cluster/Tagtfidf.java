@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import persistence.PersistenceException;
 import persistence.postgres.TagtfidfDAOPostgres;
 
 import util.LogHandler;
@@ -41,7 +42,6 @@ public class Tagtfidf extends Tag {
 	private TagtfidfDAOPostgres tagTfidfHandler;
 	
 	public Tagtfidf() {
-		// TODO Auto-generated constructor stub
 		this.tagTfidfHandler = new TagtfidfDAOPostgres();
 	}
 
@@ -310,6 +310,18 @@ public class Tagtfidf extends Tag {
 			keyList.add(it.next());
 		}
 		return keyList;
+		
+	}
+
+	public void extractTfidfFromDatabase() {
+//TODO MODIFICA!!!!!!!!!!!!!!!
+		
+		try {
+			this.tagTfidfHandler.retrieveTag(this.tag);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

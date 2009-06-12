@@ -402,6 +402,8 @@ public class TreeDAOPostgres implements TreeDAO {
 					//devo estrarre i dati relativi al tfidf del tag foglia.
 					
 					Tagtfidf tagRepresentation = new Tagtfidf();
+					tagRepresentation.setTag(tag.getTag());
+					tagRepresentation.extractTfidfFromDatabase();
 					
 					
 					currentAncestor.setCentroid(tagRepresentation);
