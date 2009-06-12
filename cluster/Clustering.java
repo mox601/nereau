@@ -178,4 +178,28 @@ public class Clustering {
 		this.totalNodes = totalNodes;
 	}
 
+	/* restituisce la somma di tutti i (moduli al quadrato) dei cluster che lo compongono */
+	public double getSumSquareModules() {
+		
+		double squareModule = 0.0;
+	
+		for (HashSet<Node> singleCluster: clustering) {
+			
+			
+			for (Node tag: singleCluster) {
+				tag.getCentroid().getModule();
+			}
+			
+			
+			double calculatedModule = 5.0;
+			squareModule = Math.pow(calculatedModule, 2);
+			
+			
+			
+			System.out.println("il modulo al quadrato Ž: " + squareModule);
+		}
+		
+		return squareModule;
+	}
+
 }

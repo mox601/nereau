@@ -297,17 +297,31 @@ public class TreeTest {
 				System.out.print(node.toString() + ", ");
 			}
 			System.out.println("> ");
-		}	
+		}
+		
+		//////////////////////////////////////////////////////
+		
+		Clustering clusteringMaxModule = tree.cutTreeAtMaxModule();
+		
+		System.out.println("Clustering tagliato con il valore del modulo massimo");
+		
+		for (HashSet<Node> cluster: clusteringMaxModule.getClustering()) {
+			System.out.print("<");
+			for (Node node: cluster) {
+				System.out.print(node.toString() + ", ");
+			}
+			System.out.println("> ");
+		}
+		
 		
 	}
 
+	@Ignore
 	@Test
 	public void testCutNullTree() {
 		Tree tree = new Tree();
 		tree.cutTreeAtSimilarity(0.8);
-		
-		
-		
+
 	}
 	
 	

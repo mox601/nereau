@@ -11,6 +11,7 @@ import model.RankedTag;
 
 import cluster.ClusterCombinator;
 import cluster.Node;
+import cluster.Tagtfidf;
 import cluster.Tree;
 import persistence.PersistenceException;
 import java.sql.SQLException;
@@ -356,7 +357,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		return twoNodes;
 	}
 
-
+	/* l'ultimo elemento Node deve anche contenere una rappresentazione tfidf del tag */
 	private LinkedList<Node> extractSingleTagHierarchy(RankedTag tag) throws PersistenceException {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 //		logger.info("extracting ancestors of tag: " + tag.getTag());
@@ -398,6 +399,13 @@ public class TreeDAOPostgres implements TreeDAO {
 				if ((left + 1) == right) {
 //					logger.info("raggiunta foglia: " + tag.getTag());
 					currentAncestor.setValue(tag.getTag());
+					//devo estrarre i dati relativi al tfidf del tag foglia.
+					
+					Tagtfidf tagRepresentation = new Tagtfidf();
+					
+					
+					currentAncestor.setCentroid(tagRepresentation);
+					
 				}
 				ancestors.add(currentAncestor);
 				

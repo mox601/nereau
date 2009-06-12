@@ -369,7 +369,9 @@ public class QueryExpander {
 		/* per ora il taglio della similarity la faccio a 0.5 */
 		double cutSimilarity = 0.5;
 		logger.info("cutting tree at: " + cutSimilarity);
-		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);		
+		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);
+		Clustering optimalClustering = hierarchicalClustering.cutTreeAtMaxModule();
+		
 		logger.info("cut clustering: " + clustering.toString());
 
 		
@@ -384,14 +386,11 @@ public class QueryExpander {
 		}
 		
 		*/
-	
-	
-		
+			
 		/* ogni cluster avr‡ la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
 
 		int number = 0;
-		
 	
 		for (HashSet<Node> cluster: clustering.getClustering()) {
 			logger.info("< cluster " + number + " >");
@@ -431,11 +430,8 @@ public class QueryExpander {
 				/* somma i valori di ogni rankedTag in una mappa clusterValues */
 				HashMap<String, Double> tempClusterValues = mergeMaps(clusterValues, coOccurrenceValues4tag); 
 				clusterValues = tempClusterValues;
-				
 			
-				
 			}//for node in cluster
-	
 			
 			/* crea un'espansione a partire da clusterValues */
 		
@@ -467,15 +463,13 @@ public class QueryExpander {
 				}
 	
 			}
-			
 			number++;
 		}// for cluster: clustering
 		
 		
 		/* ottengo alla fine un 
 		 * Set<ExpandedQuery> result = new HashSet<ExpandedQuery>(); 
-		 * che contiene ExpandedQuery fatte cos’: 
-		 * una per ogni cluster. */
+		 * che contiene ExpandedQuery, una per ogni cluster. */
 		
 		/* costruisco il risultato, un insieme di ExpandedQueries */
 		Set<ExpandedQuery> result = new HashSet<ExpandedQuery>();
@@ -486,75 +480,6 @@ public class QueryExpander {
 		}
 		
 		logger.info("query espanse: " + expandedQueries);
-		
-		
-		
-		
-		/* OLD SCHOOL */
-		/* OLD SCHOOL: per ogni ranked tag  */
-//		for(RankedTag tag: expansionTags) {
-//			/* calcola i valori di cooccorrenza per il tag nella subMatrix */
-//			Map<String,Double> coOccurrenceValues4tag =
-//				this.initCoOccurrenceValues4tag(tag,subMatrix);
-//			for(String term1: subMatrix.keySet()) {
-//				/* per ogni termine contenuto nelle chiavi della submatrix, 
-//				 * che sarebbero i termini della query stemmati,   
-//				 * calcola i valori di co-occorrenza termine-tag */
-//				Map<String,Double> coOccurrenceValues4term4tag = 
-//					subMatrix.get(term1).get(tag);
-//				if(coOccurrenceValues4term4tag!=null) {
-//					for(String term2: coOccurrenceValues4term4tag.keySet()) {
-//						double sumValue =
-//							coOccurrenceValues4tag.remove(term2) 
-//							+ (termWeight * coOccurrenceValues4term4tag.get(term2));
-//						coOccurrenceValues4tag.put(term2, sumValue);
-//					}
-//				}
-//			}
-//	
-//			logger.info("co-occurrence values for tag " + tag + ": " + coOccurrenceValues4tag);
-//
-//			/* seleziona solo alcuni termini rilevanti, i primi k? */
-//			Map<String,Map<String,Integer>> expansionTerms = 
-//				this.selectRelevantTerms(stemmedQueryTerms,coOccurrenceValues4tag);
-//			
-//			/* se ho trovato dei termini con cui fare l'espansione, */
-//			
-//			if(expansionTerms!=null) {
-//				ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
-//				Set<RankedTag> rankedTags = null;
-//				if(expandedQueries.containsKey(expandedQuery))
-//					rankedTags = expandedQueries.get(expandedQuery);
-//				else {
-//					rankedTags = new HashSet<RankedTag>();
-//					expandedQueries.put(expandedQuery, rankedTags);
-//				}
-//				rankedTags.add(tag);
-//			}
-//			
-//		}
-//		
-		
-		
-		
-		
-		/*
-		if(expansionTags.isEmpty()) {
-			
-			Map<String,Map<String,Integer>> expansionTerms = 
-				this.selectRelevantTerms(stemmedQueryTerms, new HashMap<String,Double>());
-			
-			
-			//
-			//System.out.println("Expansion terms: " + expansionTerms);
-			
-			ExpandedQuery expandedQuery = new ExpandedQuery(expansionTerms);
-			Set<RankedTag> setWithNullTag = new HashSet<RankedTag>();
-			setWithNullTag.add(ParameterHandler.NULL_TAG);
-			expandedQueries.put(expandedQuery, setWithNullTag);
-		}
-		*/
-		
 		
 		return result;
 		

@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import persistence.postgres.TagtfidfDAOPostgres;
+
 import util.LogHandler;
 
 public class Tagtfidf extends Tag {
@@ -35,7 +37,14 @@ public class Tagtfidf extends Tag {
 	/* numero di risorse annotate con il tag attuale: Ž la lunghezza degli elementi 
 	 * della mappa tagUrl? */
 	private Integer totalUrls;
+	//per estrarre dal database
+	private TagtfidfDAOPostgres tagTfidfHandler;
 	
+	public Tagtfidf() {
+		// TODO Auto-generated constructor stub
+		this.tagTfidfHandler = new TagtfidfDAOPostgres();
+	}
+
 	public Tagtfidf(String tag, Map<String, Double> tagUrlsMap) {
 		this.tag = tag;
 		this.tagUrlsMap = tagUrlsMap;
@@ -47,9 +56,6 @@ public class Tagtfidf extends Tag {
 		this.tagUrlsMap = new HashMap<String, Double>();
 		this.totalUrls = new Integer(this.tagUrlsMap.size());
 	}
-	
-	
-	
 	
 	
 	public Tagtfidf(List<Tagtfidf> tagsToMerge) {

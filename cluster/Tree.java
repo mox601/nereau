@@ -178,7 +178,7 @@ public class Tree {
 
 				/* se é una foglia con similarity piú bassa di quella 
 				 * specificata, comunque aggiungi la lista col nodo singolo */
-				//????? come fa ad essere una foglia con similarity più bassa???
+				// come fa ad essere una foglia con similarity più bassa???
 				if (node.isLeaf()) {
 					HashSet<Node> leaf = new HashSet<Node>();
 					leaf.add(node);
@@ -186,6 +186,7 @@ public class Tree {
 				}
 
 //				System.out.println("nodo " + node.getValue() + " troppo generale, passo ai figli");
+				
 				/* passa a visitare i figli, 
 				 * questo nodo é troppo generale per la similarity scelta.  */
 				for (Node child: node.getChildren()) {
@@ -309,7 +310,50 @@ public class Tree {
 //		System.out.println("clustering ottimo by mean: ");
 //		System.out.println(optimalClustering.toString() + " " + optimalClustering.getDevStandard());
 		
-		Clustering clusteringObj = null;
+//		Clustering clusteringObj = null;
+		
+		return optimalClustering;
+	}
+
+	public Clustering cutTreeAtMaxModule() {
+		/* TODO taglia il clustering in un punto, come nell'articolo 
+		 * a comparison of document clustering techniques. 
+		 * la qualitá di un cluster é la coesivitá del cluster, 
+		 * cioé il modulo del vettore del centroide al quadrato. 
+		 * sommando su tutti i clusters di un particolare clustering, 
+		 * ho la qualitá del clustering. 
+		 * Effettuo il taglio quando la qualitá é massima.  
+		*/
+		Clustering optimalClustering = null;
+	
+		HashSet<HashSet<Node>> clustering = new HashSet<HashSet<Node>>();
+		
+		double similarity = 1.0;
+		HashSet<Clustering> clusteringsSet = new HashSet<Clustering>();
+		
+		//calcola tutti i clustering possibili, inseriscili nel clusteringsSet
+		while (similarity > 0.0) {	
+			Clustering actualClustering = this.cutTreeAtSimilarity(similarity);
+			if (!clusteringsSet.contains(actualClustering)) {
+				clusteringsSet.add(actualClustering);
+			}			
+			similarity = similarity - 0.15; 
+		}
+		
+		
+		double maxSquareModule = 0.0;
+		
+		for (Clustering actualClustering: clusteringsSet) {
+			System.out.print("esamino clustering: \n" + actualClustering.toString());
+			double currentSquareModule = actualClustering.getSumSquareModules();
+			System.out.println("che ha modulo al quadrato = " + currentSquareModule);
+			
+			if (actualClustering.getSumSquareModules() > maxSquareModule) {
+				maxSquareModule = currentSquareModule;
+				optimalClustering = actualClustering;
+			}
+		
+		}
 		
 		
 		return optimalClustering;
