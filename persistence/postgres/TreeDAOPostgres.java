@@ -43,12 +43,11 @@ public class TreeDAOPostgres implements TreeDAO {
 		Node root = clustering.getRoot();
 		
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("comincio la visita dell'albero e lo salvo");
+//		logger.info("comincio la visita dell'albero e lo salvo");
 				
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
-		
 		try {
 			/* cancella tutte le tuple della tabella clusters_sets, 
 			 * tanto non Ž rilevante modificarla */
@@ -57,7 +56,7 @@ public class TreeDAOPostgres implements TreeDAO {
 			String deleteQuery = this.prepareStatementForDelete();
 			statement = connection.prepareStatement(deleteQuery);
 			statement.executeUpdate();
-			logger.info("DELETED all clusters_sets rows: " + deleteQuery);
+//			logger.info("DELETED all clusters_sets rows: " + deleteQuery);
 			
 			/* visita l'albero, e per ogni nodo che incontri inserisci una tupla.  
 			 * la tabella Ž fatta cos’: 
@@ -131,7 +130,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		try {
 			String query = prepareStatementForInsert();
 			/* query per salvare i dati del nodo e l'id del padre */	
-			logger.info("saving node: " + node.getValue());
+//			logger.info("saving node: " + node.getValue());
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, node.getIdNode());
 			statement.setInt(2, idTag);

@@ -314,7 +314,7 @@ public class Tagtfidf extends Tag {
 	}
 
 	public void extractTfidfFromDatabase() {
-//TODO MODIFICA!!!!!!!!!!!!!!!
+		/* TODO: devo estrarre la rappresentazione tfidf del tag */
 		
 		try {
 			this.tagTfidfHandler.retrieveTag(this.tag);

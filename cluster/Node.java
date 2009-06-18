@@ -150,7 +150,7 @@ public class Node {
 		/* parte dall'ultimo nodo della gerarchia del nodo 1 e cerca un nodo 
 		 * uguale nella gerarchia del nodo 2 
 		 * quando lo trova, mette quale valore di similarity? 
-		 * quello del nodo nella gerarchia, dovrebbe essere lo stesso */
+		 * quello del nodo nella gerarchia */
 		
 		boolean found = false;
 		

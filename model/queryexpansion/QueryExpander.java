@@ -370,7 +370,7 @@ public class QueryExpander {
 		double cutSimilarity = 0.5;
 		logger.info("cutting tree at: " + cutSimilarity);
 		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);
-		Clustering optimalClustering = hierarchicalClustering.cutTreeAtMaxModule();
+//		Clustering optimalClustering = hierarchicalClustering.cutTreeAtMaxModule();
 		
 		logger.info("cut clustering: " + clustering.toString());
 

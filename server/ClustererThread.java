@@ -31,7 +31,7 @@ public class ClustererThread implements Runnable {
 //			Tree actualClustering = clusterer.getActualClustering();
 			
 			//stampo il clustering ottenuto
-			logger.info("clustering ottenuto: " + clusterer.actualClusteringToString());
+//			logger.info("clustering ottenuto: " + clusterer.actualClusteringToString());
 
 
 			if (clusterer.getActualClustering() != null) {
