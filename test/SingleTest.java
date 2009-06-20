@@ -52,13 +52,12 @@ public class SingleTest {
 	
 	
 	
-	
 	/*
 	è un test che si fa per un termine in un contesto semantico, determinato dai tag che trovo come nome della
 	directory associata. 
 	dentro ogni directory (victoria, amazon... )
-	tagGroupDirs sono due cartelle che rappresentano i due significati della parola testName
-	per ogni cartella faccio un utente che (ha cercato, rappresenta) un termine in un dato contesto. 
+	tagGroupDirs sono DUE cartelle che rappresentano i DUE significati della parola testName
+	per ogni cartella faccio UN UTENTE che (ha cercato, rappresenta) un termine in un dato contesto. 
 	*/
 
 	public SingleTest(String testName) {
@@ -113,7 +112,8 @@ public class SingleTest {
 		
 		//feed user model with data from tag groups
 		//fai il modello utente, visitando le pagine del training
-		this.feedUserModel();
+		//posso commentarlo, una volta effettuato. per velocizzare
+//		this.feedUserModel();
 		
 		
 		//dopo aver fatto il feed user model, devo lanciare l'algoritmo di clustering
@@ -217,8 +217,6 @@ public class SingleTest {
 			bw.write("Results without Query Expansion:\n\n");
 			bw.flush();
 			
-			
-			
 			//lucene
 			QueryParser qp = new QueryParser("contents",new StemmingAnalyzer());
 			Hits noExp = this.is.search(qp.parse(testName));
@@ -277,7 +275,6 @@ public class SingleTest {
 			bw.flush();
 			QueryExpander qef = new QueryExpander();
 			
-			//é necessario usare Map<Query, Set<RTags>> ????
 			//proviamo a cambiare questo codice, lasciando le espansioni invariate
 //			Map<Query,Set<RankedTag>> expQueries = qef.expandQuery(testName, user);
 			/* ****** ESPANSIONE OLD NEREAU 0.7 ****** */
@@ -331,9 +328,9 @@ public class SingleTest {
 			bw.write("Results with Query Expansion and Tag Clustering:\n\n");
 			bw.flush();
 			QueryExpander qefTfidf = new QueryExpander();
+			//qui le espansioni devono avere dei RankedTags PESATI. DONE
 			Set<ExpandedQuery> expQueriesTfidf = qefTfidf.expandQueryTfidf(testName, user);
 
-			
 			Set<Document> allDocsTfidf;
 			List<Document> selectedDocsTfidf = new LinkedList<Document>();
 			
@@ -347,16 +344,36 @@ public class SingleTest {
 			
 			/* ho estratto i documenti, ora calcolo le misure di precision e recall */
 			
+			countFirstCorrectResults = 0;
+			countAllCorrectResults = 0;
+			for(Document doc: selectedDocsTfidf) {
+				System.out.println(doc.get("taggroup") + " " + doc.get("filename"));
+				bw.write(doc.get("taggroup") + " " + doc.get("filename") + '\n');
+				bw.flush();
+				if(doc.get("taggroup").equals(currentTagGroup))
+					countFirstCorrectResults++;
+			}
+			for(Document doc: allDocsTfidf) {
+				if(doc.get("taggroup").equals(currentTagGroup))
+					countAllCorrectResults++;
+			}
+			double precisionEXPTFIDF = (double)countFirstCorrectResults / evaluationResults;
+			double recallEXPTFIDF = (double)countAllCorrectResults / TestParams.test_docs_per_tag_group;
+			double fmeasureEXPTFIDF = (2.0*precisionEXPTFIDF*recallEXPTFIDF)/(precisionEXPTFIDF+recallEXPTFIDF);
+			System.out.println("Precision: " + precisionEXPTFIDF + "\nRecall: " + recallEXPTFIDF);
+			bw.write("Precision: " + precisionEXPTFIDF + "\nRecall: " + recallEXPTFIDF + "\n");
+			System.out.println("F1-measure: " + fmeasureEXPTFIDF);
+			bw.write("F1-measure: " + fmeasureEXPTFIDF + "\n\n");
+			bw.flush();
+		
 			
 			
-			
-			
-			
+
 			/* ********END_NEW************* */
 			
 
 			//update results
-			Double[] measures = {fmeasureNOEXP,fmeasureEXP};
+			Double[] measures = {fmeasureNOEXP,fmeasureEXP, fmeasureEXPTFIDF};
 			String testname = user.getUsername();
 			result.put(testname, measures);
 			
@@ -386,41 +403,41 @@ public class SingleTest {
 		bw.flush();
 		
 		
-		//calcola la somma dei pesi dei tag di ogni query
+		//calcola la somma dei pesi DEI TAGS di OGNI QUERY
+		//esegui la ricerca con la query espansa usando lucene
 		for(model.Query expQuery: expQueries) {
 			QueryParser qp = new QueryParser("contents",new StemmingAnalyzer());
 			Hits expHit = this.is.search(qp.parse(expQuery.toString()));
 			expHits.put(expQuery, expHit);
 			double expQueryRank = 0.0;
 			
-			//per ogni RankedTag presente nella query espansa corrente
+			//per ogni RANKEDTAG presente nella query espansa corrente
 			for(RankedTag rt: expQuery.getExpansionTags())
 				if(rt.getRanking()>expQueryRank)
 					expQueryRank = rt.getRanking();
 			
+			//metto in una mappa con il suo ranking
 			expQueryRanks.put(expQuery, expQueryRank);
 			queryRankSum += expQueryRank;
+			
+			System.out.println("query: " + expQuery.toString() + " ranking dei tags: " + expQueryRank);
+//			System.out.println("somma dei ranking di tutte le queries: " + queryRankSum);
 		}
 		//ho calcolato la queryRankSum, utile per pesare il valore dell'espansione. 
 		
-		
+		//normalize si usa per moltiplicare il rank di ogni expQuery
 		double normalize = (double)evaluationResults/(queryRankSum);
+		System.out.println(normalize + " = " + evaluationResults + " / " + queryRankSum);
 		
-		//aggiorna i ranks delle query espanse in base al valore normalize
+		//aggiorna i rankings delle query espanse in base al valore normalize
 		for(model.Query expQuery: expQueryRanks.keySet()) {
 			double rank = expQueryRanks.get(expQuery);
 			rank *= normalize;
-			System.out.println(expQuery + "(rank=" + rank + ") for tags: " + expQuery.toString());
-			
-			
-			
+			System.out.println(expQuery + " (rank=" + rank + ") for tags: " + expQuery.toString());
 			bw.write(expQuery + "(rank=" + rank + ") for tags: " + expQuery.toString() + "\n");
 			bw.flush();
-			
-			
 			expQueryRanks.put(expQuery, rank);
 		}
-		
 		
 		/* riordino le query per rilevanza */
 		
@@ -443,18 +460,20 @@ public class SingleTest {
 			bw.flush();
 		}
 		
-		//prima fase, parto dal pi√π basso, assegno resNums temporanei
+		//prima fase, parto dal piú basso, assegno resNums temporanei
 		System.out.println("\nTemporary results per query (1):");
+		//devo assegnare ancora remainingRes risultati
 		int remainingRes = evaluationResults;
 		for(model.Query expQ: sortedExpQueries) {
 			int tempResNum = (int)expQueryRanks.get(expQ).doubleValue();
 			remainingRes -= tempResNum;
 			expQueryResNums.put(expQ, tempResNum);
 			System.out.println(expQ + " ---> " + tempResNum + " results.");
-			//bw.write(expQ + " ---> " + tempResNum + " results.\n");
-			//bw.flush();
+			bw.write(expQ + " ---> " + tempResNum + " results.\n");
+			bw.flush();
 		}
-		//seconda fase, parto dal pi√π basso, togliendo i risultati in eccesso
+		
+		//seconda fase, parto dal piú basso, togliendo i risultati in eccesso
 		//(rispetto a quelli effettivamente reperiti)
 		System.out.println("\nTemporary results per query (2):");
 		int availableRes = 0;
@@ -469,7 +488,8 @@ public class SingleTest {
 			expQueryResNums.put(expQ, tempResNum);
 			System.out.println(expQ + " ---> " + tempResNum + " results.");
 		}
-		//terza fase, parto dal pi√π alto (assegno ulteriori risultati fino ad esaurirli)
+		
+		//terza fase, parto dal piú alto (assegno ulteriori risultati fino ad esaurirli)
 		remainingRes += availableRes;
 		for(int i=sortedExpQueries.size()-1; i>=0 && remainingRes>0; i--) {
 			model.Query expQ = sortedExpQueries.get(i);
@@ -500,11 +520,9 @@ public class SingleTest {
 		Set<String> allDocsPaths = new HashSet<String>();
 		Set<String> selectedDocsPaths = new HashSet<String>();
 		boolean firstIteration = true;
-		//create list with selected results
+		//create list with selected results//
 		while(selectedDocs.size()<evaluationResults) {
-			
 			boolean noMoreResults = true;
-			
 			for(model.Query expQuery: sortedExpQueries) {
 				Hits hits = expHits.get(expQuery);
 				int chosenRes = 0;
@@ -688,7 +706,7 @@ public class SingleTest {
 		
 		UserModelUpdater umu = new UserModelUpdater();
 		
-		//TODO: per ridurre i tempi di test, poi si cambia
+		//FIXME: per ridurre i tempi di test, poi si cambia
 			
 		int totalPagesToVisit = 5;
 		

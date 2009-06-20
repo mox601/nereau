@@ -270,12 +270,7 @@ public class QueryExpander {
 		return result;
 	}
 
-	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {
-		/* si deve basare sui tag che hanno partecipato all'espansione 
-		 * vecchia, deve ricevere in qualche modo i vettori dei tag e
-		 * i valori dei termini per poi sommarli e formare espansioni diverse */
-		
-		/* comincia nello stesso modo dell'espansione vecchia */
+	public Set<ExpandedQuery> expandQueryTfidf(String queryString, User user) {	
 		
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("query originale: " + queryString);
@@ -326,16 +321,20 @@ public class QueryExpander {
 			this.tfidfExpansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
 		
 		logger.info("tags (associati a termini della query) per espansione: " + allExpansionTags);
+		//allExpansionTags hanno il ranking!
 		
 		Map<ExpandedQuery, Set<RankedTag>> expandedQueries = 
 			new HashMap<ExpandedQuery, Set<RankedTag>> ();
 		
-		/* ho trovato tutti i tag in relazione con i termini della query. */		
+		/* ho trovato TUTTI i tag in relazione con i termini della query. */		
 		/* avendo i rankedTags, posso estrarre le loro gerarchie dal database */
 		
 		TreeDAOPostgres treeHandler = new TreeDAOPostgres();
 		
 		LinkedList<RankedTag> tagsList = new LinkedList<RankedTag>(allExpansionTags);
+		//il rank qui ce l'hanno!
+		System.out.println("elenco di RankedTags da estrarre dal database: " + tagsList);
+		
 		Tree hierarchicalClustering = null;
 		try {
 			hierarchicalClustering = treeHandler.retrieve(tagsList);
@@ -343,9 +342,7 @@ public class QueryExpander {
 			hierarchicalClustering = new Tree();
 			e.printStackTrace();
 		}
-
-		/* potrebbe essere che l'albero sia nullo perché non ho trovato tag 
-		 * di cui posso ricostruire la gerarchia.  */		
+	
 		if(hierarchicalClustering.getRoot() != null) {
 			logger.info("clustering gerarchico dei tag");
 			logger.info(hierarchicalClustering.toString());
@@ -374,8 +371,6 @@ public class QueryExpander {
 		
 		logger.info("cut clustering: " + clustering.toString());
 
-		
-		
 		/* prova per il cambiamento del punto di taglio: works */
 		/*
 		for (double simCut = 1.0; simCut > 0.0; simCut = simCut - 0.1) {
@@ -402,7 +397,8 @@ public class QueryExpander {
 				logger.info("calcolo le co-occorrenze per il tag: " 
 						+ tag.toString());
 				/* trasformo in rankedtag per poter usare le funzioni vecchie */
-				RankedTag rTag = new RankedTag(tag.getValue());
+				//TODO: aggiungo un parametro al costruttore, il double ranking
+				RankedTag rTag = new RankedTag(tag.getValue(), tag.getRanking());
 				/* calcola i valori di cooccorrenza per il tag nella subMatrix */
 				Map<String,Double> coOccurrenceValues4tag =
 					this.initCoOccurrenceValues4tag(rTag,subMatrix);
@@ -458,7 +454,9 @@ public class QueryExpander {
 	
 				//dovrei aggiungere tutti i tag del cluster corrente
 				for (Node tag: cluster) {
-					RankedTag rTag = new RankedTag(tag.getValue());
+					RankedTag rTag = new RankedTag(tag.getValue(), tag.getRanking());
+					System.out.println("da qui costruisco un ranked tag: " + tag.toString());
+					System.out.println("che è questo: " + rTag.toString());
 					rankedTags.add(rTag);
 				}
 	

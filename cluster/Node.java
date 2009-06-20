@@ -11,6 +11,8 @@ public class Node {
 	private Node father;
 	private List<Node> children;
 	private String value; 
+	//ranking del RankedTag corrispondente che il nodo rappresenta
+	private double ranking;
 	/* valore di somiglianza in corrispondenza del quale Ž stato creato il nodo (cluster) */
 	private Float similarity;
 	
@@ -66,14 +68,6 @@ public class Node {
 	}
 
 	private Tagtfidf centroid;
-	
-	/* contiene all'inizio solo un tag, poi i nodi si fondono e contengono sempre piœ 
-	 * tags, fino a contenerli tutti */
-	/* posso non usarlo: per trovare i tag di un cluster si fa getLeaves sul cluster 
-	 * di cui si vuole conoscere la composizione */
-//	private List<Tagtfidf> clusterTags; 
-	
-	
 	public Node(String value) {
 		this.value = value; 
 		this.children = new LinkedList<Node>();
@@ -405,6 +399,15 @@ public class Node {
 	 */
 	public void setHierarchy(LinkedList<Node> hierarchy) {
 		this.hierarchy = hierarchy;
+	}
+
+	public double getRanking() {
+		return this.ranking;
+	}
+
+	public void setRanking(double ranking) {
+		this.ranking = ranking;
+		
 	}
 
 

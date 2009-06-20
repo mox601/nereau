@@ -1,0 +1,66 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf460
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 arrangeResults(expQueries, selectedDocuments, evaluationResults)\
+riordina i risultati ottenuti dalle query espanse\
+\
+ho gli hits per ogni query: expHits\
+e i rank per ogni query: expQueryRanks\
+e il numero di risultati garantiti per ogni query: expQueryResNums\
+sortedExpQueries sono le espansioni ordinate\
+\
+1) per ogni query, calcolo gli expHit, i documenti trovati con la query usando Lucene; poi per ogni RankedTag della query attuale, prendo il ranking e lo sommo, ottenendo per ogni query la somma dei ranking dei tags usati per la query. \
+\
+2) normalize = evaluationResults/queryRankSum, cio\'e9 se devo considerare i primi 10 risultati e ho una queryRankSum = 8, normalize = 10/8. \
+queryRankSum \'e9 la somma di TUTTI i pesi delle espansioni\
+\
+3) aggiorno i valori di ranking di ogni query espansa moltiplicandoli per normalize. \
+cos\'ed normalizzo i ranking e li salvo in expQueryRanks\
+\
+4) fase di riordino delle query, per rilevanza. \
+\
+metto tutte le expQueries in una lista; \
+prendo la prima expQuery e la prendo come minRank: la confronto con tutte le altre query e vedo se trovo una query pi\'fa bassa; se si aggiorno il minimo; \
+metto la query pi\'fa bassa nel sortedExpQueries; \
+\
+prima fase: remainingRes = evaluationResults; cio\'e9 devo assegnare ancora tutti i risultati che devo considerare. \
+per tutte le query ordinate dalla pi\'fa bassa alla pi\'fa alta; \
+tempResNum \'e9 il numero di risultati assegnati alla query corrente secondo il suo peso; \
+remainingRes lo diminuisco dei tempResNum; \
+metto in una mappa expQueryResNums la query e il numero di risultati assegnati. \
+\
+seconda fase: (verifico se sono effettivamente disponibili i risultati che avevo assegnato: pu\'f3 anche essere che non ho hits a sufficienza per una query, quindi la successiva query eredita dei risultati disponibili. )\
+per ogni query ordinata nel sortedExpQueries, \
+tempResNum \'e9 sempre il numero di risultati assegnati alla query (stavolta intero!) secondo il suo peso; \
+aggiungo a tempResNum availableRes, (inizialmente 0) e riazzero availableRes. \
+se il numero di risultati tempResNum cos\'ed calcolato \'e9 pi\'fa grande del numero di hits ottenuti con la query corrente, allora assegna ad availableResults i risultati che avanzano: tempResNum - expHits.get(expQ).length() e il tempResNum \'e9 pari al massimo possibile, ovvero expHits.get(expQ).length(), tutti gli hits ottenuti. \
+metto in una mappa la query e i risultati assegnati. \
+\
+terza fase: (assegno i risultati rimanenti alla query pi\'fa pesante? )\
+\
+\
+\
+ho dei problemi con il clusterer: \
+QUANDO \'e9 eseguito e \
+COME funziona\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+}

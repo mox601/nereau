@@ -175,7 +175,7 @@ public class TreeDAOPostgres implements TreeDAO {
 	
 	@Override
 	public Tree retrieve(List<RankedTag> tags) throws PersistenceException {
-		/* da una lista di rankedtags - quelli scelti da nereau vecchio - 
+		/* da una lista di rankedtags con i valori pesati - quelli scelti da nereau vecchio - 
 		 * estrae una gerarchia dal database con solo quei tag.  */
 		//viene usato durante l'espansione
 		//FIXME: se gli passo solo un rankedTag??
@@ -186,8 +186,10 @@ public class TreeDAOPostgres implements TreeDAO {
 		
 		/* estrae tutte le liste degli antenati di ogni tag */
 		for (RankedTag currentTag: tags) {
-//			logger.info("estraggo gli ancestor del tag: " + currentTag.getTag());
 			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
+			
+			logger.info("ottengo la lista di antenati del tag: " + currentTag.getTag() + ": " + singleTagHierarchy);
+			
 			/* l'ultimo nodo nella gerarchia Ž il nodo del rankedtag che si sta calcolando */
 			if (singleTagHierarchy.size() != 0) {
 				hierarchiesList.add(singleTagHierarchy);
@@ -223,8 +225,8 @@ public class TreeDAOPostgres implements TreeDAO {
 	}
 
 
-	private Tree buildTreeFromHierarchies(
-			LinkedList<LinkedList<Node>> hierarchiesList) {
+	private Tree buildTreeFromHierarchies(LinkedList<LinkedList<Node>> hierarchiesList) {
+		
 		/* algoritmo che ricostruisce un albero a partire da una lista di gerarchie */
 		Logger logger = LogHandler.getLogger(this.getClass().getName());		
 		LinkedList<Node> nodesList = new LinkedList<Node>();
@@ -250,7 +252,9 @@ public class TreeDAOPostgres implements TreeDAO {
 		
 		
 		logger.info("Algoritmo per la ricostruzione dell'albero ridotto");
-		while (nodesList.size() != 1) {
+		
+		
+		while (nodesList.size() > 1) {
 			/* algoritmo per la ricostruzione */
 			/* 1 - cerco la coppia (lista) di Nodes che ha un ancestor (comune)
 			 * con la similarity piœ alta di tutti gli altri */
@@ -285,7 +289,9 @@ public class TreeDAOPostgres implements TreeDAO {
 		return reconstructedTree;
 	}
 
-
+	/* da una lista di nodi, trova nodi con 
+	 * il valore di similarity dell'antenato piœ alta */
+	//FIXME!!!
 	private LinkedList<Node> findNodesWithHighestAncestorSimilarity(
 			LinkedList<Node> nodesList) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
@@ -298,9 +304,17 @@ public class TreeDAOPostgres implements TreeDAO {
 		//comune che deve diventare il padre della coppia di nodi
 		this.ancestorFound = null;
 				
-		/* ottengo tutte le combinazioni di coppie tra i nodi passati */
+		/* ottengo tutte le combinazioni di coppie tra i nodi della lista */
 		ClusterCombinator nodesCombinator= new ClusterCombinator(nodesList);
 		LinkedList<LinkedList<Node>> combinations = nodesCombinator.getClusterCombinations();
+		
+		System.out.println("combinazioni di coppie: " + combinations);
+		
+		////////////////////////////////////////////////////FIXME
+		
+		for(int i=0;i<combinations.size();i++) {
+			System.out.println("combinazione " + i + ": " + combinations.get(i));
+		}
 		
 		/* per ogni coppia trovo il valore del primo nodo antenato 
 		 * e verifico se supera il valore massimo trovato finora */
@@ -310,13 +324,20 @@ public class TreeDAOPostgres implements TreeDAO {
 		for (LinkedList<Node> couple: combinations) {
 			double actualSimilarity = 0.0;
 			Node ancestor = Node.calculateFirstAncestor(couple);
-			actualSimilarity = ancestor.getSimilarity().doubleValue();
-//			logger.info("cerco l'ancestor dei nodi: " + 
-//					couple.getFirst().toString() + " e " + 
-//					couple.getLast().toString());
-//			logger.info("found ancestor: " + ancestor.toString());
+
+			logger.info("cerco l'ancestor dei nodi: " + 
+			couple.getFirst().toString() + " e " + 
+			couple.getLast().toString());
+
 			
-			if (actualSimilarity >= maxSimilarity) {
+			if (ancestor != null) {
+				actualSimilarity = ancestor.getSimilarity().doubleValue();
+				logger.info("found ancestor: " + ancestor.toString());
+				
+			}
+			
+//			
+			if (actualSimilarity > maxSimilarity) {
 				//aggiorno l'antenato, la sua similarity trovata
 				//e la coppia di nodi a cui corrisponde l'antenato con 
 				//similarity piœ alta
@@ -394,18 +415,23 @@ public class TreeDAOPostgres implements TreeDAO {
 //						currentAncestor.getSimilarity() + 
 //						" {" + currentAncestor.getLeft() + ", " + currentAncestor.getRight() + "}");
 				
-				//ho trovato l'ultimo nodo, quello da cui ha origine questa gerarchia
+				//ho trovato l'ultimo nodo foglia, quello da cui ha origine questa gerarchia
 				if ((left + 1) == right) {
 //					logger.info("raggiunta foglia: " + tag.getTag());
 					currentAncestor.setValue(tag.getTag());
+					//e il ranking?
+					
 					//devo estrarre i dati relativi al tfidf del tag foglia.
 					
 					Tagtfidf tagRepresentation = new Tagtfidf();
 					tagRepresentation.setTag(tag.getTag());
 					tagRepresentation.extractTfidfFromDatabase();
-					
-					
 					currentAncestor.setCentroid(tagRepresentation);
+					//aggiungo al node un attributo ranking, del tag che rappresenta. 
+					//Solo se Ž una foglia
+					currentAncestor.setRanking(tag.getRanking());
+					System.out.println("aggiungo il RankedTag "+ tag.getTag()
+							+ " e il ranking " + tag.getRanking());
 					
 				}
 				ancestors.add(currentAncestor);

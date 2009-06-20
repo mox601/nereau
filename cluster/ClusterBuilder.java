@@ -47,13 +47,17 @@ public class ClusterBuilder {
 	 */
 	
 	
-
+//FIXME: broken, non clusterizza tutti i tags dal database
 	public void buildClusters() {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("START TAGTFIDF CLUSTERING");
 		//problema con i decimali, moltiplico per 10 per lavorare meglio
 		int similarity = 10;
 		int scala = 10;
+		
+//		System.out.println("nodi da fondere: " + clustersToMerge.toString());
+		//i nodi da fondere sono giusti!
+		
 		while (similarity >= 0 && clustersToMerge.size() > 1) {
 //			logger.info("Similarity: " + similarity);
 			double similarityValue = (double) similarity / scala;
@@ -85,26 +89,75 @@ public class ClusterBuilder {
 		}
 
 		
+		logger.info("iterazione terminata. ora fondo i cluster che rimangono%%%%%%%%%%%%%%%%");
 		
-		if (clustersToMerge.size() > 0) {
+		
+		if (clustersToMerge.size() > 0 && similarity <= 0) {
 			if (clustersToMerge.size() > 1) {
-//				logger.info("c'Ž una foresta, e la similarity Ž a 0: " + 
-//						clustersToMerge.toString());
-				/* fondo tutti i nodi rimanenti */
-				LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, 0.0);				
-
-				for (LinkedList<Node> actualMergingCouple: mergingClusters) {
-					Node newCluster = new Node(actualMergingCouple, 0.0);			
-					/* elimina i due cluster fusi dal clustersToMerge */
-//					logger.info("merging clusters: " + actualMergingCouple.getFirst().toString() 
-//							+ " AND " + actualMergingCouple.getLast().toString());
-					clustersToMerge.remove(actualMergingCouple.getFirst());
-					clustersToMerge.remove(actualMergingCouple.getLast());
-					/* aggiungi il cluster merged nel clustersToMerge */
-					clustersToMerge.add(newCluster);
-//					logger.info("ADDED cluster: " + newCluster.getValue());
+				System.out.println("c'Ž una foresta, non un solo albero ");
+				
+				//elenco tutti i clusters da fondere
+				for(int i=0; i<clustersToMerge.size(); i++) {
+					System.out.println(i + ": " + clustersToMerge.get(i).toString());
 				}
-			}
+				
+				
+				
+				//finchŽ ho clusters da fondere
+				while (clustersToMerge.size() > 1) {
+					/* fondo TUTTI i clusters rimanenti !! 
+					 * lo faccio 2 a 2 ? */
+					LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, 0.0);				
+
+					for (LinkedList<Node> actualMergingCouple: mergingClusters) {
+
+						//itera tante volte quante coppie ho.
+
+						System.out.println("fondo i clusters con somiglianza 0: \n" + 
+								actualMergingCouple.getFirst() + 
+								"\nAND\n" + 
+								actualMergingCouple.getLast());
+
+
+						Node newCluster = new Node(actualMergingCouple, 0.0);
+
+						System.out.println("il nuovo nodo fusione Ž: " + newCluster.toString());
+						/* elimina i due cluster fusi dal clustersToMerge */
+						//					logger.info("merging clusters: "); 
+						//					logger.info(actualMergingCouple.getFirst().toString() 
+						//							+ "\nAND \n" + actualMergingCouple.getLast().toString());
+
+						//codice cruciale! 
+						clustersToMerge.remove(actualMergingCouple.getFirst());
+						clustersToMerge.remove(actualMergingCouple.getLast());
+
+						System.out.println("ho levato la coppia che ho fuso, ottengo: ");
+
+
+						//elenco tutti i clusters dopo la fusione
+						System.out.println("clustersToMerge dopo la rimozione della coppia: ");
+						for(int i=0; i<clustersToMerge.size(); i++) {
+							System.out.println(i + ": " + clustersToMerge.get(i).toString());
+						}
+
+
+						
+						/* aggiungi il cluster fusione nel clustersToMerge */
+						clustersToMerge.add(newCluster);
+	//					logger.info("ADDED cluster: " + newCluster.getValue());
+
+
+
+						System.out.println("clustersToMerge dopo l'aggiunta della fusione: ");
+						for(int i=0; i<clustersToMerge.size(); i++) {
+							System.out.println(i + ": " + clustersToMerge.get(i).toString());
+						}
+
+					}
+				}
+
+			} //while 
+
 			
 			
 			/* esiste un solo nodo, che Ž la radice dell'albero. */
@@ -113,6 +166,15 @@ public class ClusterBuilder {
 			/* devo assegnare un id ad ogni nodo dell'albero */
 			/* ora funziona con i nested sets */
 			actualClustering.assignIds();
+
+			//discrepanza tra clustersToMerge e actualClustering NO, prima!
+			
+			System.out.println("clustersToMerge, preso come radice " + clustersToMerge.get(0));
+			System.out.println("tree-clustering ottenuto: " + actualClustering.toString());
+			
+			
+			
+			
 
 		} else {
 			logger.info("nessun tag nel database, non si effettua il clustering");
@@ -152,7 +214,8 @@ public class ClusterBuilder {
 			for (Tagtfidf tag: extractedTags) {
 				Node currentNode = new Node(tag.getTag(), tag);
 				this.clustersToMerge.add(currentNode); 
-//				logger.info("from Tagtfidf to Node tag: " + currentNode.toString());
+//				logger.info("found tagtfidf, convert to Node tag: " + currentNode.toString());
+//				logger.info("nodo creato: " + currentNode.toString());
 			}
 
 		}
@@ -179,6 +242,7 @@ public class ClusterBuilder {
 		LinkedList<LinkedList<Node>> listOfAllCouples = new LinkedList<LinkedList<Node>>();
 		ClusterCombinator clusterCombinator = new ClusterCombinator(clustersToMerge);
 		listOfAllCouples = clusterCombinator.getClusterCombinations();
+//		System.out.println("lista di coppie con somiglianza: " + listOfAllCouples);
 		/* itero sulle coppie per vedere quali hanno somiglianza = similarity */
 		Iterator<LinkedList<Node>> couplesIterator = listOfAllCouples.iterator();
 		/* elenco di coppie cluster da restituire */
@@ -230,8 +294,7 @@ public class ClusterBuilder {
 			
 			String firstTagInActualTestingCouple = actualTestingCouple.getFirst().getValue();
 			String secondTagInActualTestingCouple = actualTestingCouple.getLast().getValue();
-			
-
+		
 			if ( (firstTagInCouple.equals(firstTagInActualTestingCouple)) || 
 					(firstTagInCouple.equals(secondTagInActualTestingCouple)) || 
 					(secondTagInCouple.equals(firstTagInActualTestingCouple)) ||

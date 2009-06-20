@@ -111,6 +111,7 @@ public class CombineTasks {
 	
 	
 	 */
+	
 	private static Map<String, List<Set<String>>> parseTests() throws FileNotFoundException {
 
 		Map<String, List<Set<String>>> result = new HashMap<String, List<Set<String>>>();

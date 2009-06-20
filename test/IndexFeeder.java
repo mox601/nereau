@@ -126,10 +126,10 @@ public class IndexFeeder {
 	public static void main(String[] args) throws CorruptIndexException, LockObtainFailedException, IOException, ParseException {
 		
 		
-		//costruisce l'index per le cartelle nei file dei parametri
+		//costruisce l'index con lucene per le cartelle nei file dei parametri
 		createIndex();
 		
-		//search("cancer");
+//		search("cancer");
 		
 	}
 	
