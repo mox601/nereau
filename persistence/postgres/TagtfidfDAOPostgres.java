@@ -43,11 +43,11 @@ public class TagtfidfDAOPostgres implements TagtfidfDAO {
 			//
 			Map<String, Double> tagUrlsMap = new HashMap<String, Double>();
 			while (result.next()) {
-				System.out.println(result.getInt("id") + " " + 
-						result.getInt("idtag") + " " +
-						result.getInt("idurl") + " " + 
-						result.getInt("value") + " " + 
-						result.getString("url"));
+//				System.out.println(result.getInt("id") + " " + 
+//						result.getInt("idtag") + " " +
+//						result.getInt("idurl") + " " + 
+//						result.getInt("value") + " " + 
+//						result.getString("url"));
 				
 				//costruisci il tagtfidf, con i valori degli url, non con gli id
 				

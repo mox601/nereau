@@ -47,7 +47,6 @@ public class ClusterBuilder {
 	 */
 	
 	
-//FIXME: broken, non clusterizza tutti i tags dal database
 	public void buildClusters() {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("START TAGTFIDF CLUSTERING");
@@ -89,17 +88,17 @@ public class ClusterBuilder {
 		}
 
 		
-		logger.info("iterazione terminata. ora fondo i cluster che rimangono%%%%%%%%%%%%%%%%");
+//		logger.info("iterazione terminata. ora fondo i cluster che rimangono%%%%%%%%%%%%%%%%");
 		
 		
 		if (clustersToMerge.size() > 0 && similarity <= 0) {
 			if (clustersToMerge.size() > 1) {
-				System.out.println("c'Ž una foresta, non un solo albero ");
+//				logger.info("c'Ž una foresta, non un solo albero ");
 				
 				//elenco tutti i clusters da fondere
-				for(int i=0; i<clustersToMerge.size(); i++) {
-					System.out.println(i + ": " + clustersToMerge.get(i).toString());
-				}
+//				for(int i=0; i<clustersToMerge.size(); i++) {
+//					System.out.println(i + ": " + clustersToMerge.get(i).toString());
+//				}
 				
 				
 				
@@ -113,15 +112,15 @@ public class ClusterBuilder {
 
 						//itera tante volte quante coppie ho.
 
-						System.out.println("fondo i clusters con somiglianza 0: \n" + 
-								actualMergingCouple.getFirst() + 
-								"\nAND\n" + 
-								actualMergingCouple.getLast());
+//						System.out.println("fondo i clusters con somiglianza 0: \n" + 
+//								actualMergingCouple.getFirst() + 
+//								"\nAND\n" + 
+//								actualMergingCouple.getLast());
 
 
 						Node newCluster = new Node(actualMergingCouple, 0.0);
 
-						System.out.println("il nuovo nodo fusione Ž: " + newCluster.toString());
+//						System.out.println("il nuovo nodo fusione Ž: " + newCluster.toString());
 						/* elimina i due cluster fusi dal clustersToMerge */
 						//					logger.info("merging clusters: "); 
 						//					logger.info(actualMergingCouple.getFirst().toString() 
@@ -131,14 +130,15 @@ public class ClusterBuilder {
 						clustersToMerge.remove(actualMergingCouple.getFirst());
 						clustersToMerge.remove(actualMergingCouple.getLast());
 
-						System.out.println("ho levato la coppia che ho fuso, ottengo: ");
+//						System.out.println("ho levato la coppia che ho fuso, ottengo: ");
 
 
 						//elenco tutti i clusters dopo la fusione
-						System.out.println("clustersToMerge dopo la rimozione della coppia: ");
-						for(int i=0; i<clustersToMerge.size(); i++) {
-							System.out.println(i + ": " + clustersToMerge.get(i).toString());
-						}
+//						System.out.println("clustersToMerge dopo la rimozione della coppia: ");
+//					
+//						for(int i=0; i<clustersToMerge.size(); i++) {
+//							System.out.println(i + ": " + clustersToMerge.get(i).toString());
+//						}
 
 
 						
@@ -148,10 +148,10 @@ public class ClusterBuilder {
 
 
 
-						System.out.println("clustersToMerge dopo l'aggiunta della fusione: ");
-						for(int i=0; i<clustersToMerge.size(); i++) {
-							System.out.println(i + ": " + clustersToMerge.get(i).toString());
-						}
+//						System.out.println("clustersToMerge dopo l'aggiunta della fusione: ");
+//						for(int i=0; i<clustersToMerge.size(); i++) {
+//							System.out.println(i + ": " + clustersToMerge.get(i).toString());
+//						}
 
 					}
 				}
