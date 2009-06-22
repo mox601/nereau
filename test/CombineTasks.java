@@ -27,7 +27,7 @@ public class CombineTasks {
 		SingleTest st;
 		
 		//create log file
-		File logFile = new File(TestParams.data_dir,"secondtest_first_try.log");
+		File logFile = new File(TestParams.data_dir,"firsttest_first_try.log");
 		if(!logFile.exists())
 			if(!logFile.createNewFile())
 				throw new IOException();
@@ -49,10 +49,19 @@ public class CombineTasks {
 		}
 		
 		
-		//effettua i test trovati nel file
+		//effettua i tests trovati nel file
 		for(String test: testSpecs.keySet()) {
 			st = new SingleTest(test);
-			st.performFirstTest();
+//			st.performFirstTest();
+			st.performTest();
+			
+			/* problema nel database dei tagsvisitedurls: 
+			 * i profili eseguiti per ultimi risentono delle visite di tutti gli utenti 
+			 * creati precedentemente. L'aspetto sociale così è enfatizzato. 
+			 * si puó anche evitare, cancellando la tabella ogni volta che si 
+			 * effettua un test, per valutare solo i miglioramenti individuali... 
+			 * La prima volta ho svuotato tagsvisitedurls... */ 
+			
 		}
 		
 		//for(int numOfRes=5; numOfRes<=50; numOfRes++) {
@@ -78,6 +87,8 @@ public class CombineTasks {
 				bw.flush();
 			}
 			*/
+		
+		
 			/*
 			double noExpMean=0.0, expMean=0.0;
 			for(String testname: results.keySet()) {
@@ -119,6 +130,7 @@ public class CombineTasks {
 		Scanner scanner = new Scanner(testSpecsFile);
 		while(scanner.hasNextLine()) {
 			String testName = scanner.nextLine();
+//			System.out.println("trovato nome del test: " + testName);
 			List<Set<String>> tagGroups = new LinkedList<Set<String>>();
 			while(scanner.hasNextLine()) {
 				String tagGroup = scanner.nextLine();

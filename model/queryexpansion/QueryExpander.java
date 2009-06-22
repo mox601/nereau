@@ -311,10 +311,6 @@ public class QueryExpander {
 		double termWeight = 1.0 / (double)stemmedQueryTerms.size();
 		
 		/* devo prendere tutti i tags ! */
-//		vecchio metodo, da rimuovere
-//		Set<RankedTag> expansionTags = 
-//			this.expansionTagsStrategy.findExpansionTags(stemmedQueryTerms, subMatrix);
-//		
 		// altro insieme, con TUTTI i tags, anche quelli meno rilevanti, senza fare intersezioni tra i tag 
 		// associati ai termini della query
 		Set<RankedTag> allExpansionTags = 

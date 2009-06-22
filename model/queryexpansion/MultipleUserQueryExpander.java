@@ -21,7 +21,8 @@ public class MultipleUserQueryExpander extends QueryExpander {
 	
 	
 	
-	
+	/* espande la query usando un modello utente di tutti gli utenti che hanno 
+	 * lo username che comincia per "...", accorpando due diversi contesti semantici */
 	public Set<ExpandedQuery> expandQuery(String queryString, User user) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("query originale: " + queryString);
@@ -50,6 +51,9 @@ public class MultipleUserQueryExpander extends QueryExpander {
 			this.expand(stemmedQueryTerms,subMatrix);
 		return expandedQueries;
 	}
+	
+	
+	
 
 	private void updateSubMatrix(User user, Set<String> stemmedQueryTerms, Map<String, Map<RankedTag, Map<String, Double>>> subMatrix) {
 

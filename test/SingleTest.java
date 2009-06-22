@@ -91,8 +91,11 @@ public class SingleTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("costruzione del test " + this.testName + " completata");
 	}
 	
+	/* performTest genera anche il modello utente, poi fa il clustering e lancia 
+	 * performFirstTest, che invece si occupa di lanciare le 3 query con i 3 diversi modi */
 	public void performTest() throws PersistenceException, IOException, ParseException {
 		
 		//create log file
@@ -113,8 +116,7 @@ public class SingleTest {
 		//feed user model with data from tag groups
 		//fai il modello utente, visitando le pagine del training
 		//posso commentarlo, una volta effettuato. per velocizzare
-//		this.feedUserModel();
-		
+		this.feedUserModel();
 		
 		//dopo aver fatto il feed user model, devo lanciare l'algoritmo di clustering
 		//che mi salvi sul database i clusters risultanti. 
@@ -366,7 +368,6 @@ public class SingleTest {
 			bw.write("F1-measure: " + fmeasureEXPTFIDF + "\n\n");
 			bw.flush();
 		
-			
 			
 
 			/* ********END_NEW************* */
@@ -706,9 +707,9 @@ public class SingleTest {
 		
 		UserModelUpdater umu = new UserModelUpdater();
 		
-		//FIXME: per ridurre i tempi di test, poi si cambia
+		//FIXME: per ridurre i tempi di test globali, poi si cambia
 			
-		int totalPagesToVisit = 5;
+		int totalPagesToVisit = 3;
 		
 		for(File dataDir: dataDirs) {
 			int pagesVisited = 0;			
@@ -744,7 +745,7 @@ public class SingleTest {
 
 	public static void main(String[] args) throws PersistenceException, IOException, ParseException {
 		
-		SingleTest st = new SingleTest("victoria");
+		SingleTest st = new SingleTest("oxford");
 		st.performTest();
 		
 	}
