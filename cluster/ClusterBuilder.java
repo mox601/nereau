@@ -169,8 +169,9 @@ public class ClusterBuilder {
 
 			//discrepanza tra clustersToMerge e actualClustering NO, prima!
 			
-			System.out.println("clustersToMerge, preso come radice " + clustersToMerge.get(0));
-			System.out.println("tree-clustering ottenuto: " + actualClustering.toString());
+//			logger.info("clustersToMerge, preso come radice " + clustersToMerge.get(0));
+			//rimosso, potrebbe creare problemi con la stampa dell'albero
+//			logger.info("tree-clustering ottenuto: " + actualClustering.toString());
 			
 			
 			

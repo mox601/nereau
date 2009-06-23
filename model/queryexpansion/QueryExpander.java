@@ -329,7 +329,7 @@ public class QueryExpander {
 		
 		LinkedList<RankedTag> tagsList = new LinkedList<RankedTag>(allExpansionTags);
 		//il rank qui ce l'hanno!
-		System.out.println("elenco di RankedTags da estrarre dal database: " + tagsList);
+		logger.info("elenco di RankedTags da estrarre dal database: " + tagsList);
 		
 		Tree hierarchicalClustering = null;
 		try {
@@ -340,8 +340,8 @@ public class QueryExpander {
 		}
 	
 		if(hierarchicalClustering.getRoot() != null) {
-			logger.info("clustering gerarchico dei tag");
-			logger.info(hierarchicalClustering.toString());
+			logger.info("clustering gerarchico dei tag della query effettuato");
+//			logger.info(hierarchicalClustering.toString());
 		} 
 
 		/* dopo che ho le gerarchie, costruisco l'albero ridotto e 
@@ -365,7 +365,7 @@ public class QueryExpander {
 		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);
 //		Clustering optimalClustering = hierarchicalClustering.cutTreeAtMaxModule();
 		
-		logger.info("cut clustering: " + clustering.toString());
+		logger.info("cut clustering: \n" + clustering.toString());
 
 		/* prova per il cambiamento del punto di taglio: works */
 		/*
@@ -381,10 +381,10 @@ public class QueryExpander {
 		/* ogni cluster avrá la sua espansione, calcolata su diversi tag */
 		Set<ExpandedQuery> clustersExpansion = new HashSet<ExpandedQuery>();
 
-		int number = 0;
+		int clusterNumber = 0;
 	
 		for (HashSet<Node> cluster: clustering.getClustering()) {
-			logger.info("< cluster " + number + " >");
+			logger.info("< cluster " + clusterNumber + " >");
 			/* per ogni tag del cluster devo sommare i vettori dei pesi 
 			 * dei termini associati ai tags */
 			/* somma di tutti i tag appartenenti al cluster */
@@ -393,7 +393,6 @@ public class QueryExpander {
 				logger.info("calcolo le co-occorrenze per il tag: " 
 						+ tag.toString());
 				/* trasformo in rankedtag per poter usare le funzioni vecchie */
-				//TODO: aggiungo un parametro al costruttore, il double ranking
 				RankedTag rTag = new RankedTag(tag.getValue(), tag.getRanking());
 				/* calcola i valori di cooccorrenza per il tag nella subMatrix */
 				Map<String,Double> coOccurrenceValues4tag =
@@ -451,13 +450,13 @@ public class QueryExpander {
 				//dovrei aggiungere tutti i tag del cluster corrente
 				for (Node tag: cluster) {
 					RankedTag rTag = new RankedTag(tag.getValue(), tag.getRanking());
-					System.out.println("da qui costruisco un ranked tag: " + tag.toString());
-					System.out.println("che è questo: " + rTag.toString());
+//					logger.info("da qui costruisco un ranked tag: " + tag.toString());
+					logger.info("RankedTag: " + rTag.toString());
 					rankedTags.add(rTag);
 				}
 	
 			}
-			number++;
+			clusterNumber++;
 		}// for cluster: clustering
 		
 		

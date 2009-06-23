@@ -208,7 +208,7 @@ public class Tree {
 		}
 	}
 	
-		
+		/* broken!! */
 	public String toString() {
 		String treeString = "";
 		/* visita in preordine e stampa i nodi */
