@@ -9,6 +9,8 @@ import model.RankedTag;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.sun.tools.javac.util.List;
+
 import persistence.PersistenceException;
 import persistence.postgres.TreeDAOPostgres;
 
@@ -17,6 +19,8 @@ import cluster.Node;
 import cluster.Tree;
 
 
+
+/* testing intensivo!!! */
 public class TreeDAOPostgresTest {
 	
 	private Tree clustering;
@@ -46,10 +50,15 @@ public class TreeDAOPostgresTest {
 		/**/
 		
 		/* costruisco dei ranked tags */
-		/* scelgo di estrarre 3 tags: {blog, sapere, wikipedia} */
-		RankedTag blog = new RankedTag("blog");
-		RankedTag sapere = new RankedTag("sapere");
-		RankedTag wikipedia = new RankedTag("wikipedia");
+		/* scelgo di estrarre 3 tags */
+	
+		double blogRank = 1.0;
+		double sapereRank = 2.0;
+		double wikipediaRank = 3.0;
+		
+		RankedTag blog = new RankedTag("blog", blogRank);
+		RankedTag sapere = new RankedTag("sapere", sapereRank);
+		RankedTag wikipedia = new RankedTag("wikipedia", wikipediaRank);
 		LinkedList<RankedTag> tags = new LinkedList<RankedTag>();
 		tags.add(blog);
 		tags.add(sapere);
@@ -68,7 +77,16 @@ public class TreeDAOPostgresTest {
 		}
 		
 		/* le foglie della gerarchia devono essere quelle della lista */
-		/* ma le foglie sono dei Node, non dei RankedTag */
+		/* le foglie sono dei Node, ma contengono proprio dati del RankedTag:  
+		 * devo fare l'assert su quelli. */
+		/* value e ranking*/
+		
+		List<Node> leaves = (List<Node>) hierarchy.getLeaves();
+		
+		for (Node node: leaves) {
+//			assertEquals();
+		}
+		
 //		assertEquals(tags, hierarchy.getLeaves());
 				
 		

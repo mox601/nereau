@@ -116,7 +116,7 @@ public class SingleTest {
 		//feed user model with data from tag groups
 		//fai il modello utente, visitando le pagine del training
 		//posso commentarlo, una volta effettuato. per velocizzare
-		this.feedUserModel();
+//		this.feedUserModel();
 		
 		//dopo aver fatto il feed user model, devo lanciare l'algoritmo di clustering
 		//che mi salvi sul database i clusters risultanti. 
@@ -319,11 +319,6 @@ public class SingleTest {
 			bw.flush();
 			
 			
-			
-			
-			
-			
-			//TODO: integra, integra!!
 			/* RISULTATI DI NEREAU 0.7 NEW  */
 
 			System.out.println("Results with Query Expansion and Tag Clustering:");
@@ -421,14 +416,14 @@ public class SingleTest {
 			expQueryRanks.put(expQuery, expQueryRank);
 			queryRankSum += expQueryRank;
 			
-			System.out.println("query: " + expQuery.toString() + " ranking dei tags: " + expQueryRank);
+//			System.out.println("query: " + expQuery.toString() + " ranking dei tags: " + expQueryRank);
 //			System.out.println("somma dei ranking di tutte le queries: " + queryRankSum);
 		}
 		//ho calcolato la queryRankSum, utile per pesare il valore dell'espansione. 
 		
 		//normalize si usa per moltiplicare il rank di ogni expQuery
 		double normalize = (double)evaluationResults/(queryRankSum);
-		System.out.println(normalize + " = " + evaluationResults + " / " + queryRankSum);
+//		System.out.println(normalize + " = " + evaluationResults + " / " + queryRankSum);
 		
 		//aggiorna i rankings delle query espanse in base al valore normalize
 		for(model.Query expQuery: expQueryRanks.keySet()) {
@@ -683,6 +678,12 @@ public class SingleTest {
 		for(User user: dbTestUsers)
 			ud.deleteUser(user);
 		
+		
+		//delete tagvisitedurls
+		
+		
+		
+		
 		//create new user in the database
 		for(User user: dbTestUsers) {
 			
@@ -714,8 +715,9 @@ public class SingleTest {
 		for(File dataDir: dataDirs) {
 			int pagesVisited = 0;			
 			for(File doc: dataDir.listFiles()) {
-				//totalPages
-				if(!doc.getName().startsWith("tags_") && pagesVisited < totalPagesToVisit) {
+				//totalPages, rimuovo i limiti ne visita 50
+//				if(!doc.getName().startsWith("tags_") && pagesVisited < totalPagesToVisit) {
+				if(!doc.getName().startsWith("tags_")) {
 					List<VisitedURL> vUrls = new LinkedList<VisitedURL>();
 					VisitedURL vUrl;
 					model.Query query = new model.Query(this.testName);

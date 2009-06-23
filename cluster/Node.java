@@ -148,12 +148,25 @@ public class Node {
 		
 		boolean found = false;
 		
+		/* caso limite: 
+		searching ancestor of: 1 and 1
+		with 1st hierarchy: []
+		with 2nd hierarchy: []
+		*/
+		System.out.println("searching ancestor of: " + couple.getFirst().getValue()
+				+ " and " + couple.getLast().getValue());
+		
+		
+		System.out.println("with 1st hierarchy: " + couple.getFirst().getHierarchy().toString());
+		System.out.println("with 2nd hierarchy: " + couple.getLast().getHierarchy().toString());
+		
 		while (firstIterator.hasNext() && !found) {
 			Iterator<Node> secondIterator = couple.getLast().getHierarchy().descendingIterator();
 			Node a = firstIterator.next();
 			
 			while (secondIterator.hasNext() && !found) {
 				Node b = secondIterator.next();
+				//se i due nodi in lista sono uguali, 
 				if ((b.getLeft() == a.getLeft()) && 
 						(b.getRight() == a.getRight()) && 
 						(b.getIdNode() == a.getIdNode()) ) {

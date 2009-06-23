@@ -53,6 +53,8 @@ web81_nereau
 nereauroma3
 
 
+ssh web136_nereau@nereau.eunetwork.net -p 4422
+
 web136_nereau
 nereauroma3
 
@@ -60,6 +62,14 @@ nereauroma3
 login e pwd del postgres
 postgres
 midianbombe
+
+
+in remoto ho lo stesso database: 
+nereau_dump
+proprietario web81_nereau
+
+psql -d nereau_dump -U postgres
+
 
 Nereau funziona in locale
 java 1.6

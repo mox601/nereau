@@ -308,7 +308,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		
 //		System.out.println("combinazioni di coppie tra nodi: " + combinations);
 		
-		/* FIXME occhio a >=0.0 o > 0.0 */
+		/* occhio a >=0.0 o > 0.0 */
 		
 //		for(int i=0;i<combinations.size();i++) {
 //			System.out.println("combinazione " + i + ": " + combinations.get(i));
@@ -321,6 +321,7 @@ public class TreeDAOPostgres implements TreeDAO {
 	
 		for (LinkedList<Node> couple: combinations) {
 //			System.out.println("&&&&&&&&&&&&&& ricerca antenato di una coppia di nodi");
+			
 			double actualSimilarity = 0.0;
 
 //			logger.info("cerco l'ancestor dei nodi: " + 
@@ -328,6 +329,8 @@ public class TreeDAOPostgres implements TreeDAO {
 //					couple.getLast().toString());
 
 			Node ancestor = Node.calculateFirstAncestor(couple);
+			
+			System.out.println("found ancestor: " + ancestor);
 			
 			if (ancestor != null) {
 				actualSimilarity = ancestor.getSimilarity().doubleValue();
@@ -362,7 +365,7 @@ public class TreeDAOPostgres implements TreeDAO {
 
 		
 		
-		
+		/* FIXME: gestione del caso in cui non ho antenati!! */
 		
 		/* cerco l'indice dell'ancestor nella gerarchia di uno dei due 
 		 * nodi per costruire la sua gerarchia di ancestors */
@@ -371,7 +374,6 @@ public class TreeDAOPostgres implements TreeDAO {
 		int ancestorIndex = 0;
 		int i = 0;
 		for (Node node: twoNodes.getFirst().getHierarchy()) {
-
 			if ((node.getLeft() == ancestorFound.getLeft()) && 
 					(node.getRight() == ancestorFound.getRight()) && 
 					(node.getIdNode() == ancestorFound.getIdNode()) ) {
@@ -434,13 +436,13 @@ public class TreeDAOPostgres implements TreeDAO {
 				currentAncestor.setLeft(left);
 				currentAncestor.setRight(right);
 				currentAncestor.setSimilarity(similarity);
-//				logger.info("found ancestor with value: " + nodeValue + " sim: " + 
-//						currentAncestor.getSimilarity() + 
-//						" {" + currentAncestor.getLeft() + ", " + currentAncestor.getRight() + "}");
+				logger.info("found ancestor with value: " + nodeValue + " sim: " + 
+						currentAncestor.getSimilarity() + 
+						" {" + currentAncestor.getLeft() + ", " + currentAncestor.getRight() + "}");
 				
 				//ho trovato l'ultimo nodo foglia, quello da cui ha origine questa gerarchia
 				if ((left + 1) == right) {
-//					logger.info("raggiunta foglia: " + tag.getTag());
+					logger.info("raggiunta foglia: " + tag.getTag());
 					currentAncestor.setValue(tag.getTag());
 					//e il ranking?
 					
