@@ -148,17 +148,22 @@ public class Node {
 		
 		boolean found = false;
 		
+		//se cerco l'ancestor di un nodo e la root, non trova mai l'antenato 
 		/* caso limite: 
 		searching ancestor of: 1 and 1
 		with 1st hierarchy: []
 		with 2nd hierarchy: []
+		la gerarchia deve sempre contenere il nodo di cui é la gerarchia!! 
+		il prob non é qui. se uno dei due è il nodo radice, devo mettere nella gerarchia
+		il nodo radice!  
 		*/
-		System.out.println("searching ancestor of: " + couple.getFirst().getValue()
-				+ " and " + couple.getLast().getValue());
+		
+//		System.out.println("searching ancestor of: " + couple.getFirst().getValue()
+//				+ " and " + couple.getLast().getValue());
 		
 		
-		System.out.println("with 1st hierarchy: " + couple.getFirst().getHierarchy().toString());
-		System.out.println("with 2nd hierarchy: " + couple.getLast().getHierarchy().toString());
+//		System.out.println("with 1st hierarchy: " + couple.getFirst().getHierarchy().toString());
+//		System.out.println("with 2nd hierarchy: " + couple.getLast().getHierarchy().toString());
 		
 		while (firstIterator.hasNext() && !found) {
 			Iterator<Node> secondIterator = couple.getLast().getHierarchy().descendingIterator();
@@ -173,8 +178,6 @@ public class Node {
 					firstAncestor = b;
 					found = true;
 				} 
-				
-				
 			} // secondIterator
 			
 		}// firstIterator
@@ -214,8 +217,8 @@ public class Node {
 					found = true;
 					mergedAncestorsList = (LinkedList<Node>) ancestorB.getHierarchy().subList(0, toIndex);
 
-					System.out.println("ho trovato l'antenato comune - id: " + 
-							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
+//					System.out.println("ho trovato l'antenato comune - id: " + 
+//							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
 				}
 				/* diminuisco il counter per calcolare l'indice della seconda lista */
 				toIndex = toIndex - 1;

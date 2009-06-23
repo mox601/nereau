@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import model.RankedTag;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.sun.tools.javac.util.List;
@@ -34,6 +35,7 @@ public class TreeDAOPostgresTest {
 		clustering = clusterer.getActualClustering();	
 	}
 	
+	@Ignore
 	@Test
 	public void testVisitTree() throws PersistenceException {
 		TreeDAOPostgres treeHandler = new TreeDAOPostgres();
@@ -53,16 +55,16 @@ public class TreeDAOPostgresTest {
 		/* scelgo di estrarre 3 tags */
 	
 		double blogRank = 1.0;
-		double sapereRank = 2.0;
-		double wikipediaRank = 3.0;
+		double linguisticsRank = 2.0;
+		double scholarshipsRank = 3.0;
 		
 		RankedTag blog = new RankedTag("blog", blogRank);
-		RankedTag sapere = new RankedTag("sapere", sapereRank);
-		RankedTag wikipedia = new RankedTag("wikipedia", wikipediaRank);
+		RankedTag linguistics = new RankedTag("linguistics", linguisticsRank);
+		RankedTag scholarships = new RankedTag("scholarships", scholarshipsRank);
 		LinkedList<RankedTag> tags = new LinkedList<RankedTag>();
 		tags.add(blog);
-		tags.add(sapere);
-		tags.add(wikipedia);
+		tags.add(linguistics);
+		tags.add(scholarships);
 		
 		/* estraggo la gerarchia relativa a solo questi ranked tags */
 		
