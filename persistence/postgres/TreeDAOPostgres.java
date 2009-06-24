@@ -358,6 +358,7 @@ public class TreeDAOPostgres implements TreeDAO {
 					twoNodes.addAll(couple);
 					this.ancestorFound = ancestor;
 
+					//FIXME
 					logger.info("found ancestor with MAX similarity: " 
 							+ ancestor.toString() 
 							+ " sim: " + actualSimilarity);
@@ -370,8 +371,7 @@ public class TreeDAOPostgres implements TreeDAO {
 
 		} //for combinations
 
-		
-		
+	
 		/* FIXME: gestione del caso in cui non ho antenati!! */
 		
 		/* cerco l'indice dell'ancestor nella gerarchia di uno dei due 

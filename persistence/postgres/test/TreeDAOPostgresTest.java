@@ -43,6 +43,7 @@ public class TreeDAOPostgresTest {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void retrieveTreeTest() {
 		/* testa la costruzione di una gerarchia a partire da un 
@@ -92,7 +93,7 @@ public class TreeDAOPostgresTest {
 //		assertEquals(tags, hierarchy.getLeaves());
 				
 		
-		System.out.println(hierarchy.toString());
+//		System.out.println(hierarchy.toString());
 		
 		/*
 		for (Node node: hierarchy.getLeaves()) {
@@ -102,6 +103,57 @@ public class TreeDAOPostgresTest {
 		
 	}
 	
+	
+	@Test
+	public void testFromTagsToHierarchy() {
+		
+		
+		/* conta i tag distinti sul database, nel clustering */
+		java.util.List<Node> leaves = this.clustering.getLeaves();
+		
+		int distinctTags = leaves.size();
+		
+		System.out.println("distinctTags = " + distinctTags);
+		
+		/* sceglie un numero random di tags (1-11) e fa RankedTags */
+		
+		double random = (Math.random()*10) + 1;
+		int tagNumber = (int) Math.rint(random);
+		System.out.println("random = " + random + " e intero = " + tagNumber);
+		
+		
+		System.out.println("elenco delle foglie: \n" + leaves.toString());
+		
+
+		LinkedList<Integer> extractedIndexes = new LinkedList<Integer>();
+		LinkedList<RankedTag> rankedTags = new LinkedList<RankedTag>();
+		
+		
+		for (int i = 0; i < tagNumber; i++) {
+
+			boolean safeIndex = false;
+
+			Integer tagIndex = null;
+			while (!safeIndex) {
+				double randomIndex = (Math.random()*distinctTags) + 1;
+				tagIndex = new Integer((int) Math.rint(randomIndex));
+				if (!extractedIndexes.contains(tagIndex)) {
+					safeIndex = true;
+				}
+			}
+
+			extractedIndexes.add(tagIndex);
+			System.out.println("picking tag " + i + " from index " + tagIndex);
+			
+		}
+		
+		
+		/* da List<RankedTags>, cerco di ricostruire l'albero ridotto */
+		
+		/* valuto i risultati */
+		
+		
+	}
 	
 	
 	
