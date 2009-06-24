@@ -188,13 +188,13 @@ public class TreeDAOPostgres implements TreeDAO {
 		for (RankedTag currentTag: tags) {
 			LinkedList<Node> singleTagHierarchy = this.extractSingleTagHierarchy(currentTag);
 
-			logger.info("ottengo la lista di antenati del tag: " + currentTag.getTag() + ": \n" + singleTagHierarchy);
+//			logger.info("ottengo la lista di antenati del tag: " + currentTag.getTag() + ": \n" + singleTagHierarchy);
 //			System.out.println("ho estratto gli antenati del tag: " + currentTag.getTag());
 			//OK, ho estratto gerarchie solo di Tags!
 			
 			/* l'ultimo nodo nella gerarchia Ž il nodo del rankedtag che si sta calcolando */
 			if (singleTagHierarchy.size() != 0) {
-				System.out.println("aggiungo il tag singolo in coda: " + singleTagHierarchy);
+//				System.out.println("aggiungo il tag singolo in coda: " + singleTagHierarchy);
 				hierarchiesList.add(singleTagHierarchy);
 			}
 		}
@@ -249,7 +249,7 @@ public class TreeDAOPostgres implements TreeDAO {
 //			currentNode.setRight(hierarchy.getLast().getRight());
 //			currentNode.setIdNode(hierarchy.getLast().getIdNode());
 //			currentNode.setSimilarity(hierarchy.getLast().getSimilarity());
-			logger.info("from list to Node: " + currentNode.toString());
+//			logger.info("from list to Node: " + currentNode.toString());
 			nodesList.add(currentNode);
 		}
 		
@@ -324,10 +324,10 @@ public class TreeDAOPostgres implements TreeDAO {
 		double maxSimilarity = -1.0;
 	
 		for (LinkedList<Node> couple: combinations) {
-			System.out.println("ricerca antenato della coppia di nodi: \n" +  
-					 couple.toString() + "\n" + "con gerarchie: \n" + 
-					 couple.getFirst().getHierarchy() + " e \n" + 
-					 couple.getLast().getHierarchy());
+//			System.out.println("ricerca antenato della coppia di nodi: \n" +  
+//					 couple.toString() + "\n" + "con gerarchie: \n" + 
+//					 couple.getFirst().getHierarchy() + " e \n" + 
+//					 couple.getLast().getHierarchy());
 			
 			double actualSimilarity = 0.0;
 
@@ -337,7 +337,7 @@ public class TreeDAOPostgres implements TreeDAO {
 
 			Node ancestor = Node.calculateFirstAncestor(couple);
 			
-			System.out.println("found ancestor: " + ancestor);
+//			System.out.println("found ancestor: " + ancestor);
 			
 			if (ancestor != null) {
 				actualSimilarity = ancestor.getSimilarity().doubleValue();
@@ -357,11 +357,11 @@ public class TreeDAOPostgres implements TreeDAO {
 					twoNodes.clear();
 					twoNodes.addAll(couple);
 					this.ancestorFound = ancestor;
-
-					logger.info("found ancestor with MAX similarity: " 
-							+ ancestor.toString() 
-							+ " sim: " + actualSimilarity);
-					
+//
+//					logger.info("found ancestor with MAX similarity: " 
+//							+ ancestor.toString() 
+//							+ " sim: " + actualSimilarity);
+//					
 //					logger.info("found ancestor with MAX similarity: " 
 //							+ this.ancestorFound.toString() 
 //							+ " sim: " + actualSimilarity);
@@ -375,9 +375,7 @@ public class TreeDAOPostgres implements TreeDAO {
 
 		} //for combinations
 
-	
-		/* FIXME: gestione del caso in cui non ho antenati!! */
-		
+			
 		/* cerco l'indice dell'ancestor nella gerarchia di uno dei due 
 		 * nodi per costruire la sua gerarchia di ancestors */
 
@@ -405,7 +403,7 @@ public class TreeDAOPostgres implements TreeDAO {
 		if(ancestorIndex > 0) {
 			ancestorHierarchy.addAll(twoNodes.getFirst().getHierarchy().subList(0, ancestorIndex));
 			this.ancestorFound.setHierarchy(ancestorHierarchy);
-		} else {
+		} else {//FIXED!
 			//caso limite in cui l'indice dell'ancestor Ž 0, restituisco 
 			//proprio quell'elemento
 			ancestorHierarchy.add(twoNodes.getFirst().getHierarchy().getFirst());

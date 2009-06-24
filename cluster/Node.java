@@ -219,9 +219,9 @@ public class Node {
 					 * che si trova a distanza toIndex */
 					found = true;
 					mergedAncestorsList = (LinkedList<Node>) ancestorB.getHierarchy().subList(0, toIndex);
-					System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-					System.out.println("ho trovato l'antenato comune - id: " + 
-							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
+//					System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+//					System.out.println("ho trovato l'antenato comune - id: " + 
+//							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
 				}
 				/* diminuisco il counter per calcolare l'indice della seconda lista */
 				toIndex = toIndex - 1;

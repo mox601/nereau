@@ -117,7 +117,6 @@ public class ClusterBuilder {
 //								"\nAND\n" + 
 //								actualMergingCouple.getLast());
 
-
 						Node newCluster = new Node(actualMergingCouple, 0.0);
 
 //						System.out.println("il nuovo nodo fusione Ž: " + newCluster.toString());
@@ -139,9 +138,7 @@ public class ClusterBuilder {
 //						for(int i=0; i<clustersToMerge.size(); i++) {
 //							System.out.println(i + ": " + clustersToMerge.get(i).toString());
 //						}
-
-
-						
+	
 						/* aggiungi il cluster fusione nel clustersToMerge */
 						clustersToMerge.add(newCluster);
 	//					logger.info("ADDED cluster: " + newCluster.getValue());
@@ -172,9 +169,7 @@ public class ClusterBuilder {
 //			logger.info("clustersToMerge, preso come radice " + clustersToMerge.get(0));
 			//rimosso, potrebbe creare problemi con la stampa dell'albero
 //			logger.info("tree-clustering ottenuto: " + actualClustering.toString());
-			
-			
-			
+				
 			
 
 		} else {
