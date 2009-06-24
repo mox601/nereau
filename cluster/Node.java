@@ -96,7 +96,7 @@ public class Node {
 		
 		/* devo settare gli ancestors 
 		 * se ho passato due nodi che HANNO la gerarchia, 
-		 * restituisco una gerarchia del nodo padre */
+		 * restituisco UNA gerarchia del nodo padre */
 		
 		if (clustersToMerge.getFirst().getHierarchy() != null && 
 				clustersToMerge.getLast().getHierarchy() != null) {
@@ -149,6 +149,7 @@ public class Node {
 		boolean found = false;
 		
 		//se cerco l'ancestor di un nodo e la root, non trova mai l'antenato 
+		
 		/* caso limite: 
 		searching ancestor of: 1 and 1
 		with 1st hierarchy: []
@@ -157,6 +158,7 @@ public class Node {
 		il prob non é qui. se uno dei due è il nodo radice, devo mettere nella gerarchia
 		il nodo radice!  
 		*/
+		
 		
 //		System.out.println("searching ancestor of: " + couple.getFirst().getValue()
 //				+ " and " + couple.getLast().getValue());
@@ -189,8 +191,9 @@ public class Node {
 
 	/* Override dei metodi equals e hashCode per il confronto tra oggetti */
 	// TODO: cambiare se cambia la definizione dell'oggetto
-	
 	/* fonde le gerarchie dei due nodi */
+	
+	/* se ho solo un elemento? */
 	private LinkedList<Node> mergeHierarchies(Node first, Node second) {
 		LinkedList<Node> mergedAncestorsList = new LinkedList<Node>();
 		
@@ -216,9 +219,9 @@ public class Node {
 					 * che si trova a distanza toIndex */
 					found = true;
 					mergedAncestorsList = (LinkedList<Node>) ancestorB.getHierarchy().subList(0, toIndex);
-
-//					System.out.println("ho trovato l'antenato comune - id: " + 
-//							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
+					System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+					System.out.println("ho trovato l'antenato comune - id: " + 
+							ancestorA.idNode + " left: " + ancestorA.left + " right: " + ancestorA.right);
 				}
 				/* diminuisco il counter per calcolare l'indice della seconda lista */
 				toIndex = toIndex - 1;

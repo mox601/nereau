@@ -120,8 +120,6 @@ public class TreeDAOPostgresTest {
 		double random = (Math.random()*10) + 1;
 		int tagNumber = (int) Math.rint(random);
 		System.out.println("random = " + random + " e intero = " + tagNumber);
-		
-		
 		System.out.println("elenco delle foglie: \n" + leaves.toString());
 		
 
@@ -135,7 +133,7 @@ public class TreeDAOPostgresTest {
 
 			Integer tagIndex = null;
 			while (!safeIndex) {
-				double randomIndex = (Math.random()*distinctTags) + 1;
+				double randomIndex = (Math.random()*distinctTags);
 				tagIndex = new Integer((int) Math.rint(randomIndex));
 				if (!extractedIndexes.contains(tagIndex)) {
 					safeIndex = true;
@@ -144,11 +142,32 @@ public class TreeDAOPostgresTest {
 
 			extractedIndexes.add(tagIndex);
 			System.out.println("picking tag " + i + " from index " + tagIndex);
+			String currentTagName = leaves.get(tagIndex).getValue();
+			double ranking = leaves.get(tagIndex).getRanking();
+			RankedTag currentTag = new RankedTag(currentTagName, ranking);
+			rankedTags.add(currentTag);
 			
 		}
 		
 		
+		/* stampa ranked tags estratti */
+		for (RankedTag rankedTag: rankedTags) {
+			System.out.println("tag scelto: " + rankedTag.toString());
+		} 
+		
+		
 		/* da List<RankedTags>, cerco di ricostruire l'albero ridotto */
+		Tree hierarchy = null;
+		TreeDAOPostgres treeHandler = new TreeDAOPostgres();
+		
+		try {
+			hierarchy = treeHandler.retrieve(rankedTags);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("albero ricostruito: \n" + hierarchy.toString());
 		
 		/* valuto i risultati */
 		
