@@ -193,7 +193,7 @@ public class ClusterBuilder {
 		/* estrae tutti i tags dal database e ne costruisce una lista di
 		 *  clusters (Node) */
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
-		logger.info("extracting all tags from database");
+//		logger.info("extracting all tags from database");
 		this.clustersToMerge = new LinkedList<Node>();
 		TagtfidfDAOPostgres tagTfidfHandler = new TagtfidfDAOPostgres();
 		List<Tagtfidf> extractedTags = null;
@@ -205,7 +205,7 @@ public class ClusterBuilder {
 		}
 	
 		if (extractedTags != null) {
-			logger.info("creating singleton clusters to be merged");
+//			logger.info("creating singleton clusters to be merged");
 			/* poi costruisce un cluster a partire da ogni tag */
 			for (Tagtfidf tag: extractedTags) {
 				Node currentNode = new Node(tag.getTag(), tag);
