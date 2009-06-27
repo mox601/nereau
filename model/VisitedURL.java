@@ -6,11 +6,15 @@ public class VisitedURL {
 	private String urlString;
 	private Query query;
 	private ExpandedQuery expandedQuery;
+	private String expQueryString;
 	private final long date;
 	//aggiunti per i test
 	private String title;
 	private String summary;
+	private int expansionType;
 	
+
+
 	public VisitedURL(String urlString, Query query, ExpandedQuery expandedQuery) {
 		this.urlString = urlString;
 		this.query = query;
@@ -35,6 +39,17 @@ public class VisitedURL {
 	}
 	
 	
+	/* used for saving visited url tags TODO */
+	public VisitedURL(String urlString, Query query, ExpandedQuery expandedQuery,
+			int expansionType) {
+		this.urlString = urlString;
+		this.title = title;
+		this.summary = summary;
+		this.expandedQuery = expandedQuery;
+		this.query = query;
+		this.date = System.currentTimeMillis();
+		this.expansionType = expansionType;
+	}
 
 	public Query getQuery() {
 		return query;
@@ -54,7 +69,8 @@ public class VisitedURL {
 	
 	public String toString() {
 		String result = 
-			"(url=" + urlString + ",query=" + query + ")";
+			"(url=" + urlString + ",query=" + query + ",expansionType=" + expansionType 
+			+ " expandedQueryString=" + expandedQuery.toString() +")";
 		return result;
 	}
 
@@ -85,5 +101,20 @@ public class VisitedURL {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
+	
+	/**
+	 * @return the expansionType
+	 */
+	public int getExpansionType() {
+		return expansionType;
+	}
+
+	/**
+	 * @param expansionType the expansionType to set
+	 */
+	public void setExpansionType(int expansionType) {
+		this.expansionType = expansionType;
+	}
+	
 
 }

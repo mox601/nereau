@@ -172,9 +172,17 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 
 	public void saveVisitedURL(VisitedURL vUrl, User user) throws PersistenceException {
 
+		
+		//aggiunto il tipo di espansione associata con la visita dell'url
+		//TODO: renderlo parametrico: ottengo la stringa e poi vedo l'id, non il contrario
+		//come succede ora
+		
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();
 		PreparedStatement statement = null;
+		
+		System.out.println("started saving vUrl: " + vUrl.toString());
+		
 		try {
 			ResultSet result;
 			int visitedUrlId = 0;
@@ -194,19 +202,25 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 			//save visited url per un utente che non ha id nell'oggetto user
 			// l'id va preso dal db
 			if(user.getUserID()<=0) {
-				statement = connection.prepareStatement(SQL_INSERT);
+				statement = connection.prepareStatement(SQL_INSERT_EXPANSION_TYPEID);
 				statement.setString(1, username);
 				statement.setString(2, url);
 				statement.setString(3, query);
+				
+				
 				if(expandedQuery!=null)
 					statement.setString(4, expandedQuery);
 				else
 					statement.setString(4, "");
 				statement.setLong(5, date);
+				
+				//expansionType
+				statement.setInt(6, vUrl.getExpansionType());
+			
 			}
 			//salva l'url visitato per un utente di cui hai gi‡ l'id
 			else {
-				statement = connection.prepareStatement(SQL_INSERT_BY_USERID);
+				statement = connection.prepareStatement(SQL_INSERT_BY_USERID_EXPANSION_TYPEID);
 				statement.setInt(1, user.getUserID());
 				statement.setString(2, url);
 				statement.setString(3, query);
@@ -215,7 +229,13 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				else
 					statement.setString(4, "");
 				statement.setLong(5, date);
+				
+				//expansionType
+				statement.setInt(6, vUrl.getExpansionType());
 			}
+			
+		
+			
 			statement.executeUpdate();
 			
 			
@@ -249,6 +269,8 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 			//save associated Expansion Tags, devono necessariamente gi‡ esistere
 			//nel database!
 			
+			
+			//salva i tags che si sono usati per arrivare alla visita dell'url
 			for(RankedTag rTag: expansionTags) {
 				String tag = rTag.getTag();
 				double rank = rTag.getRanking();
@@ -461,9 +483,31 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 		"	? " +
 		") ";
 	
+	private final String SQL_INSERT_EXPANSION_TYPEID = 
+		"INSERT INTO visitedurls (iduser,url,query,expandedquery,date, expansiontypeid) " +
+		"VALUES ( " +
+		"	( " +
+		"		SELECT id " +
+		"		FROM users " +
+		"		WHERE username=? " +
+		"	), " +
+		"	?, " +
+		"	?, " +
+		"	?, " +
+		"	? " +
+		") ";
+	
+	
+	
+	
 	private final String SQL_INSERT_BY_USERID = 
 		"INSERT INTO visitedurls (iduser,url,query,expandedquery,date) " +
 		"VALUES ( ?, ?, ?, ?, ? ) ";
+	
+	private final String SQL_INSERT_BY_USERID_EXPANSION_TYPEID = 
+		"INSERT INTO visitedurls (iduser,url,query,expandedquery,date, expansiontypeid) " +
+		"VALUES ( ?, ?, ?, ?, ?, ? ) ";
+	
 	
 	private final String SQL_INSERT_VISITEDURLTAG =
 		"INSERT INTO visitedurltags (idvisitedurl,idtag,value) " +
