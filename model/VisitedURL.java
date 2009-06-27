@@ -68,9 +68,15 @@ public class VisitedURL {
 	}
 	
 	public String toString() {
+		
+		String expQueryString = "";
+		if (expandedQuery != null) {
+			expQueryString = expandedQuery.toString();
+		}
+		
 		String result = 
 			"(url=" + urlString + ",query=" + query + ",expansionType=" + expansionType 
-			+ " expandedQueryString=" + expandedQuery.toString() +")";
+			+ " expandedQueryString=" + expQueryString +")";
 		return result;
 	}
 
