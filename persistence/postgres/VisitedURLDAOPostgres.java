@@ -234,7 +234,6 @@ public class VisitedURLDAOPostgres implements VisitedURLDAO {
 				statement.setInt(6, vUrl.getExpansionType());
 			}
 			
-		
 			
 			statement.executeUpdate();
 			

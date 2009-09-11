@@ -30,8 +30,7 @@ public class ExpandTfidfExecutor extends CommandExecutor {
 			e.printStackTrace();
 		} 
 		User user = new User(userID);
-		/* costruisce una risposta chiamando il metodo di nereau nuovo!! 
-		 * TODO: per ora usa il vecchio! */
+		/* costruisce una risposta chiamando il metodo di nereau nuovo!!  */
 		
 //		Set<ExpandedQuery> expQueries = nereau.expandQuery(queryString, user);
 		

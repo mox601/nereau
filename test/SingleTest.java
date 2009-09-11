@@ -116,7 +116,9 @@ public class SingleTest {
 		//feed user model with data from tag groups
 		//fai il modello utente, visitando le pagine del training
 		//posso commentarlo, una volta effettuato. per velocizzare
-//		this.feedUserModel();
+		//per ora NON metto le pagine di noise nel training set
+		//completato!!
+		this.feedUserModel();
 		
 		//dopo aver fatto il feed user model, devo lanciare l'algoritmo di clustering
 		//che mi salvi sul database i clusters risultanti. 
@@ -747,7 +749,7 @@ public class SingleTest {
 
 	public static void main(String[] args) throws PersistenceException, IOException, ParseException {
 		
-		SingleTest st = new SingleTest("oxford");
+		SingleTest st = new SingleTest("capital");
 		st.performTest();
 		
 	}

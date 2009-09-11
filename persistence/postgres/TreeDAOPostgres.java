@@ -436,7 +436,8 @@ public class TreeDAOPostgres implements TreeDAO {
 		/* faccio una query ed estraggo tutti gli antenati del tag, 
 		 * prima estraendo l'id nella tabella tags */
 		
-		/* li restituisce in ordine farlocco, perché? */
+		/* li restituisce in ordine farlocco, perché? 
+		 * li ordino con la query sql */
 		
 		DataSource dataSource = DataSource.getInstance();
 		Connection connection = dataSource.getConnection();

@@ -504,19 +504,21 @@ public class BenchmarkCreator {
 		List<Set<String>> tagGroups = new LinkedList<Set<String>>();
 		Set<String> group1 = new HashSet<String>();
 		Set<String> group2 = new HashSet<String>();
-		group1.add("health");
-		group1.add("medicine");
-		group2.add("astrology");
-		group2.add("horoscope");
+		group1.add("tree");
+		group1.add("garden");
+		group2.add("tree");
+		group2.add("xml");
 		tagGroups.add(group1);
 		tagGroups.add(group2);
 		//crea un BenchMarkCreator con (parola, lista di tags) 
 		//per creare un contesto semantico con i tags
-		BenchmarkCreator bc = new BenchmarkCreator("cancer",tagGroups);
-//		bc.retrieveTestPages();
+		BenchmarkCreator bc = new BenchmarkCreator("tree",tagGroups);
+		bc.retrieveTestPages();
 //		bc.addNoise();
 		
 	}
+	
+	
 
 	public void addNoise() throws IOException {
 		

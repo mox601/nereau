@@ -52,10 +52,12 @@ public class CombineTasks {
 		//effettua i tests trovati nel file
 		for(String test: testSpecs.keySet()) {
 			st = new SingleTest(test);
+			//non si fa, versione vecchia:
 //			st.performFirstTest();
+			//questo si:
 			st.performTest();
 			
-			/* problema nel database dei tagsvisitedurls: 
+			/* "problema" nel database dei tagsvisitedurls: 
 			 * i profili eseguiti per ultimi risentono delle visite di tutti gli utenti 
 			 * creati precedentemente. L'aspetto sociale così è enfatizzato. 
 			 * si puó anche evitare, cancellando la tabella ogni volta che si 

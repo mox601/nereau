@@ -119,7 +119,7 @@ public class UserModelUpdater {
 			 * allora usa quelli che ti hanno passato. 
 			 * PROBLEMA RISOLTO: prima li ho salvati sul database, e ho la possibilit‡ di
 			 * estrarre l'ID quando mi serve.
-			 * TODO:  */
+			 * */
 			visitedURLs = this.vUrls;
 		
 		else {

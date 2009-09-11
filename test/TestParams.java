@@ -15,7 +15,7 @@ public abstract class TestParams {
 	public final static String test_dir = 			"test";
 	public final static String delicious_prefix = 	"http://delicious.com/search?p=";
 	public final static String delicious_suffix = 	"&context=all&lc=1&page=";
-	public final static String delicious_suffix_mytags = 	"&u=mox601&chk=&context=userposts&fr=del_icio_us&lc=1&page=";
+	public final static String delicious_suffix_mytags = 	"&u=mox601&chk=&context=all&fr=del_icio_us&lc=1&page=";
 	public final static String delicious_search = "http://delicious.com/search?p=cancer+(tag%3Amedicine+OR+tag%3Ahealth+)+-tag%3Ahoroscope+-tag%3Aastrology1&u=mox601&chk=&context=userposts&fr=del_icio_us&lc=";
 
 	//old seem to work. useless: 

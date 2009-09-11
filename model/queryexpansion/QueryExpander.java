@@ -355,11 +355,10 @@ public class QueryExpander {
 		 * 2 oppure osservando il profilo dell'utente nelle co-occorrenze dei tag
 		 *  */
 		
-		/* 1 - TODO: media e varianza delle dimensioni dei clusters */
+		/* 1 : media e varianza delle dimensioni dei clusters */
 //		Clustering clusteringMean = hierarchicalClustering.calculateClusteringByMean();
 		
 		
-		/* per ora il taglio della similarity la faccio a 0.5 */
 		double cutSimilarity = 0.5;
 		logger.info("cutting tree at: " + cutSimilarity);
 		Clustering clustering = hierarchicalClustering.cutTreeAtSimilarity(cutSimilarity);
