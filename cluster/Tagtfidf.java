@@ -27,18 +27,14 @@ public class Tagtfidf extends Tag {
 	 * e l'url un vettore colonna. 
 	 * 
 	 * 
-	 * TagTfidf: rappresenta il tag come mappa di chiave-valore: (url-tfidf) 
-	 * forse mantiene solamente il tf nel tag, l'idf é calcolato al volo globalmente */
+	 * TagTfidf: rappresenta il tag come mappa di chiave-valore: (url-tfidf). 
+	 * Si mantiene solamente il tf nel tag, l'idf non é calcolato */
 
-	// le Map<K, V> accettano solo istanze di classi come K e V
 //	private Map<String, Map<RankedTag, Map<String, Double>>> userMatrix;
 	private String tag;
-	//cambio di rappresentazione: da Integer a Double
 	private Map<String, Double> tagUrlsMap;
-	/* numero di risorse annotate con il tag attuale: é la lunghezza degli elementi 
-	 * della mappa tagUrl? */
+	/* numero di risorse annotate con il tag attuale */
 	private Integer totalUrls;
-	//per estrarre dal database
 	private TagtfidfDAOPostgres tagTfidfHandler;
 	
 	public Tagtfidf() {
@@ -96,8 +92,8 @@ public class Tagtfidf extends Tag {
 		this.tag = this.tag.substring(0, this.tag.length() - 1);		
 	}
 	
-	/* metodo duplicato? 
-	 * quando non é presente un url, restituisce 0 */
+	
+	/* quando non é presente un url, restituisce 0 */
 	public Double getValue(String url) {
 		Double value = null;
 		if (this.getTagUrlsMap().containsKey(url)) {
@@ -124,8 +120,7 @@ public class Tagtfidf extends Tag {
 		return keys;
 	}
 	
-	/* 
-	 * confronto tra due tag usando la coseno somiglianza */
+	/* confronto tra due tag usando la coseno somiglianza */
 	public Double compareToTag(Tagtfidf tagToCompare) {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 //		logger.info("comparing tag: " + this.getTag() + " to tag: " + tagToCompare.getTag());
@@ -144,13 +139,12 @@ public class Tagtfidf extends Tag {
 				numeratore = numeratore + (keyValue1.getValue() * value2);			
 			}
 				/* se nel secondo tag l'url cercato non é presente: 
-				 * avrebbe come valore 0 e quindi si moltiplicherebbe il 
-				 * primo valore per 0: non é necessario aggiungere un caso else */	
+				 * avrebbe come valore 0: non é necessario aggiungere un caso else */	
 		}
 		
 		/* Modulo (sqrt della somma di tutti i valori tf) 
 		 * dei due vettori Tagtfidf 
-		 * se uso tfidf cambia il risultato? no */
+		 * se usassi tfidf non cambierebbe il risultato */
 		/* Modulo tag 1 */
 		Double moduloTag1 = this.getModule();
 		/* Modulo tag 2 */
@@ -204,6 +198,7 @@ public class Tagtfidf extends Tag {
 	/* TODO: ho levato il parametro Integer frequency:  
 	 * perché dovrei poter specificare un valore per l'occorrenza dell'url? 
 	 * perché quando costruisco il Tag estraendolo dal database ha senso... */
+	
 	/* DEPRECATED , use addUrlOccurrences(String, int) instead */
 	public boolean addUrlOccurrency(String url) {
 		boolean success = false;
@@ -219,8 +214,7 @@ public class Tagtfidf extends Tag {
 			this.totalUrls = this.totalUrls + 1;
 			success = true;
 		} else {
-			/* aggiorno il valore esistente, aggiungendo un'occorrenza */
-			/* TODO: uhm... */
+			/* TODO: aggiorno il valore esistente, aggiungendo un'occorrenza */
 			this.tagUrlsMap.put(url, oldValue + 1.0);
 //			System.out.print("tag " + this.getTag());
 //			System.out.println(" chiave inserita: " + url + " valore: " + this.tagUrlsMap.get(url));
@@ -325,16 +319,5 @@ public class Tagtfidf extends Tag {
 		
 	}
 
-	
-
-
-	/**
-	 * @param totalUrls the totalUrls to set
-	 */
-// non deve essere possibile settare il numero degli url dall'esterno
-//	public void setTotalUrls(int totalUrls) {
-//		this.totalUrls = totalUrls;
-//	}
-
-	
+		
 }

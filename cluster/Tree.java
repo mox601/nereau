@@ -34,7 +34,7 @@ public class Tree {
 		boolean found = false;
 		/* from root */
 		Node currentNode = this.getRoot();
-		/* examinate the list of root's children */
+		/* examinate root's children */
 		found = (currentNode == b);
 		if (!found) {
 			found = currentNode.hasDescendant(b);
@@ -44,9 +44,7 @@ public class Tree {
 	
 	public List<Node> pathToRoot(Node child) {
 		List<Node> path = null;
-		/* list aggiunge in coda */
-		/* aggiungi il nodo corrente */
-		
+		/* aggiungi il nodo corrente */		
 		if (this.contains(child)) {
 			path = new LinkedList<Node>();
 			path.add(child);
@@ -113,7 +111,7 @@ public class Tree {
 	
 	
 	/* restituisce il valore di similarity che si deve usare per 
-	 * generare un cluster di qualitá buona. Con quale strategia? */
+	 * generare un cluster di qualitá buona. TODO: scelta della strategia */
 	double getCutSimilarity() {
 		double similarity = 0.0;
 		
@@ -124,10 +122,7 @@ public class Tree {
 	
 	
 	
-	
-	
-	
-	/* da un albero, restituisce il clustering esatto ottenuto tagliando 
+	/* dato un albero, restituisce il clustering esatto ottenuto tagliando 
 	 * la gerarchia ad un certo valore di similarity */
 	public Clustering cutTreeAtSimilarity(double similarity) {
 		
@@ -178,7 +173,6 @@ public class Tree {
 
 				/* se é una foglia con similarity piú bassa di quella 
 				 * specificata, comunque aggiungi la lista col nodo singolo */
-				// come fa ad essere una foglia con similarity più bassa???
 				if (node.isLeaf()) {
 					HashSet<Node> leaf = new HashSet<Node>();
 					leaf.add(node);
@@ -194,9 +188,9 @@ public class Tree {
 				}
 			} else {
 				/* la similarity é = o > di quella scelta, 
-				 * costruisco UNA SOLA (?) lista con le foglie di questo nodo */
+				 * costruisco UNA SOLA lista con le foglie di questo nodo */
 				/* caso limite, se similarity é = a quella attuale. */
-				//			System.out.println("similarity corrente: " + node.getSimilarity());
+	//			System.out.println("similarity corrente: " + node.getSimilarity());
 				LinkedList<Node> leavesList = this.getLeaves(node);
 				HashSet<Node> leavesSet = new HashSet(leavesList);
 				clustering.add(leavesSet);
@@ -208,7 +202,7 @@ public class Tree {
 		}
 	}
 	
-		/* broken!! */
+		/* FIXME: broken. il buffer si espande troppo */
 	public String toString() {
 		String treeString = "";
 		/* visita in preordine e stampa i nodi */
@@ -254,8 +248,8 @@ public class Tree {
 		
 	}
 
-	/* visita in preordine e assegnazione degli id. ora si assegnano secondo 
-	 * la struttura del database nested sets */
+	/* visita in preordine e assegnazione degli id. 
+	 * ora si assegnano secondo la struttura del database nested sets */
 	private void visitAndAssignIds(Node node, int rowId, int nestedSetId) {
 		//vecchio id
 		node.setIdNode(rowId);
