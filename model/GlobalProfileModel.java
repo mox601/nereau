@@ -68,17 +68,12 @@ public class GlobalProfileModel {
 	/* prendo direttamente i visitedURLs ed estraggo i tag per conto mio */
 	public GlobalProfileModel(List<VisitedURL> visitedURLs, boolean alreadyRetrieved) {
 		
-		
 		this.alreadyRetrieved = alreadyRetrieved;
 //		System.out.println("gli url sono tutti sul filesystem? " + this.alreadyRetrieved);
-		
-		
 		
 		if(alreadyRetrieved) {
 			//devo ancora salvare gli url su database, altrimenti non avranno ID!!
 		}
-		
-		
 		
 		/* devo passare da visitedURL a URLTags */
 		LinkedList<URLTags> urlTagsToSave = null;
@@ -112,7 +107,6 @@ public class GlobalProfileModel {
 			
 			String urlString = visitedURL.getURL();
 			
-			
 			Set<RankedTag> tags = null;
 			
 			//se devo lavorare sugli url
@@ -128,7 +122,6 @@ public class GlobalProfileModel {
 				String preUrlString = urlString.substring(0, urlString.lastIndexOf('/')+1);
 				String postUrlString = urlString.substring(urlString.lastIndexOf('/')+1);
 				
-				//qui devo scrivere l'url di cosa?
 				String tagString = preUrlString + "tags_" + postUrlString;
 //				urlString = preUrlString + postUrlString;
 

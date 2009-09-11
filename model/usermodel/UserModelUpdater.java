@@ -152,7 +152,6 @@ public class UserModelUpdater {
 		//ricerca dei tag da file... 
 		
 		
-		
 		logger.info("aggiornamento OLD NEREAU");
 		
 		/* AGGIORNAMENTO DEL MODELLO UTENTE, OLD NEREAU */

@@ -39,7 +39,6 @@ public class VisitedURL {
 	}
 	
 	
-	/* used for saving visited url tags TODO */
 	public VisitedURL(String urlString, Query query, ExpandedQuery expandedQuery,
 			int expansionType) {
 		this.urlString = urlString;

@@ -206,7 +206,6 @@ public class TreeDAOPostgres implements TreeDAO {
 			extractedTree = buildTreeFromHierarchies(hierarchiesList);	
 		}
 		
-		
 		return extractedTree;
 	}
 	

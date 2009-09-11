@@ -46,7 +46,6 @@ public class ClusterBuilder {
 	 * algoritmo gerarchico di shepitsen. 
 	 */
 	
-	
 	public void buildClusters() {
 		Logger logger = LogHandler.getLogger(this.getClass().getName());
 		logger.info("START TAGTFIDF CLUSTERING");
@@ -101,11 +100,10 @@ public class ClusterBuilder {
 //				}
 				
 				
-				
 				//finchŽ ho clusters da fondere
 				while (clustersToMerge.size() > 1) {
 					/* fondo TUTTI i clusters rimanenti !! 
-					 * lo faccio 2 a 2 ? */
+					 */
 					LinkedList<LinkedList<Node>> mergingClusters = getClusterWithSimilarity(clustersToMerge, 0.0);				
 
 					for (LinkedList<Node> actualMergingCouple: mergingClusters) {
@@ -164,10 +162,9 @@ public class ClusterBuilder {
 			/* ora funziona con i nested sets */
 			actualClustering.assignIds();
 
-			//discrepanza tra clustersToMerge e actualClustering NO, prima!
 			
 //			logger.info("clustersToMerge, preso come radice " + clustersToMerge.get(0));
-			//rimosso, potrebbe creare problemi con la stampa dell'albero
+			//rimosso, potrebbe creare problemi con la stampa dell'albero su stringa
 //			logger.info("tree-clustering ottenuto: " + actualClustering.toString());
 				
 			
@@ -218,7 +215,7 @@ public class ClusterBuilder {
 
 	}	
 
-	/*TODO: riesce a restituire liste, o solo coppie? */
+	/* TODO: in futuro, potrebbe restituire liste? */
 	private LinkedList<LinkedList<Node>> getClusterWithSimilarity(
 			List<Node> clustersToMerge, double similarity) {
 
@@ -251,7 +248,7 @@ public class ClusterBuilder {
 			
 			/* confronto i tag dei cluster (centroidi) */
 			double interClusterSimilarity = firstCentroidTag.compareToTag(secondCentroidTag);
-			//TODO: check
+
 			if (interClusterSimilarity >= similarity) {
 				/* se hanno somiglianza giusta per essere combinati, li aggiungo 
 				 * alla listOfCouples, 

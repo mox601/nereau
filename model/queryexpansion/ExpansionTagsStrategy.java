@@ -25,9 +25,6 @@ public abstract class ExpansionTagsStrategy {
 		
 	}
 	
-	
-	
-	
 	/* filtra i RankedTag per prendere solo quelli rilevanti. 
 	 * nella parte del clustering non si filtrano */
 	protected TreeSet<RankedTag> selectRelevantTags(TreeSet<RankedTag> tags) {

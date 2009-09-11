@@ -149,16 +149,7 @@ public class Node {
 		boolean found = false;
 		
 		//se cerco l'ancestor di un nodo e la root, non trova mai l'antenato 
-		
-		/* caso limite: 
-		searching ancestor of: 1 and 1
-		with 1st hierarchy: []
-		with 2nd hierarchy: []
-		la gerarchia deve sempre contenere il nodo di cui é la gerarchia!! 
-		il prob non é qui. se uno dei due è il nodo radice, devo mettere nella gerarchia
-		il nodo radice!  
-		*/
-		
+			
 		
 //		System.out.println("searching ancestor of: " + couple.getFirst().getValue()
 //				+ " and " + couple.getLast().getValue());
@@ -193,7 +184,6 @@ public class Node {
 	// TODO: cambiare se cambia la definizione dell'oggetto
 	/* fonde le gerarchie dei due nodi */
 	
-	/* se ho solo un elemento? */
 	private LinkedList<Node> mergeHierarchies(Node first, Node second) {
 		LinkedList<Node> mergedAncestorsList = new LinkedList<Node>();
 		
@@ -228,7 +218,6 @@ public class Node {
 			} // second iterator
 			
 		} // first iterator
-		
 		
 		
 		return mergedAncestorsList;
